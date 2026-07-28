@@ -10,7 +10,7 @@ Public Information Trust System (PITS) is a web application that allows users to
 >
 > Make sure to start the backend server. Otherwise, majority of the functionality will fail to work.
 >
-> Backend repository: https://github.com/DELTA-PITS/V2-Backend
+> Backend repository: (https://github.com/DELTA-PITS/backend-for-uat.git)
 
 
 Install dependencies:
