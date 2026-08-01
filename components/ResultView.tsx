@@ -1,11 +1,11 @@
 'use client';
 
-import { useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import Card from '@components/common/OperationCard';
 import OperationButton from '@components/common/OperationButton';
 import CopyButton from '@components/dashboard/CopyButton';
-import { parseResultPayload } from '@/lib/resultPayload';
+import { readResultPayload } from '@/lib/resultPayload';
+import type { ResultPayload } from '@/types';
 import { getUploadFailureMessage } from '@/lib/uploadErrorMessage';
 import { formatDisplayDateTime } from '@lib/dateFormat';
 import type { RegisterData, VerifyData, RawData, ResultStatus } from '@/types/';
@@ -109,8 +109,14 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
  */
 export default function ResultView({ status }: ResultViewProps) {
   const { t, locale }: { t: Dictionary; locale: 'id' | 'en' } = useLocale();
-  const searchParams = useSearchParams();
-  const payload = useMemo(() => parseResultPayload(searchParams.get('payload')), [searchParams]);
+  // Read once on mount rather than during render — sessionStorage isn't
+  // available during SSR, so starting from `null` keeps the first client
+  // render consistent with the server-rendered markup (avoids a hydration
+  // mismatch), then this fills in on mount.
+  const [payload, setPayload] = useState<ResultPayload | null>(null);
+  useEffect(() => {
+    setPayload(readResultPayload());
+  }, []);
 
   const data = payload?.response?.data;
   const registerData = getRegisterData(data);

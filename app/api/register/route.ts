@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { parseUpload } from '../_lib/parseUpload';
+import { requireAccessToken } from '../_lib/requireAuth';
 
 const BACKEND_REGISTER_URL = process.env.PITS_BACKEND_REGISTER_URL;
 const DEFAULT_ISSUER_ID = 'e99aef26-88f2-4e24-8934-3cd3ac27b439';
@@ -17,15 +17,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'PITS_BACKEND_REGISTER_URL is not configured' }, { status: 503 });
     }
 
-    const session = await auth();
-    const accessToken = session?.accessToken;
-    if (!accessToken) {
-      return NextResponse.json({ message: 'Missing Keycloak access token' }, { status: 401 });
-    }
+    const authResult = await requireAccessToken();
+    if (!authResult.ok) return authResult.response;
+    const { accessToken } = authResult;
 
     const issuerId = process.env.PITS_ISSUER_ID ?? DEFAULT_ISSUER_ID;
     const upload = await parseUpload(request);
-    if (!upload) return NextResponse.json({ message: 'Invalid upload payload' }, { status: 400 });
+    if (!upload.ok) return NextResponse.json({ message: upload.message }, { status: upload.status });
 
     const formData = new FormData();
     formData.append('file', upload.file);
