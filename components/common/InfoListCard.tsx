@@ -30,19 +30,24 @@ export default function InfoListCard({
 }: InfoListCardProps) {
   return (
     <div className={`w-full rounded-2xl border border-base-300 bg-base-100 p-5 shadow-card ${className ?? ''}`.trim()}>
-      {HeadingIcon ? (
-        <div className="mb-3 flex items-center gap-2">
-          <HeadingIcon className="text-secondary" style={{ fontSize: '1.2rem' }} />
-          <p className="text-xs font-semibold text-base-content">{heading}</p>
-        </div>
-      ) : (
-        <p className="mb-3 text-xs font-semibold text-base-content">{heading}</p>
-      )}
-      <ul className={`grid grid-cols-1 ${columns === 2 ? 'gap-2.5 sm:grid-cols-2' : 'gap-2'}`}>
+      {/* Matches the "section label" treatment used everywhere else in the app
+          (MetadataCard, ResultView SectionLabel, RecordDetailDrawer) — uppercase,
+          tracked, muted — instead of a one-off bold dark heading that stood out
+          next to MetadataCard on the same page (Register). */}
+      <div className="mb-3 flex items-center gap-1.5">
+        {HeadingIcon ? <HeadingIcon className="text-ink-muted" style={{ fontSize: '0.9rem' }} /> : null}
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{heading}</p>
+      </div>
+      <ul className={`grid grid-cols-1 ${columns === 2 ? 'gap-3 sm:grid-cols-2' : 'gap-2.5'}`}>
         {items.map((item) => (
-          <li key={item} className="flex items-start gap-2 text-xs text-ink-secondary">
+          <li
+            key={item}
+            className={`flex gap-2 text-sm text-ink-secondary ${bullet === 'check' ? 'items-center' : 'items-start'}`}
+          >
             {bullet === 'check' ? (
-              <CheckCircleOutlinedIcon className="mt-0.5 shrink-0 text-secondary" style={{ fontSize: '1.1rem' }} />
+              // text-success (not text-secondary) matches the "verified/good" check
+              // used everywhere else in the app (ResultView, DocumentPreview, CopyButton).
+              <CheckCircleOutlinedIcon className="shrink-0 text-success" style={{ fontSize: '1rem' }} />
             ) : (
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary/50" />
             )}

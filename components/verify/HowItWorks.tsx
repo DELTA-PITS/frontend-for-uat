@@ -34,7 +34,7 @@ export default function HowItWorks() {
                 {t.howItWorks.stepLabel} {index + 1}
               </p>
               <p className="text-base font-semibold text-base-content">{step.title}</p>
-              <p className="mt-1 text-xs text-ink-secondary">{step.description}</p>
+              <p className="mt-1 text-sm text-ink-secondary">{step.description}</p>
             </div>
           </div>
         ))}

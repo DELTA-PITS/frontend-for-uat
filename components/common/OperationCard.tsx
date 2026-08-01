@@ -56,8 +56,15 @@ export default function OperationCard({
             of its own local flex-col container silently stretches to fill that
             container's height instead of sitting at its natural size (bit us
             once already inside Dropzone). Fixed here once so no future
-            component nested in an OperationCard has to rediscover it. */}
-        <div className="card-body w-full gap-4 [&_p]:grow-0">
+            component nested in an OperationCard has to rediscover it.
+
+            `p-0!` cancels daisyUI's own `.card-body` padding (40px on all
+            sides from the `card-xl` modifier) — the parent `.card` section
+            above already sets the real, responsive padding (`px-6 sm:px-10
+            py-6`). Without this the two stack, which is invisible on desktop
+            but on mobile eats most of the card as empty padding (measured:
+            content area was under half the viewport width). */}
+        <div className="card-body w-full gap-4 p-0! [&_p]:grow-0">
           {children}
           {actions ? (
             <div className="card-actions justify-end">{actions}</div>

@@ -48,7 +48,7 @@ export default function FAQSection() {
                 style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
               >
                 <div className="overflow-hidden">
-                  <p className="max-w-2xl px-5 pb-4 text-xs text-ink-secondary">{faq.a}</p>
+                  <p className="max-w-2xl px-5 pb-4 text-sm text-ink-secondary">{faq.a}</p>
                 </div>
               </div>
             </div>
