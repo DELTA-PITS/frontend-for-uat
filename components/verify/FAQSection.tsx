@@ -21,7 +21,7 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="mt-14 w-full pb-16">
+    <section className="w-full">
       <h2 className="text-center text-[1.375rem] font-bold text-secondary">{t.faq.heading}</h2>
       <div className="mt-6 flex flex-col gap-3">
         {t.faq.items.map((faq, index) => {

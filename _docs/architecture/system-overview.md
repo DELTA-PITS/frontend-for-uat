@@ -6,6 +6,10 @@
 
 Aplikasi Next.js App Router dengan tiga area: **Verify** (publik, `/`), **Register** (publisher, `/publisher`), **Dashboard** (publisher, `/dashboard`). Semua panggilan ke backend PITS diproksi lewat Next.js API routes server-side (`app/api/*`), bukan langsung dari client.
 
+**⚠️ Project ini pakai Next.js 16 — proteksi route lewat `proxy.ts`, BUKAN `middleware.ts`.** Next.js 16 men-deprecate konvensi `middleware.ts` dan menggantinya dengan `proxy.ts` (`export { auth as proxy } from '@/auth'`). File itu **sudah ada** di root dan sudah menjalankan `authorized()` callback di `auth.ts` untuk semua route. **Jangan pernah membuat `middleware.ts` baru** — Next.js akan menolak start server kalau keduanya terdeteksi bersamaan ("Both middleware file and proxy file are detected"). Lihat `_docs/security/session-auth-audit-2026-08-02.md` §12 untuk kronologi lengkap kesalahan ini.
+
+Proteksi `/publisher` dan `/dashboard` sekarang 2 lapis: `proxy.ts` (edge, utama) + `redirect()` eksplisit di masing-masing `page.tsx` (defense-in-depth). Keduanya juga pakai `export const dynamic = 'force-dynamic'` supaya tidak pernah di-cache (mencegah halaman lama muncul lagi lewat tombol back/forward setelah logout).
+
 ```
 ┌────────────┐   login    ┌──────────────┐
 │  Publisher │ ─────────► │  Keycloak    │

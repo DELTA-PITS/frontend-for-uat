@@ -15,6 +15,7 @@ export const translations = {
       openMenu: 'Buka menu',
       closeMenu: 'Tutup menu',
       language: 'Bahasa',
+      loggedOutMessage: 'Kamu berhasil keluar.',
     },
     verifyHero: {
       badge: 'Akses Publik',
@@ -129,6 +130,7 @@ export const translations = {
       errorNoToken: 'Token akses Keycloak tidak ditemukan',
       errorLoad: 'Gagal memuat data dokumen',
       errorConn: 'Tidak bisa terhubung ke layanan backend',
+      errorSessionExpired: 'Sesi kamu sudah berakhir. Silakan masuk kembali.',
       statusSummary: (count: number) =>
         `Semua ${count.toLocaleString('id-ID')} dokumen berhasil tercatat on-chain — tidak ada isu terdeteksi.`,
     },
@@ -251,6 +253,7 @@ export const translations = {
       openMenu: 'Open menu',
       closeMenu: 'Close menu',
       language: 'Language',
+      loggedOutMessage: 'You have been signed out.',
     },
     verifyHero: {
       badge: 'Public Access',
@@ -359,6 +362,7 @@ export const translations = {
       errorNoToken: 'Keycloak access token not found',
       errorLoad: 'Failed to load document data',
       errorConn: 'Could not reach the backend service',
+      errorSessionExpired: 'Your session has expired. Please sign in again.',
       statusSummary: (count: number) =>
         `All ${count.toLocaleString('en-US')} documents are recorded on-chain — no issues detected.`,
     },

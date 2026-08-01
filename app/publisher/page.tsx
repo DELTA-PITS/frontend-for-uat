@@ -1,48 +1,20 @@
-'use client';
+import { redirect } from 'next/navigation';
+import { auth } from '@/auth';
+import PublisherPortalClient from '@components/register/PublisherPortalClient';
 
-import { useFileUpload } from '@hooks/useUpload';
-import FileUpload from '@components/FileUpload';
-import RegisterHero from '@components/register/RegisterHero';
-import MetadataCard from '@components/register/MetadataCard';
-import RequirementCard from '@components/register/RequirementCard';
-import BeforeSubmitChecklist from '@components/register/BeforeSubmitChecklist';
-import PageContainer from '@components/layout/PageContainer';
-import { useLocale } from '@lib/i18n/LocaleContext';
+// Defense-in-depth: `middleware.ts` already blocks unauthenticated requests
+// to this route at the edge, but this check makes sure the page itself never
+// renders the publisher form without a session even if the middleware
+// matcher is ever misconfigured — see _docs/security/session-auth-audit-2026-08-02.md.
+// `force-dynamic` also stops this page from being cached, so a logged-out
+// visitor can't have it served from cache/back-forward-cache after logout.
+export const dynamic = 'force-dynamic';
 
-/**
- * Publisher Portal landing page — deliberately styled as an institutional
- * workflow (navy accent, metadata summary, permanence warnings) rather than
- * a copy of the public Verify page, even though both share the same
- * underlying upload mechanism.
- */
-export default function PublisherPortal() {
-  const { file, isUploading, handleFileChange, handleSubmit } = useFileUpload('register');
-  const { t } = useLocale();
+export default async function PublisherPortalPage() {
+  const session = await auth();
+  if (!session) {
+    redirect('/');
+  }
 
-  return (
-    <div className="flex w-full flex-col">
-      <RegisterHero />
-
-      <section className="w-full bg-base-100">
-        <PageContainer variant="content" className="py-8 sm:py-10">
-          <FileUpload
-            mode="register"
-            buttonLabel={t.registerForm.button}
-            accent="secondary"
-            file={file}
-            isUploading={isUploading}
-            onFileChange={handleFileChange}
-            onSubmit={handleSubmit}
-            extraBeforeSubmit={file ? <BeforeSubmitChecklist /> : undefined}
-          />
-          {!isUploading ? (
-            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-              <MetadataCard file={file} />
-              <RequirementCard />
-            </div>
-          ) : null}
-        </PageContainer>
-      </section>
-    </div>
-  );
+  return <PublisherPortalClient />;
 }

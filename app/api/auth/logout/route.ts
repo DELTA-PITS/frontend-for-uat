@@ -7,6 +7,9 @@ import { signOut } from '@/auth';
 export const GET = async () => {
   return signOut({
     redirect: true,
-    redirectTo: process.env.AUTH_URL,
+    // `?loggedOut=1` triggers the confirmation banner on the Verify page
+    // (`components/verify/LogoutBanner.tsx`) — logout previously gave no
+    // feedback at all when every redirect happened to succeed silently.
+    redirectTo: `${process.env.AUTH_URL}/?loggedOut=1`,
   });
 };

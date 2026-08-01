@@ -58,6 +58,13 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
 export const { handlers, auth, signIn, signOut } = nextAuth({
   debug: process.env.NODE_ENV === 'development',
   providers: [Keycloak],
+  // Redirect target when `authorized()` rejects a request (middleware) — the
+  // public Verify page rather than NextAuth's plain default sign-in page, so
+  // an unauthenticated visitor lands somewhere with real context and a
+  // "Masuk" button, not a bare provider list.
+  pages: {
+    signIn: '/',
+  },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const protectedRoute = nextUrl.pathname.startsWith('/publisher') || nextUrl.pathname.startsWith('/dashboard');

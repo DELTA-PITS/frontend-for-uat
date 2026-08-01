@@ -69,7 +69,7 @@ export function Header({ session }: HeaderProps) {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full bg-base-100/90 backdrop-blur-sm transition-shadow duration-200 ${isScrolled ? 'shadow-sm' : ''
+      className={`sticky top-0 z-50 w-full bg-base-100 transition-shadow duration-200 ${isScrolled ? 'shadow-sm' : ''
         }`}
     >
       {/* Brand row — institutional identity + main menu */}

@@ -23,7 +23,7 @@ export default function HowItWorks() {
   const { t } = useLocale();
 
   return (
-    <section className="mt-14 w-full">
+    <section className="w-full">
       <h2 className="text-center text-[1.375rem] font-bold text-secondary">{t.howItWorks.heading}</h2>
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {t.howItWorks.steps.map((step, index) => (

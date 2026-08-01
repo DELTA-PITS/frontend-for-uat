@@ -4,6 +4,23 @@ File ini diupdate Claude Code **setiap sesi kerja selesai**. Entry terbaru selal
 
 ---
 
+## [2026-08-02 03:00] — Claude Code
+
+- **Progress**: Audit sesi login/logout (dipicu laporan user: `/publisher` masih terlihat setelah logout, back button menampilkan Dashboard lama, logout Keycloak error "Invalid redirect uri") disusun jadi dokumen, lalu diimplementasikan penuh setelah user konfirmasi "ok implementasi". Ditemukan 1 koreksi penting terhadap audit sendiri saat implementasi. Diverifikasi type-check, lint, dan langsung di browser.
+- **Selesai sesi ini**:
+  - **Koreksi penting ditemukan saat implementasi**: mencoba menambah `middleware.ts` bikin dev server GAGAL start — ternyata project ini sudah pakai **Next.js 16**, yang mengganti konvensi `middleware.ts` jadi `proxy.ts`. File `proxy.ts` **sudah ada** sejak awal, sudah meng-export `auth as proxy` dengan matcher yang mencakup hampir semua route — artinya `authorized()` callback di `auth.ts` **sudah aktif sepanjang waktu**, bukan dead code seperti dugaan awal audit. `middleware.ts` yang sempat dibuat langsung dihapus lagi. Root cause asli yang dilaporkan user 100% adalah fenomena back/forward cache (bfcache) browser, bukan celah proteksi route.
+  - **Auth guard eksplisit (defense-in-depth)** ditambah di `app/publisher/page.tsx` dan `app/dashboard/page.tsx` — keduanya sekarang `redirect('/')` kalau tidak ada sesi, plus `export const dynamic = 'force-dynamic'` supaya halaman tidak pernah di-cache. `app/publisher/page.tsx` diubah dari client component murni jadi async Server Component; JSX aslinya dipindah ke `components/register/PublisherPortalClient.tsx`.
+  - **`BfcacheRefresh`** (komponen baru, `components/layout/BfcacheRefresh.tsx`) — listener global `pageshow`, kalau `event.persisted` true (halaman dipulihkan dari bfcache, misal lewat tombol back) langsung `router.refresh()` supaya data/sesi selalu ke-cek ulang. Di-mount sekali di `app/layout.tsx`.
+  - **Redirect target login diarahkan ke Verify**: `auth.ts` ditambah `pages: { signIn: '/' }` — user tanpa sesi yang coba akses route privat sekarang mendarat di halaman Verify (`/?callbackUrl=...`), bukan halaman default NextAuth yang polos.
+  - **Banner konfirmasi logout**: `app/api/auth/logout/route.ts` redirect ke `/?loggedOut=1`, ditangkap `components/verify/LogoutBanner.tsx` (baru) yang menampilkan "Kamu berhasil keluar." lalu membersihkan query param — sebelumnya logout sukses tidak memberi feedback apapun ke user.
+  - **Logout Keycloak "Invalid redirect uri" TIDAK bisa diperbaiki dari sesi ini** — butuh akses ke Keycloak admin console (realm → client → Valid Post Logout Redirect URIs) untuk mendaftarkan `http://localhost:3000/api/auth/logout`. Dicatat sebagai backlog #22 (prioritas High, blocker fungsional).
+  - Dev server sempat macet dengan error stale module (`EmptyState defined multiple times`) dari cache `.next` lama peninggalan sesi sebelumnya — di-clear (`rm -rf .next`) dan restart bersih, tidak terkait kode aktual (`tsc`/`oxlint` sudah bersih sebelum itu).
+  - Dokumentasi disinkronkan: `session-auth-audit-2026-08-02.md` (status → DIIMPLEMENTASIKAN, koreksi ditulis eksplisit di bagian atas + §12 log implementasi, acceptance criteria dicentang), `tasks/tasks.md` (#22 baru untuk item Keycloak yang masih terbuka).
+- **Blocker / butuh keputusan dari Ersa**: akses Keycloak admin console untuk memperbaiki §5.3 (post-logout redirect URI) — di luar kendali sesi coding, perlu dikoordinasikan dengan siapa pun yang pegang akses admin realm ini.
+- **Next steps**: setelah Keycloak diperbaiki, uji ulang alur logout end-to-end. Backlog lama masih terbuka: #2b (validasi server), #3 (cleanup test), #6 (proteksi middleware/proxy untuk route API — belum disentuh sesi ini, beda dari proteksi halaman yang baru dikerjakan).
+
+---
+
 ## [2026-08-02 01:00] — Claude Code
 
 - **Progress**: Design Language v2 — audit "bahasa visual" (bukan layout) atas kritik user bahwa PITS masih terasa dashboard 2019–2022, disusun jadi dokumen (`design-language-v2.md`), lalu diterapkan penuh setelah user konfirmasi "lanjut kerjakan 1-4". Diverifikasi type-check, lint, dan visual di browser (termasuk scroll behavior navbar via `getComputedStyle`).
