@@ -1,6 +1,6 @@
 # PITS Frontend — Claude Code Instructions
 
-Aplikasi Next.js (App Router) untuk **Public Information Trust System (PITS)** — dua portal: Publisher Portal (registrasi dokumen) dan Verification Portal (verifikasi publik). Auth via NextAuth + Keycloak. Styling TailwindCSS + daisyUI. Testing Storybook + Vitest (jest.config.ts saat ini tidak terpakai — lihat coding-standards.md).
+Aplikasi Next.js (App Router) untuk **Public Information Trust System (PITS)** — dua portal: Publisher Portal (registrasi dokumen) dan Verification Portal (verifikasi publik). Auth via NextAuth + Keycloak. Styling TailwindCSS + daisyUI. Testing via Vitest (`npm test` = project `unit`; Storybook interaction test = project `storybook`) — lihat coding-standards.md.
 
 ---
 
@@ -21,7 +21,7 @@ Hasil audit awal           → _docs/audit/audit-2026-07-31.md
 
 ## Prinsip Tidak Bisa Diganggu Gugat (Constitution)
 
-- Data hasil registrasi/verifikasi (hash, record ID, error backend) **tidak boleh** ditaruh mentah di query string URL tanpa pertimbangan privasi — ini pola yang sudah ada (`lib/resultPayload.ts`) tapi harus diperbaiki, bukan ditambah lagi di tempat lain (lihat audit #7).
+- Data hasil registrasi/verifikasi (hash, record ID, error backend) **tidak boleh** ditaruh mentah di query string URL — sejak 2026-08-02 `lib/resultPayload.ts` menyimpannya di `sessionStorage` (`buildResultHref`/`readResultPayload`), href-nya polos `/result/<status>`. Jangan kembalikan ke pola query-string di tempat lain.
 - Route `/publisher` dan `/dashboard` **selalu** wajib login (role publisher via Keycloak) — jangan buka akses tanpa auth check tanpa keputusan eksplisit.
 - Route `/verify` **selalu** publik tanpa login — jangan tambahkan auth requirement tanpa mendiskusikan dampaknya ke BRD.
 - Tidak ada kredensial/secret Keycloak yang ditulis langsung di kode — selalu lewat environment variable (`AUTH_KEYCLOAK_*` server-side, `NEXT_PUBLIC_AUTH_KEYCLOAK_*` client-side).
@@ -43,7 +43,7 @@ Setiap Technical Design wajib dicek tidak melanggar bagian ini sebelum coding.
 - **Warna selalu lewat token daisyUI** (`styles/globals.css`), jangan hardcode hex di komponen — brand color utama saat ini merah BRIN asli (`#E62F2A`, dicek langsung dari brin.go.id), bukan biru.
 - Port dev server default: `3000`.
 - Env var Keycloak ada dua set (server-side tanpa prefix, client-side dengan `NEXT_PUBLIC_`) — kalau mengubah salah satu, cek keduanya tetap sinkron (lihat audit #6).
-- `jest.config.ts` saat ini tidak dipakai secara efektif (nol test file, environment salah) — unit test baru sebaiknya lewat Vitest, bukan menambah test Jest baru sampai keputusan tentang test runner ini diambil (lihat `tasks/tasks.md`).
+- Test runner-nya Vitest (`jest.config.ts` sudah dihapus 2026-08-02, jangan ditambah lagi). Unit test baru (`*.test.ts`/`*.test.tsx`) otomatis masuk project `unit` (jsdom) di `vitest.config.ts` — jalankan dengan `npm test`. Route handler API (`app/api/*/route.ts`) yang butuh session sekarang pakai `app/api/_lib/requireAuth.ts`, jangan cek `auth()` manual berulang di tiap route.
 
 ## Status Update (WAJIB)
 

@@ -2,7 +2,7 @@
 
 Aplikasi Next.js untuk Public Information Trust System — Publisher Portal & Verification Portal.
 
-**Terakhir diupdate:** 2026-08-01
+**Terakhir diupdate:** 2026-08-02
 
 ## Navigasi Cepat
 
@@ -16,6 +16,7 @@ Aplikasi Next.js untuk Public Information Trust System — Publisher Portal & Ve
 | "Kenapa keputusan arsitektur ini diambil?" | [decisions/README.md](decisions/) |
 | "Arsitektur sistem?" | [architecture/system-overview.md](architecture/system-overview.md) |
 | "Code style & aturan project?" | [referensi/coding-standards.md](referensi/coding-standards.md) |
+| "Semua teks UI (ID & EN) buat direview/diedit?" | [referensi/teks-ui-id-en.md](referensi/teks-ui-id-en.md) |
 | "Warna, tipografi, komponen, layout system, riwayat keputusan desain?" | [design/design-system.md](design/design-system.md) |
 | "Riset/audit desain mendalam (type scale, layout tablet, tren 2026)?" | [design/](design/) — lihat `type-scale-audit-*.md`, `layout-md-breakpoint-audit-*.md`, `2026-design-trend-research.md` |
 | "Kapan boleh mulai coding?" | [quality/definition-of-ready.md](quality/definition-of-ready.md) |

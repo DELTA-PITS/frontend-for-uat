@@ -10,6 +10,8 @@ Aplikasi Next.js App Router dengan tiga area: **Verify** (publik, `/`), **Regist
 
 Proteksi `/publisher` dan `/dashboard` sekarang 2 lapis: `proxy.ts` (edge, utama) + `redirect()` eksplisit di masing-masing `page.tsx` (defense-in-depth). Keduanya juga pakai `export const dynamic = 'force-dynamic'` supaya tidak pernah di-cache (mencegah halaman lama muncul lagi lewat tombol back/forward setelah logout).
 
+**`proxy.ts`/`authorized()` TIDAK memproteksi `/api/*`** (matcher-nya lolos untuk path apapun selain `/publisher`/`/dashboard`) — kalau proteksi API dipasang lewat mekanisme itu, penolakan akan me-redirect ke halaman HTML, padahal client fetch API mengharapkan JSON, dan itu bisa merusak alur upload. Sebagai gantinya, route API yang butuh sesi Keycloak (`app/api/register`, `app/api/records`) memanggil `requireAccessToken()` dari `app/api/_lib/requireAuth.ts` — satu sumber kebenaran untuk cek `auth()`+`accessToken`, dipanggil manual di awal handler masing-masing. `app/api/verify` sengaja tidak memakainya karena publik (lihat Constitution di `CLAUDE.md`).
+
 ```
 ┌────────────┐   login    ┌──────────────┐
 │  Publisher │ ─────────► │  Keycloak    │
@@ -86,7 +88,7 @@ Proteksi `/publisher` dan `/dashboard` sekarang 2 lapis: `proxy.ts` (edge, utama
 |---|---|
 | `app/result/success/page.tsx`, `app/result/failure/page.tsx` | Thin wrapper, render `ResultView` |
 | `components/ResultView.tsx` | 4 state: Registrasi Berhasil / Dokumen Terverifikasi / Dokumen Tidak Ditemukan / Error — kartu terpisah per outcome, bukan alert generik |
-| `lib/resultPayload.ts` | Serialisasi hasil ke query string (⚠️ masih berisi data sensitif di URL, lihat `tasks/tasks.md` #7) |
+| `lib/resultPayload.ts` | `buildResultHref` menyimpan hasil (hash, record ID) di `sessionStorage` (bukan query string sejak 2026-08-02), href-nya `/result/<status>` polos. `readResultPayload` dibaca `ResultView` lewat `useEffect` (client-only, `sessionStorage` tidak ada saat SSR) |
 
 ## Sistem i18n (ID/EN)
 

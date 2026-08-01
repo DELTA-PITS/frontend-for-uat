@@ -2,7 +2,7 @@
 
 Panduan handoff untuk developer yang melanjutkan/mengambil alih project ini. Baca ini dulu sebelum menyentuh kode.
 
-**Terakhir diupdate:** 2026-08-01
+**Terakhir diupdate:** 2026-08-02
 
 ---
 
@@ -35,8 +35,10 @@ Pastikan backend PITS sudah jalan (`../backend-for-uat/`) sebelum test fitur reg
 - **`components/features/` dan `components/ui/` sudah dihapus** (2026-08-01) — itu dulu dead code yang divergen dari versi aktif. Semua komponen aktif ada di `components/{common,auth,layout,verify,register,dashboard}/` + file top-level (`FileUpload.tsx`, `ResultView.tsx`). Kalau nemu dokumen lama yang masih menyebut folder itu, abaikan.
 - **`FileUpload` adalah controlled component**: state `file`/`isUploading` dikelola di level halaman lewat `useFileUpload()` (hook), bukan di dalam `FileUpload` sendiri — supaya halaman bisa menampilkan info file yang sama di komponen sibling (mis. `MetadataCard` di halaman Register). Jangan kembalikan ke pola uncontrolled.
 - **Route verifikasi sesungguhnya ada di `app/page.tsx` (root `/`)**. `app/verify/page.tsx` masih placeholder statis, tidak terhubung navigasi, belum ikut sistem i18n — nasibnya (lanjutkan jadi entry point resmi atau hapus) masih keputusan terbuka, lihat `_docs/tasks/tasks.md` #11.
-- **Validasi upload baru ada di client** (`components/common/Dropzone.tsx`: PDF-only, max 20MB, pesan error inline via `t.dropzone.*`). Validasi **server** (`app/api/_lib/parseUpload.ts`) masih cuma cek `file instanceof File` — jangan asumsikan server sudah aman. Backlog terbuka: `_docs/tasks/tasks.md` #2b.
-- **Setup test masih membingungkan**: ada `jest.config.ts` DAN `vitest.config.ts`, tapi nol file test (`*.test.ts*`) di repo. Vitest yang benar-benar wired (lewat Storybook addon), Jest tidak efektif. Kalau menambah unit test, pakai Vitest. Backlog: `_docs/tasks/tasks.md` #3.
+- **Validasi upload ada di dua lapis** (2026-08-02): client (`components/common/Dropzone.tsx`: PDF-only, max 20MB, pesan error inline via `t.dropzone.*`) DAN server (`app/api/_lib/parseUpload.ts`, mengembalikan `ParseUploadResult` diskriminatif — 413 kalau >20MB, 415 kalau bukan PDF berdasar ekstensi+MIME). Jangan hapus/lemahkan pengecekan server-nya dengan alasan "client sudah cek".
+- **Setup test sudah rapi** (2026-08-02): `jest.config.ts` **sudah dihapus**, cuma Vitest. `vitest.config.ts` punya 2 project — `unit` (jsdom, untuk `lib/*.ts` + hooks, dijalankan via `npm test`) dan `storybook` (browser/Playwright, untuk story interaction test). Alias `@lib`/`@components`/dst di-mirror manual di `vitest.config.ts` (`resolve.alias`) karena Vitest tidak baca `tsconfig.json` paths otomatis — kalau nambah alias baru di `tsconfig.json`, tambahkan juga di sana.
+- **API route yang butuh sesi Keycloak pakai `app/api/_lib/requireAuth.ts`** (`requireAccessToken()`) — jangan tulis ulang `const session = await auth(); if (!session?.accessToken) ...` di route baru, pakai helper ini supaya konsisten. `app/api/records/route.ts` saat ini tidak dipanggil dari mana pun (dashboard fetch backend langsung, server-side) — jangan bingung kalau nemu route ini "tidak terpakai", itu memang begitu; lihat `_docs/tasks/tasks.md`.
+- **Hasil register/verify (hash, record ID) TIDAK lagi lewat query string URL** (2026-08-02) — `lib/resultPayload.ts` (`buildResultHref`/`readResultPayload`) menyimpannya di `sessionStorage`, href-nya `/result/<status>` polos. `ResultView.tsx` baca payload lewat `useEffect` (bukan `useMemo`) karena `sessionStorage` cuma ada di client — kalau butuh data serupa di komponen lain, ikuti pola yang sama, jangan taruh data sensitif balik ke URL.
 - **Dua set env var Keycloak** (server `AUTH_KEYCLOAK_*` vs client `NEXT_PUBLIC_AUTH_KEYCLOAK_*`) harus selalu diubah bersamaan.
 - **Dashboard detail dokumen pakai drawer kanan (`≥sm`) / bottom sheet (`<sm`)** (`RecordDetailDrawer.tsx`), bukan modal tengah — pola ini disengaja supaya tabel tetap terlihat di belakang. Ikuti pola ini untuk panel detail baru, jangan balik ke `<dialog>` modal.
 - **Card selalu border-only, tanpa shadow** (`border border-base-300 bg-base-100 rounded-2xl`) — konsisten di seluruh app. **Kecuali overlay** (drawer, drawer mobile navbar) yang sengaja diberi `shadow-2xl` karena benar-benar melayang di atas konten — jangan tambah shadow ke card biasa, itu bukan bug yang perlu "diperbaiki" jadi konsisten.
@@ -49,10 +51,10 @@ Ikuti `CLAUDE.md` § "Wajib Sebelum Coding Fitur". Ringkas: cek SRS di `_docs/sr
 
 ## 5. Prioritas Kerja Saat Ini
 
-Lihat `_docs/tasks/tasks.md` untuk daftar lengkap dengan prioritas. Ringkas beberapa teratas:
-1. Tambah validasi file upload di **server** (client sudah, server belum) — #2b.
-2. Bersihkan setup test (Jest vs Vitest), tulis unit test untuk `lib/*.ts`, `hooks/useUpload.ts`, dan dictionary i18n — #3.
-3. Aktifkan kembali CI linting — #4.
+Lihat `_docs/tasks/tasks.md` untuk daftar lengkap dengan prioritas. Ringkas beberapa teratas (per 2026-08-02, #2b/#3/#6/#7/#9b sudah selesai):
+1. Aktifkan kembali CI linting — #4.
+2. Evaluasi upgrade `next-auth` ke versi stabil begitu tersedia — #5.
+3. Buat `.env.example` — #8.
 4. Putuskan nasib `app/verify/page.tsx` (placeholder orphan) — #11.
 5. Server-side pagination untuk dashboard (saat ini masih client-side atas seluruh data yang di-fetch) — #12.
 

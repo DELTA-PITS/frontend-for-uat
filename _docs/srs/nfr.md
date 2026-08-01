@@ -8,9 +8,9 @@ Timestamp dari backend dalam UTC — konversi ke timezone lokal user dilakukan d
 
 ## Keamanan & Privasi Data
 
-- Jangan taruh data hasil registrasi/verifikasi (hash, record ID, pesan error backend) mentah di query string URL tanpa mempertimbangkan risiko privasi (browser history, access log) — lihat gap di `lib/resultPayload.ts` (audit #7).
+- Jangan taruh data hasil registrasi/verifikasi (hash, record ID, pesan error backend) mentah di query string URL tanpa mempertimbangkan risiko privasi (browser history, access log) — sejak 2026-08-02 `lib/resultPayload.ts` menyimpannya di `sessionStorage`, bukan lagi query string.
 - Kredensial Keycloak (`AUTH_KEYCLOAK_SECRET`) hanya server-side, tidak pernah di-expose via `NEXT_PUBLIC_*`.
-- Validasi upload (tipe, ukuran) harus ada di client sebagai UX guard DAN di server sebagai pertahanan utama — jangan andalkan salah satu saja.
+- Validasi upload (tipe, ukuran) ada di client sebagai UX guard DAN di server (`app/api/_lib/parseUpload.ts`) sebagai pertahanan utama — jangan andalkan salah satu saja.
 
 ## Availability & Error Handling
 
@@ -19,11 +19,11 @@ Timestamp dari backend dalam UTC — konversi ke timezone lokal user dilakukan d
 
 ## Performance Targets
 
-- Hindari client-side fetch-on-mount untuk data yang bisa di-fetch di server component (lihat gap `app/dashboard/page.tsx` — audit #12).
+- Hindari client-side fetch-on-mount untuk data yang bisa di-fetch di server component — `app/dashboard/page.tsx` sudah Server Component (fetch server-side langsung), pertahankan pola ini untuk halaman data baru.
 - Gunakan `next/image` untuk semua gambar statis (lihat inkonsistensi `BgHeader.tsx` vs `layout/Header.tsx` — audit #10).
 
 ## Constraint Teknis
 
 - Next.js App Router, React 19, TypeScript strict mode aktif.
 - Linting: Oxlint (bukan ESLint) — CI linting saat ini tidak aktif (lihat audit #4), harus diaktifkan kembali sebelum keluar dari UAT.
-- Test runner: Vitest (wired ke Storybook interaction test) — `jest.config.ts` ada tapi tidak efektif (nol test file, environment default salah).
+- Test runner: Vitest — project `unit` (jsdom, `lib/*.ts` + hooks, `npm test`) dan project `storybook` (interaction test). `jest.config.ts` sudah dihapus (2026-08-02).

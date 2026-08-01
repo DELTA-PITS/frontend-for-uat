@@ -39,38 +39,37 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 The PITS V2 Frontend application has the following directory tree structure:
 
 ```text
-V2-Frontend/
-├── .github/             # GitHub action workflows and CI/CD pipelines
-├── .storybook/          # Storybook environment configuration
-├── app/                 # Next.js App Router entry points and routes
-│   ├── api/             # API routes (authentication, document upload/processing)
-│   ├── dev/             # Developer utilities and sandbox page
-│   ├── login/           # Login screen
-│   ├── publisher/       # Publisher registration and trustmark portal page
-│   ├── result/          # Verification results pages
-│   ├── verify/          # User-facing verification portal page
-│   ├── layout.tsx       # Root Next.js layout (provides common HTML structure)
-│   └── page.tsx         # App main page (handles routing/redirections)
-├── components/          # Shared and modular UI components
-│   ├── features/        # High-level feature components
-│   │   ├── auth/        # Login states and session controls
-│   │   ├── result/      # Verification outputs (e.g., loading states, status details)
-│   │   └── upload/      # File dropping and document previews
-│   ├── layout/          # Structural components (e.g., Header navigation)
-│   └── ui/              # Reusable presentational components (buttons, cards, icons)
-├── hooks/               # Custom React hooks (e.g., useUpload)
-├── lib/                 # Core utility helpers and parsing tools
-├── public/              # Static public resources (logos, background images, SVGs)
-├── stories/             # Storybook stories for UI component testing
-├── styles/              # Global styling variables and CSS entrypoint (globals.css)
-├── types/               # Common TypeScript interface definitions
-├── auth.ts              # NextAuth authentication config
-├── jest.config.ts       # Jest testing configuration
-├── next.config.ts       # Next.js application configurations
-├── postcss.config.mjs   # CSS PostCSS settings (Tailwind / DaisyUI)
-├── proxy.ts             # Development proxy settings
-├── tsconfig.json        # TypeScript compile configurations
-└── vitest.config.ts     # Vitest configuration for unit/integration tests
+frontend-for-uat/
+├── .github/              # GitHub action workflows and CI/CD pipelines
+├── .storybook/           # Storybook environment configuration
+├── _docs/                # Project documentation (BRD, SRS, architecture, backlog, status log)
+├── app/                  # Next.js App Router entry points and routes
+│   ├── api/              # API routes: auth, register, verify, records, _lib (shared server helpers)
+│   ├── dashboard/        # Publisher dashboard (registered documents, auth-only)
+│   ├── publisher/        # Publisher registration/upload portal page (auth-only)
+│   ├── result/           # Verification/registration result pages (success, failure)
+│   ├── verify/           # Placeholder route — the real public verify UI lives at app/page.tsx (root `/`)
+│   ├── layout.tsx        # Root Next.js layout (provides common HTML structure)
+│   └── page.tsx          # Public Verify page (root `/`)
+├── components/           # Shared and modular UI components
+│   ├── auth/             # Session/login-state components
+│   ├── common/           # Shared building blocks (OperationCard, PageHero, InfoListCard, Dropzone, ...)
+│   ├── dashboard/        # Dashboard-only components (records table, detail drawer, stats)
+│   ├── layout/           # Structural components (Header, PageContainer)
+│   ├── register/         # Register (Publisher upload) page components
+│   └── verify/           # Verify page components (Tips, FAQ, HowItWorks)
+├── hooks/                # Custom React hooks (e.g., useUpload)
+├── lib/                  # Core utility helpers, i18n dictionary, and parsing tools
+├── public/               # Static public resources (logos, background images, SVGs)
+├── stories/              # Storybook stories for UI component testing
+├── styles/               # Global styling variables and CSS entrypoint (globals.css)
+├── types/                # Common TypeScript interface definitions
+├── auth.ts               # NextAuth authentication config
+├── next.config.ts        # Next.js application configurations
+├── postcss.config.mjs    # CSS PostCSS settings (Tailwind / DaisyUI)
+├── proxy.ts              # Next.js 16 middleware (route protection for /publisher, /dashboard)
+├── tsconfig.json         # TypeScript compile configurations
+└── vitest.config.ts      # Vitest configuration — "unit" project (lib/hooks tests) + "storybook" project
 ```
 
 ---
@@ -110,7 +109,7 @@ npm run start
 
 ## Testing
 
-Running tests is an important part of the development process. This project uses [`Jest`](https://jestjs.io/) as the testing framework. You can run the tests with the following command:
+Running tests is an important part of the development process. This project uses [`Vitest`](https://vitest.dev/) as the testing framework — unit tests for `lib/*.ts` and hooks run under the `unit` project (jsdom environment), configured in `vitest.config.ts`. You can run them with:
 
 ```bash
 npm run test
@@ -135,7 +134,7 @@ Running the above command will open storybook in `http://localhost:6006`.
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs) - learn about Tailwind CSS features and API.
 - [daisyUI Documentation](https://daisyui.com/docs) - learn about daisyUI features and API.
 - [Oxlint Documentation](https://oxc.rs/docs) - learn about Oxlint features and API.
-- [Jest Documentation](https://jestjs.io/docs) - learn about Jest features and API.
+- [Vitest Documentation](https://vitest.dev/guide/) - learn about Vitest features and API.
 - [TypeScript Documentation](https://www.typescriptlang.org/docs) - learn about TypeScript features and API.
 - [React Documentation](https://react.dev/docs) - learn about React features and API.
 - [React Hooks Documentation](https://react.dev/hooks) - learn about React Hooks features and API.

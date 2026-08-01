@@ -104,18 +104,19 @@ Acceptance Criteria:
 
 ## 9. Risiko
 
-| Risiko | Kemungkinan | Dampak | Mitigasi |
-|--------|-------------|--------|----------|
-| Component tree duplikat (`features/`, `ui/` dead code) menyesatkan developer baru | Tinggi | Sedang | Putuskan: hapus dead code atau selesaikan migrasi (lihat `tasks/tasks.md`) |
-| Tidak ada validasi upload di client — UX buruk & beban penuh ke backend | Tinggi | Sedang-Tinggi | Tambahkan `accept`/`maxSize` di Dropzone |
-| Data hasil (hash, record ID) di query string URL | Sedang | Sedang | Pindahkan ke state yang tidak tampil di URL |
+| Risiko | Kemungkinan | Dampak | Mitigasi | Status |
+|--------|-------------|--------|----------|--------|
+| Component tree duplikat (`features/`, `ui/` dead code) menyesatkan developer baru | Tinggi | Sedang | Putuskan: hapus dead code atau selesaikan migrasi | ✅ Resolved 2026-08-01 — dead code dihapus |
+| Tidak ada validasi upload di client — UX buruk & beban penuh ke backend | Tinggi | Sedang-Tinggi | Tambahkan `accept`/`maxSize` di Dropzone | ✅ Resolved 2026-08-01 |
+| Tidak ada validasi upload di server — client bisa dilewati (curl, request dimodifikasi) | Tinggi | Tinggi | Tambahkan validasi tipe/ukuran di `parseUpload.ts` | ✅ Resolved 2026-08-02 |
+| Data hasil (hash, record ID) di query string URL | Sedang | Sedang | Pindahkan ke state yang tidak tampil di URL | ✅ Resolved 2026-08-02 — dipindah ke `sessionStorage` |
 
 ## 10. Keputusan
 
 | Keputusan | Pilihan yang Dipertimbangkan | Pilihan yang Dipilih | Alasan |
 |-----------|-------------------------------|-------------------------|--------|
 | Auth di frontend | Custom session, NextAuth | NextAuth + Keycloak provider | Konsisten dengan backend yang sudah pakai Keycloak. Detail lihat ADR-001. |
-| Test runner unit | Jest, Vitest | (belum final — dua-duanya ada, hanya Vitest yang wired ke Storybook) | Perlu keputusan eksplisit, lihat `tasks/tasks.md` |
+| Test runner unit | Jest, Vitest | Vitest | Sudah wired ke Storybook interaction test; `jest.config.ts` dihapus 2026-08-02, project `unit` (jsdom) ditambah untuk unit test `lib/*.ts`/hooks |
 
 ## 11. Sign-off
 

@@ -41,11 +41,11 @@ Route: `app/publisher/page.tsx` (upload), `app/dashboard/page.tsx` (riwayat), `a
 Publisher → /login (Keycloak via NextAuth) → session tersimpan (auth.ts)
   → /publisher (proteksi via proxy.ts + authorized callback)
   → Dropzone (components/common/Dropzone.tsx) → onDrop → hooks/useUpload.ts
-  → POST /api/register (route.ts, server-side, memakai session token)
-  → parseUpload.ts (validasi minimal: file instanceof File)
+  → POST /api/register (route.ts, server-side, memakai requireAccessToken() dari _lib/requireAuth.ts)
+  → parseUpload.ts (validasi: PDF only via ekstensi+MIME, max 20MB — 413/415 kalau gagal)
   → forward ke backend PITS: POST {PITS_BACKEND_REGISTER_URL}
-  → hasil di-serialize ke query string via lib/resultPayload.ts
-  → router.push ke /result/success atau /result/failure
+  → hasil disimpan di sessionStorage via lib/resultPayload.ts (bukan query string lagi, sejak 2026-08-02)
+  → router.push ke /result/success atau /result/failure (href polos, tanpa data)
 ```
 
 ## Perubahan API / Interface (route Next.js, bukan backend)
@@ -62,10 +62,12 @@ Response : diteruskan dari backend PITS (lihat backend-for-uat/_docs/srs/fr-docu
 ```
 METHOD   : GET
 URL      : /api/records
-Auth     : session NextAuth
+Auth     : requireAccessToken() (_lib/requireAuth.ts)
 
-Response : diteruskan dari backend GET /api/v1/records — dipanggil dari app/dashboard/page.tsx
-           via client-side useEffect (lihat catatan performa di Open Questions)
+⚠️ Route ini TIDAK dipanggil dari mana pun saat ini. app/dashboard/page.tsx (Server
+   Component) fetch PITS_BACKEND_RECORDS_URL langsung, server-side, tanpa lewat
+   route internal ini. Dipertahankan untuk konsistensi API surface, tapi secara
+   fungsional dead code — pertimbangkan dihapus di sesi refactor berikutnya.
 ```
 
 ## Business Logic
@@ -76,8 +78,8 @@ RULE-2: PITS_ISSUER_ID diambil dari env; kalau tidak diset, fallback ke DEFAULT_
         hardcoded di app/api/register/route.ts:6 — RISIKO silent misconfiguration,
         lihat audit #8. Jangan hilangkan fallback tanpa memastikan env var
         production selalu diset.
-RULE-3: Hasil register (sukses/gagal) di-serialize ke query string payload — lihat
-        audit #7 untuk risiko privasi ini.
+RULE-3: Hasil register (sukses/gagal) disimpan di sessionStorage (lib/resultPayload.ts),
+        bukan query string — diperbaiki 2026-08-02, lihat tasks.md #7.
 ```
 
 ## Permission & Access Control
@@ -91,8 +93,8 @@ RULE-3: Hasil register (sukses/gagal) di-serialize ke query string payload — l
 
 | Field | Aturan | Layer | Pesan Error |
 |-------|--------|-------|--------------|
-| file | `file instanceof File`, filename string | server (`parseUpload.ts`) | generic error |
-| file | **belum ada** validasi tipe/ukuran | client (`Dropzone.tsx`) | — (gap, lihat Open Questions) |
+| file | PDF only (ekstensi+MIME), max 20MB | server (`parseUpload.ts`) | 415 (tipe salah) / 413 (terlalu besar) |
+| file | PDF only (`accept`), max 20MB (`maxSize`) | client (`Dropzone.tsx`) | pesan inline via `t.dropzone.errorInvalidType`/`errorTooLarge` |
 
 ## Testing Plan
 
@@ -103,7 +105,7 @@ RULE-3: Hasil register (sukses/gagal) di-serialize ke query string payload — l
 □ Akses /publisher tanpa login → redirect ke /login
 □ Dashboard menampilkan record sesuai issuer yang login
 ```
-*(Belum ada test otomatis untuk skenario di atas — lihat `_docs/audit/audit-2026-07-31.md` #3.)*
+*(Skenario di atas masih manual — belum ada E2E test. Unit test Vitest sudah menutupi logic pendukungnya: `hooks/useUpload.test.ts` (submit register sukses/`already_existed`/tanpa file), `lib/resultPayload.test.ts`, `lib/uploadErrorMessage.test.ts`.)*
 
 ---
 
@@ -121,9 +123,9 @@ RULE-3: Hasil register (sukses/gagal) di-serialize ke query string payload — l
 
 ## Security Considerations
 
-- [x] Route dilindungi auth
-- [ ] Validasi tipe/ukuran file client-side — **belum ada**
-- [ ] Data hasil tidak ditaruh di query string — **saat ini masih ditaruh**, perlu diperbaiki
+- [x] Route dilindungi auth (`requireAccessToken()` di handler + `authorized()` callback di halaman)
+- [x] Validasi tipe/ukuran file client-side DAN server-side
+- [x] Data hasil tidak ditaruh di query string (dipindah ke `sessionStorage`, 2026-08-02)
 
 ## Open Questions
 
