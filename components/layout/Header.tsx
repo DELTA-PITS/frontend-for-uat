@@ -37,7 +37,12 @@ export function Header({ session }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const isLoggedIn = Boolean(session?.user);
+  // `session.error` (e.g. 'RefreshAccessTokenError') means the Keycloak
+  // refresh token failed — the session cookie/JWT may still technically
+  // exist with stale user info, but for UI purposes this must read as
+  // logged-out, otherwise the navbar shows "Dashboard"/"Keluar" while the
+  // page content says "sesi berakhir, masuk kembali" — a confusing mismatch.
+  const isLoggedIn = Boolean(session?.user) && !session?.error;
 
   // Border only appears once the page has scrolled — a flat top edge reads
   // as less "boxed in" than an always-on border under the navbar.
