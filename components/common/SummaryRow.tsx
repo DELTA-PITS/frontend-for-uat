@@ -24,11 +24,11 @@ export default function SummaryRow({
 }: SummaryRowProps) {
   return (
     <div className="flex flex-row items-start justify-between gap-1 pb-3 border-b border-base-300 dark:border-gray-500">
-      <span className="flex text-lg items-center font-semibold text-secondary gap-3 shrink-0">
+      <span className="flex text-base items-center font-semibold text-secondary gap-3 shrink-0">
         <FilledIcon icon={icon} />
         {label}:
       </span>
-      <span className="text-lg text-right text-base-content break-all min-w-0 pt-1">
+      <span className="text-base text-right text-base-content break-all min-w-0 pt-1">
         {value ?? 'N/A'}
       </span>
     </div>

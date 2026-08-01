@@ -6,6 +6,7 @@ import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import { useEffect, useState } from 'react';
 import type { UploadMode } from '@/types/files.types';
 import CloseIcon from '@mui/icons-material/Close';
+import { useLocale } from '@lib/i18n/LocaleContext';
 
 interface DocumentPreviewProps {
   /** The File object to preview, or null if no file is selected */
@@ -16,11 +17,6 @@ interface DocumentPreviewProps {
   onClear?: () => void;
 }
 
-const STATUS_LABEL: Record<UploadMode, string> = {
-  register: 'Ready for registration',
-  verify: 'Ready for verification',
-};
-
 /**
  * Renders a compact, single-row preview of the selected file with size, status, and clear action.
  * @param file - The File object to preview, or null if no file is selected.
@@ -29,6 +25,8 @@ const STATUS_LABEL: Record<UploadMode, string> = {
  * @returns The document preview component.
  */
 export default function DocumentPreview({ file, mode, onClear }: DocumentPreviewProps) {
+  const { t } = useLocale();
+  const statusLabel = mode === 'register' ? t.documentPreview.readyRegister : t.documentPreview.readyVerify;
   const [preview, setPreview] = useState<{
     name: string;
     size: string;
@@ -62,7 +60,7 @@ export default function DocumentPreview({ file, mode, onClear }: DocumentPreview
 
           {/* File name + size */}
           <div className="flex flex-col min-w-0 flex-1 text-left">
-            <span className="text-md font-normal text-base-content leading-tight truncate">
+            <span className="text-sm font-normal text-base-content leading-tight truncate">
               {preview.name}
             </span>
             <span className="text-xs text-base-content/80 leading-tight">
@@ -76,10 +74,10 @@ export default function DocumentPreview({ file, mode, onClear }: DocumentPreview
             className="flex items-center gap-1.5 shrink-0 px-3 py-1 rounded-md text-[1rem] font-medium whitespace-nowrap leading-none bg-success/20 text-success"
             style={{ fontFamily: 'var(--font-jakarta), sans-serif' }}
             role="status"
-            aria-label={STATUS_LABEL[mode]}
+            aria-label={statusLabel}
           >
             <CheckCircleOutlinedIcon style={{ fontSize: '1.5rem' }} aria-hidden="true" />
-            <span className="leading-none pb-0.5">{STATUS_LABEL[mode]}</span>
+            <span className="leading-none pb-0.5">{statusLabel}</span>
           </div>
 
           {/* Dismiss button */}

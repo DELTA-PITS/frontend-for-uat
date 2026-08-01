@@ -17,23 +17,23 @@
   --color-base-100: #F9F9F9;
   --color-base-200: oklch(97% 0 0);
   --color-base-300: #C3BEBE;
-  --color-base-content: #8B8484;
-  --color-primary: #00B5AA;
-  --color-primary-content: oklch(97% 0.014 308.299);
-  --color-secondary: #00336C;
-  --color-secondary-content: oklch(97% 0.013 17.38);
-  --color-accent: #0093DD;
-  --color-accent-content: oklch(98% 0.026 102.212);
+  --color-base-content: #3F4854;
+  --color-primary: #E62F2A;
+  --color-primary-content: #ffffff;
+  --color-secondary: #17384C;
+  --color-secondary-content: #ffffff;
+  --color-accent: #3AA6FF;
+  --color-accent-content: #00243d;
   --color-neutral: #A3A3A3;
   --color-neutral-content: oklch(98% 0 0);
-  --color-info: oklch(74% 0.16 232.661);
-  --color-info-content: oklch(29% 0.066 243.157);
-  --color-success: oklch(77% 0.152 181.912);
-  --color-success-content: oklch(27% 0.046 192.524);
+  --color-info: #3AA6FF;
+  --color-info-content: #00243d;
+  --color-success: #0F9D58;
+  --color-success-content: #ffffff;
   --color-warning: oklch(85% 0.199 91.936);
   --color-warning-content: oklch(28% 0.066 53.813);
-  --color-error: oklch(70% 0.191 22.216);
-  --color-error-content: oklch(25% 0.092 26.042);
+  --color-error: #991B1B;
+  --color-error-content: #ffffff;
   --radius-selector: 0.5rem;
   --radius-field: 0.5rem;
   --radius-box: 0.5rem;
@@ -53,22 +53,22 @@
   --color-base-200: #121b2e;
   --color-base-300: #1e2942;
   --color-base-content: #cbd5e1;
-  --color-primary: #00B5AA;
-  --color-primary-content: #0a0f1d;
+  --color-primary: #FF6B61;
+  --color-primary-content: #2a0805;
   --color-secondary: #f8fafc;
   --color-secondary-content: #0a0f1d;
-  --color-accent: #0093DD;
-  --color-accent-content: #ffffff;
+  --color-accent: #3AA6FF;
+  --color-accent-content: #001b33;
   --color-neutral: #1e293b;
   --color-neutral-content: #f8fafc;
-  --color-info: oklch(74% 0.16 232.661);
-  --color-info-content: #0a0f1d;
-  --color-success: oklch(77% 0.152 181.912);
-  --color-success-content: #0a0f1d;
+  --color-info: #3AA6FF;
+  --color-info-content: #001b33;
+  --color-success: #22C55E;
+  --color-success-content: #052e14;
   --color-warning: oklch(85% 0.199 91.936);
   --color-warning-content: #0a0f1d;
-  --color-error: oklch(70% 0.191 22.216);
-  --color-error-content: #0a0f1d;
+  --color-error: #F87171;
+  --color-error-content: #450a0a;
   --radius-selector: 0.5rem;
   --radius-field: 0.5rem;
   --radius-box: 0.5rem;
@@ -82,9 +82,11 @@
 
 :root {
   --background: #F9F9F9;
-  --foreground: #111111;
-  --primary: #00B5AA;
+  --foreground: #3F4854;
+  --primary: #E62F2A;
   --card-background: #ffffff;
+  --ink-secondary: #667085;
+  --ink-muted: #98A2B3;
 }
 
 @theme {
@@ -92,6 +94,8 @@
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-card: var(--card-background);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui;
   --font-heading: var(--font-jakarta), sans-serif;
 }
@@ -100,8 +104,10 @@
   :root {
     --background: #0a0f1d;
     --foreground: #f8fafc;
-    --primary: #00B5AA;
+    --primary: #FF6B61;
     --card-background: #121b2e;
+    --ink-secondary: #94a3b8;
+    --ink-muted: #64748b;
   }
 }
 
@@ -109,12 +115,13 @@
   font-family: var(--font-heading);
 }
 
-h2 {
-  font-size: 2rem;
-}
-
-h4 {
-  font-size: 1.25rem;
+/* Focus state — applies to every interactive element (buttons, links, inputs,
+   custom clickable divs) so keyboard navigation is consistent everywhere,
+   not just on elements that happen to be a native <button>/<input>. */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
 }
 
 body {

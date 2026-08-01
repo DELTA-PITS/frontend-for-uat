@@ -45,10 +45,10 @@ export default function OperationCard({
         </div>
       ) : null}
       <section className="flex flex-col text-center">
-        <h2 className="card-title text-xxl text-secondary justify-center p-1">{title}</h2>
-        <h4 className="w-full text-secondary text-sm p-2">{description}</h4>
+        <h2 className="card-title text-lg text-secondary justify-center p-1">{title}</h2>
+        <h4 className="w-full text-secondary text-xs p-2">{description}</h4>
       </section>
-      <section className={`card w-full bg-card card-xl px-6 sm:px-10 py-5 shadow-md shadow-black/10 ${className ?? ''}`.trim()}>
+      <section className={`card w-full bg-base-100 card-xl border border-base-300 px-6 sm:px-10 py-6 transition-colors hover:border-primary/40 ${className ?? ''}`.trim()}>
         <div className="card-body w-full gap-4">
           {children}
           {actions ? (

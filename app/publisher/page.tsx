@@ -1,19 +1,47 @@
 'use client';
 
+import { useFileUpload } from '@hooks/useUpload';
 import FileUpload from '@components/FileUpload';
+import RegisterHero from '@components/register/RegisterHero';
+import MetadataCard from '@components/register/MetadataCard';
+import RequirementCard from '@components/register/RequirementCard';
+import BeforeSubmitChecklist from '@components/register/BeforeSubmitChecklist';
+import { useLocale } from '@lib/i18n/LocaleContext';
 
 /**
- * Publisher Portal landing page component that provides an interface for users to upload files for registration in the Public Trust Information System (PITS).
- * Uses the FileUpload component to manage the file upload workflow for document registration.
- * @returns A React component that serves as the landing page for the publisher portal, allowing users to upload files for registration in PITS.
+ * Publisher Portal landing page — deliberately styled as an institutional
+ * workflow (navy accent, metadata summary, permanence warnings) rather than
+ * a copy of the public Verify page, even though both share the same
+ * underlying upload mechanism.
  */
 export default function PublisherPortal() {
+  const { file, isUploading, handleFileChange, handleSubmit } = useFileUpload('register');
+  const { t } = useLocale();
+
   return (
-    <FileUpload
-      mode="register"
-      title="Register New Document"
-      description="Upload and register a new document to the system"
-      buttonLabel="Submit Document"
-    />
+    <div className="flex w-full flex-col">
+      <RegisterHero />
+
+      <div className="px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <FileUpload
+          mode="register"
+          title={t.registerForm.title}
+          description={t.registerForm.description}
+          buttonLabel={t.registerForm.button}
+          accent="secondary"
+          file={file}
+          isUploading={isUploading}
+          onFileChange={handleFileChange}
+          onSubmit={handleSubmit}
+          extraBeforeSubmit={file ? <BeforeSubmitChecklist /> : undefined}
+        />
+        {!isUploading ? (
+          <>
+            <MetadataCard file={file} />
+            <RequirementCard />
+          </>
+        ) : null}
+      </div>
+    </div>
   );
 }

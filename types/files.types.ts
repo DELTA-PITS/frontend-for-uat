@@ -46,3 +46,13 @@ export interface ResultPayload {
   response?: ApiResponse;
   error?: string;
 }
+
+export type RecordItem = {
+  record_id: string;
+  filename: string | null;
+  content_hash: string;
+  transaction_hash: string;
+  issuer_id: string;
+  content_type: string | null;
+  created_at: string;
+};

@@ -1,60 +1,44 @@
-'use client';
+import { auth } from '@/auth';
+import DashboardView from '@components/dashboard/DashboardView';
+import DashboardHeader from '@components/dashboard/DashboardHeader';
+import DashboardErrorAlert, { type DashboardErrorCode } from '@components/dashboard/DashboardErrorAlert';
+import type { RecordItem } from '@/types/files.types';
 
-import { useEffect, useState } from 'react';
+const BACKEND_RECORDS_URL = process.env.PITS_BACKEND_RECORDS_URL;
 
-type RecordItem = {
-  record_id: string;
-  filename: string | null;
-  content_hash: string;
-  transaction_hash: string;
-  issuer_id: string;
-  created_at: string;
-};
+async function fetchRecords(): Promise<{ records: RecordItem[]; errorCode: DashboardErrorCode | null }> {
+  if (!BACKEND_RECORDS_URL) {
+    return { records: [], errorCode: 'no_backend' };
+  }
 
-export default function DashboardPage() {
-  const [records, setRecords] = useState<RecordItem[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const session = await auth();
+  if (!session?.accessToken) {
+    return { records: [], errorCode: 'no_token' };
+  }
 
-  useEffect(() => {
-    fetch('/api/records')
-      .then(async (response) => {
-        const body = await response.json();
-        if (!response.ok) throw new Error(body.message ?? 'Could not load records');
-        setRecords(body.records ?? []);
-      })
-      .catch((err: Error) => setError(err.message));
-  }, []);
+  try {
+    const response = await fetch(BACKEND_RECORDS_URL, {
+      headers: { Authorization: `Bearer ${session.accessToken}` },
+      cache: 'no-store',
+    });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      return { records: [], errorCode: 'load_failed' };
+    }
+    return { records: payload?.records ?? [], errorCode: null };
+  } catch {
+    return { records: [], errorCode: 'conn_failed' };
+  }
+}
+
+export default async function DashboardPage() {
+  const { records, errorCode } = await fetchRecords();
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-6 py-10">
-      <div className="mb-8 flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-primary">Registered Documents</h1>
-          <p className="mt-2 text-base-content/70">Registry records and their blockchain transaction evidence.</p>
-        </div>
-        <a className="btn btn-primary" href="/publisher">Register document</a>
-      </div>
+    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <DashboardHeader />
 
-      {error ? <div className="alert alert-error">{error}</div> : null}
-      {!error && records.length === 0 ? <div className="alert">No registered documents found.</div> : null}
-
-      {records.length > 0 ? (
-        <div className="overflow-x-auto rounded-xl border border-base-300 bg-base-100">
-          <table className="table">
-            <thead><tr><th>Filename</th><th>Registered</th><th>Content hash</th><th>Transaction</th></tr></thead>
-            <tbody>
-              {records.map((record) => (
-                <tr key={record.record_id}>
-                  <td>{record.filename ?? 'Not provided'}</td>
-                  <td>{new Date(record.created_at).toLocaleString()}</td>
-                  <td className="max-w-xs break-all font-mono text-xs">{record.content_hash}</td>
-                  <td className="max-w-xs break-all font-mono text-xs">{record.transaction_hash}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
+      {errorCode ? <DashboardErrorAlert code={errorCode} /> : <DashboardView records={records} />}
     </main>
   );
 }

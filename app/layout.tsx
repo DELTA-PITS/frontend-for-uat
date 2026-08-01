@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import { Header } from '@components/layout/Header';
+import { LocaleProvider } from '@lib/i18n/LocaleContext';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 import "@styles/globals.css";
 
@@ -25,11 +26,13 @@ export default async function RootLayout({ children }: { readonly children: Reac
       className={`h-full antialiased ${jakarta.variable} ${inter.variable}`}
     >
       <body className="min-h-full flex flex-col">
-        <Header session={session} />
-        <main className="flex-1 flex items-center justify-center">
-          {children}
-        </main>
-        <footer />
+        <LocaleProvider>
+          <Header session={session} />
+          <main className="flex-1 flex items-center justify-center">
+            {children}
+          </main>
+          <footer />
+        </LocaleProvider>
       </body>
     </html>
   );

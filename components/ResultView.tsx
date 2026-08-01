@@ -4,18 +4,19 @@ import { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Card from '@components/common/OperationCard';
 import OperationButton from '@components/common/OperationButton';
-import SummaryRow from '@components/common/SummaryRow';
+import CopyButton from '@components/dashboard/CopyButton';
 import { parseResultPayload } from '@/lib/resultPayload';
 import { getUploadFailureMessage } from '@/lib/uploadErrorMessage';
 import { formatDisplayDateTime } from '@lib/dateFormat';
 import type { RegisterData, VerifyData, RawData, ResultStatus } from '@/types/';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import TagOutlinedIcon from '@mui/icons-material/TagOutlined';
-import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined';
 import CheckIcon from '@mui/icons-material/Check';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { BgHeader } from '@components/BgHeader';
+import CloseIcon from '@mui/icons-material/Close';
+import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
+import SearchOffOutlinedIcon from '@mui/icons-material/SearchOffOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import { useLocale } from '@lib/i18n/LocaleContext';
+import type { Dictionary } from '@lib/i18n/translations';
 
 interface ResultViewProps {
   status: ResultStatus;
@@ -64,10 +65,50 @@ function getVerifyData(value: unknown): VerifyResultData {
   };
 }
 
+function DetailRow({
+  label,
+  value,
+  copyable,
+  notAvailable,
+}: {
+  label: string;
+  value: string | null;
+  copyable?: boolean;
+  notAvailable: string;
+}) {
+  const display = value && value.trim().length > 0 ? value : notAvailable;
+  return (
+    <div className="flex items-start justify-between gap-3 border-b border-base-300 py-3 last:border-b-0">
+      <span className="shrink-0 text-xs text-ink-secondary">{label}</span>
+      <div className="flex min-w-0 items-center gap-1">
+        <span className="min-w-0 break-all text-right text-xs font-medium text-base-content">{display}</span>
+        {copyable && value ? <CopyButton value={value} label={label} /> : null}
+      </div>
+    </div>
+  );
+}
+
+function StatusIcon({ tone, icon }: { tone: 'success' | 'error'; icon: React.ReactNode }) {
+  const toneClass = tone === 'success' ? 'bg-success/10 text-success' : 'bg-error/10 text-error';
+  return (
+    <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full ${toneClass}`}>
+      {icon}
+    </div>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">{children}</p>;
+}
+
 /**
- * Renders the result view for a given operation status.
+ * Renders the result view for a given operation status. Styled as one clear
+ * card per outcome (registered / verified / not found / error) rather than
+ * a generic green alert box — the result of a trust-system check should
+ * feel like the main event of the page, not a toast.
  */
 export default function ResultView({ status }: ResultViewProps) {
+  const { t, locale }: { t: Dictionary; locale: 'id' | 'en' } = useLocale();
   const searchParams = useSearchParams();
   const payload = useMemo(() => parseResultPayload(searchParams.get('payload')), [searchParams]);
 
@@ -82,158 +123,114 @@ export default function ResultView({ status }: ResultViewProps) {
     source: payload?.source ?? 'register',
     response: payload?.response,
     error: payload?.error,
+    t,
   });
 
   const backHref = isRegistration ? '/publisher' : '/';
-  const backLabel = isRegistration ? 'Back to Upload' : 'Back to Home';
+  const backLabel = isRegistration ? t.result.backToRegister : t.result.backToHome;
 
   return (
     <Card
-      headerContent={BgHeader(status, payload?.source)}
-      title={
-        status === 'success'
-          ? isFileVerification
-            ? 'Document Verified Successfully!'
-            : 'Document Registered Successfully!'
-          : isFileVerification
-            ? 'Failed to Verify a Document'
-            : 'Failed to Register a Document'
-      }
-      description={
-        status === 'success'
-          ? isFileVerification
-            ? 'The document matches the registered hash.'
-            : 'The registration process succeeded'
-          : isFileVerification
-            ? 'The verification process could not be completed.'
-            : ''
-      }
+      title=""
+      description=""
       className="mx-auto my-auto"
-      containerClassName="lg:max-w-6xl"
+      containerClassName="lg:max-w-2xl"
     >
-      {payload?.status !== status ? (
-        <p className="text-warning">This payload belongs to the other result page.</p>
-      ) : null}
+      {payload?.status !== status ? <p className="text-warning">{t.result.mismatchWarning}</p> : null}
 
       {status === 'success' ? (
         isRegistration ? (
-          <div className="space-y-10 text-sm">
-            <SummaryRow
-              icon={<CalendarMonthOutlinedIcon fontSize="medium" />}
-              label="Created at"
-              value={formatDisplayDateTime(registerData.created_at)}
-            />
+          <div className="flex flex-col gap-6 text-left">
+            <div className="flex flex-col items-center gap-3 text-center">
+              <StatusIcon tone="success" icon={<CheckIcon style={{ fontSize: '2.5rem' }} />} />
+              <h1 className="text-3xl font-bold text-secondary">{t.result.registerSuccessTitle}</h1>
+              <p className="text-xs text-ink-secondary">{t.result.registerSuccessBody}</p>
+            </div>
 
-            <SummaryRow icon={<TagOutlinedIcon fontSize="medium" />} label="Record ID" value={registerData.record_id} />
+            <div className="rounded-xl border border-base-300 p-5">
+              <SectionLabel>{t.result.documentSection}</SectionLabel>
+              <DetailRow label={t.result.filename} value={registerData.filename} notAvailable={t.result.notAvailable} />
+              <DetailRow
+                label={t.result.registeredAt}
+                value={formatDisplayDateTime(registerData.created_at, locale)}
+                notAvailable={t.result.notAvailable}
+              />
+              <DetailRow label={t.result.recordId} value={registerData.record_id} copyable notAvailable={t.result.notAvailable} />
 
-            <SummaryRow
-              icon={<StorageOutlinedIcon fontSize="medium" />}
-              label="Content Hash"
-              value={registerData.content_hash}
-            />
-
-            <SummaryRow icon={<TagOutlinedIcon fontSize="medium" />} label="Filename" value={registerData.filename} />
-            <SummaryRow icon={<StorageOutlinedIcon fontSize="medium" />} label="Blockchain Transaction" value={registerData.transaction_hash} />
+              <div className="mt-5">
+                <SectionLabel>{t.result.blockchainSection}</SectionLabel>
+              </div>
+              <DetailRow label={t.result.contentHash} value={registerData.content_hash} copyable notAvailable={t.result.notAvailable} />
+              <DetailRow label={t.result.txHash} value={registerData.transaction_hash} copyable notAvailable={t.result.notAvailable} />
+            </div>
           </div>
         ) : isFileVerification ? (
-          <div className="space-y-5 text-left">
-            <h3 className="text-lg font-bold text-primary">Registration Details</h3>
+          <div className="flex flex-col gap-6 text-left">
+            <div className="flex flex-col items-center gap-3 text-center">
+              <StatusIcon tone="success" icon={<GppGoodOutlinedIcon style={{ fontSize: '2.5rem' }} />} />
+              <h1 className="text-3xl font-bold text-secondary">{t.result.verifySuccessTitle}</h1>
+              <p className="max-w-sm text-xs text-ink-secondary">{t.result.verifySuccessBody}</p>
+            </div>
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-
-              <div className="md:col-span-2">
-                <SummaryRow
-                  icon={<TagOutlinedIcon fontSize="medium" />}
-                  label="Record ID"
-                  value={verifyData.record_id}
-                />
-              </div>
-              <div className="md:col-span-2">
-                <SummaryRow
-                  icon={<CalendarMonthOutlinedIcon fontSize="medium" />}
-                  label="Registered at"
-                  value={formatDisplayDateTime(verifyData.created_at)}
-                />
-              </div>
-
-              {/*}
-                  <div className="md:col-span-2"> 
-                  <SummaryRow
-                    icon={<DescriptionOutlinedIcon fontSize="medium" />}
-                    label="Filename"
-                    value={verifyData.filename ?? 'N/A'}
-                  />
-                </div> 
-              */}
-              <div className="md:col-span-2">
-                <SummaryRow
-                  icon={<StorageOutlinedIcon fontSize="medium" />}
-                  label="Content Hash"
-                  value={verifyData.content_hash}
-                />
-              </div>
-                          <div className="md:col-span-2">
-                <SummaryRow
-                  icon={<StorageOutlinedIcon fontSize="medium" />}
-                  label="Blockchain Transaction"
-                  value={verifyData.transaction_hash}
-                />
-              </div>
-</div>
-
-            <div className="flex flex-col gap-4 rounded-xl border border-success/20 bg-success/10 p-4 md:flex-row md:items-center md:justify-between">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-success/15 text-success">
-                  <CheckIcon fontSize="large" />
-                </div>
-
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center gap-2 rounded-xl border border-success/20 bg-success/5 px-4 py-3">
+                <CheckIcon className="text-success" style={{ fontSize: '1.2rem' }} />
                 <div>
-                  <p className="font-semibold text-success">Registered and Unchanged</p>
-
-                  <p className="text-sm text-base-content/70">
-                    The uploaded file matches the registered SHA-256 hash and its blockchain-anchored evidence. This confirms integrity, not the truthfulness of the document content.
-                  </p>
+                  <p className="text-xs text-ink-muted">{t.result.integrity}</p>
+                  <p className="text-xs font-semibold text-success">{t.result.valid}</p>
                 </div>
               </div>
-
-              <div className="rounded-lg border border-success/20 bg-base-100 px-4 py-2 text-sm font-medium text-success">
-                Verified on Blockchain
+              <div className="flex items-center gap-2 rounded-xl border border-success/20 bg-success/5 px-4 py-3">
+                <CheckIcon className="text-success" style={{ fontSize: '1.2rem' }} />
+                <div>
+                  <p className="text-xs text-ink-muted">{t.result.blockchain}</p>
+                  <p className="text-xs font-semibold text-success">{t.result.recorded}</p>
+                </div>
               </div>
+            </div>
+
+            <div className="rounded-xl border border-base-300 p-5">
+              <DetailRow label={t.result.recordId} value={verifyData.record_id} copyable notAvailable={t.result.notAvailable} />
+              <DetailRow
+                label={t.result.registeredAt}
+                value={formatDisplayDateTime(verifyData.created_at, locale)}
+                notAvailable={t.result.notAvailable}
+              />
+              <DetailRow label={t.result.contentHash} value={verifyData.content_hash} copyable notAvailable={t.result.notAvailable} />
+              <DetailRow label={t.result.txHash} value={verifyData.transaction_hash} copyable notAvailable={t.result.notAvailable} />
             </div>
           </div>
         ) : null
       ) : isFileVerification ? (
-        <div className="space-y-6 text-left">
-          <p className="text-xl font-bold text-secondary">What can you do?</p>
-
-          <div className="flex items-start gap-4 border-b border-base-300 pb-6">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
-              <TagOutlinedIcon fontSize="medium" />
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-primary">Check the document details</h4>
-              <p className="mt-1 text-base-content/60">
-                Ensure that the document hash or identifier was entered correctly.
-              </p>
-            </div>
+        <div className="flex flex-col gap-6 text-left">
+          <div className="flex flex-col items-center gap-3 text-center">
+            <StatusIcon tone="error" icon={<SearchOffOutlinedIcon style={{ fontSize: '2.5rem' }} />} />
+            <h1 className="text-3xl font-bold text-secondary">{t.result.notFoundTitle}</h1>
+            <p className="max-w-sm text-xs text-ink-secondary">{t.result.notFoundBody}</p>
           </div>
 
-          <div className="flex items-start gap-4 border-b border-base-300 pb-6">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
-              <SearchOutlinedIcon fontSize="medium" />
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-primary">Check document availability</h4>
-              <p className="mt-1 text-base-content/60">
-                Ensure that the document has already been registered in the system.
-              </p>
-            </div>
+          <div className="rounded-xl border border-base-300 p-5">
+            <p className="mb-3 text-xs font-semibold text-base-content">{t.result.possibleCauses}</p>
+            <ul className="flex flex-col gap-2 text-xs text-ink-secondary">
+              <li>&bull; {t.result.causeWrongFile}</li>
+              <li>&bull; {t.result.causeModified}</li>
+              <li>&bull; {t.result.causeNeverRegistered}</li>
+            </ul>
           </div>
         </div>
       ) : (
-        <p className="text-base-content">{failureMessage}</p>
+        <div className="flex flex-col gap-6 text-left">
+          <div className="flex flex-col items-center gap-3 text-center">
+            <StatusIcon tone="error" icon={<CloseIcon style={{ fontSize: '2.5rem' }} />} />
+            <h1 className="text-3xl font-bold text-secondary">
+              {isRegistration ? t.result.registerFailTitle : t.result.genericErrorTitle}
+            </h1>
+          </div>
+          <div className="flex items-start gap-3 rounded-xl border border-error/20 bg-error/5 p-4">
+            <ErrorOutlineOutlinedIcon className="mt-0.5 shrink-0 text-error" />
+            <p className="text-xs text-base-content">{failureMessage}</p>
+          </div>
+        </div>
       )}
 
       <div className="mt-10 flex justify-center">
