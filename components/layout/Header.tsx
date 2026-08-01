@@ -158,8 +158,10 @@ export function Header({ session }: HeaderProps) {
         </button>
       </div>
 
-      {/* Sub-nav row (desktop/tablet only) — only within the "Layanan Dokumen" section */}
-      {isDocumentSection ? (
+      {/* Sub-nav row (desktop/tablet only) — only within the "Layanan Dokumen" section,
+          and only when there's more than one link to switch between (logged-out visitors
+          only have Verifikasi, so a single-tab row would be pointless). */}
+      {isDocumentSection && documentNavLinks.length > 1 ? (
         <nav className="hidden items-center justify-center gap-8 border-t border-base-300 bg-base-200/40 px-6 sm:flex">
           {documentNavLinks.map(({ label, href, icon: NavIcon }) => {
             const isActive = pathname === href;

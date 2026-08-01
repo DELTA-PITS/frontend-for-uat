@@ -51,7 +51,13 @@ export default function OperationCard({
         </section>
       ) : null}
       <section className={`card w-full rounded-3xl bg-base-100 card-xl border border-base-300 px-6 sm:px-10 py-6 shadow-card transition-colors hover:border-base-content/20 ${className ?? ''}`.trim()}>
-        <div className="card-body w-full gap-4">
+        {/* `[&_p]:grow-0` cancels daisyUI's `.card-body p { flex-grow: 1 }` rule —
+            without it, any <p> nested inside this card that's also a flex item
+            of its own local flex-col container silently stretches to fill that
+            container's height instead of sitting at its natural size (bit us
+            once already inside Dropzone). Fixed here once so no future
+            component nested in an OperationCard has to rediscover it. */}
+        <div className="card-body w-full gap-4 [&_p]:grow-0">
           {children}
           {actions ? (
             <div className="card-actions justify-end">{actions}</div>

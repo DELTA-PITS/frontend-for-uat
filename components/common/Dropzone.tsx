@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { useDropzone, type FileRejection } from 'react-dropzone';
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import { useLocale } from '@lib/i18n/LocaleContext';
 import type { Dictionary } from '@lib/i18n/translations';
 
@@ -24,13 +25,17 @@ export interface DropzoneProps {
    file over the zone (isDragActive), not as permanent decoration. */
 const ACCENT_CLASSES = {
   primary: {
-    idle: 'border-base-300 bg-base-100 hover:bg-base-200 hover:border-base-content/30',
-    active: 'border-primary bg-primary/10 hover:bg-primary/20 hover:border-primary',
+    idle: 'border-base-300 bg-base-100 hover:bg-base-200/60 hover:border-base-content/30',
+    active: 'border-primary bg-primary/5 hover:bg-primary/10',
+    badgeIdle: 'bg-base-200 text-base-content/60',
+    badgeActive: 'bg-primary/10 text-primary',
     text: 'text-primary',
   },
   secondary: {
-    idle: 'border-base-300 bg-base-100 hover:bg-base-200 hover:border-base-content/30',
-    active: 'border-secondary bg-secondary/10 hover:bg-secondary/20 hover:border-secondary',
+    idle: 'border-base-300 bg-base-100 hover:bg-base-200/60 hover:border-base-content/30',
+    active: 'border-secondary bg-secondary/5 hover:bg-secondary/10',
+    badgeIdle: 'bg-base-200 text-base-content/60',
+    badgeActive: 'bg-secondary/10 text-secondary',
     text: 'text-secondary',
   },
 } as const;
@@ -69,30 +74,33 @@ export default function Dropzone({ onFileSelect, accent = 'primary' }: DropzoneP
     <div className="w-full max-w-3xl mx-auto mb-5">
       <div
         {...getRootProps()}
-        className={`flex flex-col items-center justify-center w-full h-40 sm:h-64 border-[1.5px] border-dashed rounded-lg cursor-pointer transition-colors ${isDragActive ? colors.active : colors.idle
+        className={`flex flex-col items-center justify-center gap-3 w-full h-40 sm:h-56 px-6 text-center border rounded-xl cursor-pointer transition-colors ${isDragActive ? colors.active : colors.idle
           }`}
       >
         <input {...getInputProps()} />
 
-        <div className="flex flex-col items-center justify-center pt-5 pb-6 text-base-content/70">
-          <svg className="hidden w-20 h-20 mb-4 sm:block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-          </svg>
+        <span
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors ${isDragActive ? colors.badgeActive : colors.badgeIdle
+            }`}
+        >
+          <CloudUploadOutlinedIcon style={{ fontSize: '1.5rem' }} />
+        </span>
 
-          {isDragActive ? (
-            <p className={`font-semibold ${colors.text}`}>{t.dropzone.dragActive}</p>
-          ) : (
-            <>
-              {/* Drag & drop copy only makes sense with a mouse — on touch devices, lead with the tap action instead */}
-              <p className="mb-1 hidden text-lg text-base-content/90 sm:block">
-                <span className="font-semibold">{t.dropzone.titleStrong}</span> {t.dropzone.titleRest}
-              </p>
-              <p className="mb-1 hidden text-lg text-base-content/80 sm:block">{t.dropzone.or}</p>
-              <p className="text-lg font-semibold text-base-content/90 sm:font-normal">{t.dropzone.browse}</p>
-              <p className="mt-3 text-xs text-base-content/50">{t.dropzone.meta}</p>
-            </>
-          )}
-        </div>
+        {isDragActive ? (
+          <p className={`w-full text-sm font-semibold ${colors.text}`}>{t.dropzone.dragActive}</p>
+        ) : (
+          <>
+            {/* Drag & drop copy only makes sense with a mouse — on touch devices, lead with the tap action instead */}
+            <p className="w-full text-sm text-base-content/80">
+              <span className="hidden sm:inline">
+                <span className="font-semibold text-base-content/90">{t.dropzone.titleStrong}</span>{' '}
+                {t.dropzone.titleRest} {t.dropzone.or}{' '}
+              </span>
+              <span className={`font-semibold ${colors.text}`}>{t.dropzone.browse}</span>
+            </p>
+            <p className="w-full text-xs text-base-content/50">{t.dropzone.meta}</p>
+          </>
+        )}
       </div>
       {rejectionMessage ? (
         <p className="mt-2 text-center text-xs text-error">{rejectionMessage}</p>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useLocale } from '@lib/i18n/LocaleContext';
 
 /**
@@ -29,27 +30,25 @@ export default function FAQSection() {
           return (
             <div
               key={faq.q}
-              className="rounded-2xl border border-base-300 bg-base-100 px-5 py-4 shadow-card transition-colors hover:border-base-content/20"
+              className="overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-card transition-colors hover:border-base-content/20"
             >
               <button
                 type="button"
                 onClick={() => setOpenIndex(isOpen ? null : index)}
                 aria-expanded={isOpen}
-                className="flex w-full cursor-pointer items-center justify-between gap-3 text-left text-base font-medium text-base-content"
+                className="flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left text-base font-medium text-base-content"
               >
                 {faq.q}
-                <span
+                <ExpandMoreIcon
                   className={`shrink-0 text-ink-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                >
-                  ⌄
-                </span>
+                />
               </button>
               <div
                 className="grid transition-[grid-template-rows] duration-200 ease-out"
                 style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
               >
                 <div className="overflow-hidden">
-                  <p className="mt-3 max-w-2xl text-xs text-ink-secondary">{faq.a}</p>
+                  <p className="max-w-2xl px-5 pb-4 text-xs text-ink-secondary">{faq.a}</p>
                 </div>
               </div>
             </div>
