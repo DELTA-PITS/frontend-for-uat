@@ -50,8 +50,11 @@ export function FilledIcon({ icon, className }: { icon: React.ReactNode; classNa
         return !nonColorSuffixes.includes(suffix);
     });
 
-    const bgClass = hasBgColor ? '' : 'bg-primary/10';
-    const textClass = hasTextColor ? '' : 'text-primary';
+    // Default to the neutral secondary (navy) tint, not primary red — most
+    // FilledIcon usages are informational (stats, step numbers), and primary
+    // should stay reserved for genuine CTA/active-state emphasis.
+    const bgClass = hasBgColor ? '' : 'bg-secondary/10';
+    const textClass = hasTextColor ? '' : 'text-secondary';
 
     const mergedClasses = `inline-flex items-center justify-center rounded-full aspect-square p-1.5 ${bgClass} ${textClass} ${className ?? ''}`
         .trim()

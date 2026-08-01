@@ -13,12 +13,12 @@ export default function TipsCard() {
   const { t } = useLocale();
 
   return (
-    <div className="mt-6 w-full rounded-2xl border border-base-300 bg-base-100 p-5">
+    <div className="mt-6 w-full rounded-2xl border border-base-300 bg-base-100 p-5 shadow-card">
       <p className="mb-3 text-xs font-semibold text-base-content">{t.tips.heading}</p>
       <ul className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
         {t.tips.items.map((reason) => (
           <li key={reason} className="flex items-start gap-2 text-xs text-ink-secondary">
-            <CheckCircleOutlinedIcon className="mt-0.5 shrink-0 text-primary" style={{ fontSize: '1.1rem' }} />
+            <CheckCircleOutlinedIcon className="mt-0.5 shrink-0 text-secondary" style={{ fontSize: '1.1rem' }} />
             {reason}
           </li>
         ))}

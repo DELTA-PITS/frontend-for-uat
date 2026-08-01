@@ -4,6 +4,23 @@ File ini diupdate Claude Code **setiap sesi kerja selesai**. Entry terbaru selal
 
 ---
 
+## [2026-08-02 01:00] — Claude Code
+
+- **Progress**: Design Language v2 — audit "bahasa visual" (bukan layout) atas kritik user bahwa PITS masih terasa dashboard 2019–2022, disusun jadi dokumen (`design-language-v2.md`), lalu diterapkan penuh setelah user konfirmasi "lanjut kerjakan 1-4". Diverifikasi type-check, lint, dan visual di browser (termasuk scroll behavior navbar via `getComputedStyle`).
+- **Selesai sesi ini**:
+  - **Background/Surface ditukar perannya**: `base-100` (card) `#F9F9F9`→`#FFFFFF` (putih murni), `base-200` (page bg) `oklch(97% 0 0)`→`#F5F6F8`. Sebelumnya keduanya nyaris sama terang (beda ~2%) sehingga card cuma kelihatan dari border; sekarang card benar-benar "mengambang" dari page background.
+  - **Border dihaluskan**: `base-300` `#C3BEBE`→`#E8E9EC`, ketebalan `1.5px`→`1px` (light mode saja, dark mode belum diaudit — backlog #20). Token baru `--color-divider-strong` ditambah sebagai cadangan (belum dipakai).
+  - **Shadow ditambah ke SEMUA card** (utility class baru `.shadow-card`, `0 1px 2px rgba(15,23,42,.04)` — nyaris tak terlihat sendirian) — **membalikkan prinsip lama** "card border-only, tanpa shadow sama sekali" yang baru ditetapkan 2 sesi lalu. Overlay (drawer) tetap `shadow-2xl`, jauh lebih kuat, supaya beda tingkat elevasi.
+  - **Navbar shadow-on-scroll**: border bawah statis dihapus, diganti `bg-base-100/90 backdrop-blur-sm` + `shadow-sm` yang cuma muncul setelah `scrollY > 4` (state React + scroll listener) — diverifikasi bekerja lewat `getComputedStyle(header).boxShadow` di browser.
+  - **`OperationCard` naik ke `rounded-3xl`** (satu-satunya "hero-level card"), card besar lain tetap `rounded-2xl`.
+  - **Peran warna merah (`primary`) dibatasi drastis**: audit lewat grep menemukan 24 titik pemakaian lintas-peran di 12 file (nav aktif, nav hover, ikon default, border dropzone, hover card/FAQ). Semua diganti netral kecuali CTA/badge/state penting: nav aktif & hover → `bg-base-200`/`text-base-content` (bukan merah), `FilledIcon` default → `bg-secondary/10 text-secondary` (navy, bukan merah — berdampak ke `StatsCards` & `HowItWorks` yang tidak eksplisit override warna), `Dropzone` idle border → netral (`primary` HANYA saat `isDragActive`), hover border card (`OperationCard`/`RecordsTable`/`FAQSection`) → `hover:border-base-content/20`, `CopyButton` hover → netral, `MetadataCard` status "siap dikirim" → `text-success` (bukan primary, karena semantiknya "siap/baik").
+  - **Tipografi dinaikkan lagi**: Page Title 30→32px, Section Title 20→22px — keduanya arbitrary value (`text-[2rem]`, `text-[1.375rem]`) karena tidak match step Tailwind manapun. Card Title/Subsection/Body/Caption SENGAJA tidak diubah (dianggap sudah final dari revisi sebelumnya).
+  - Dokumentasi disinkronkan: `design-language-v2.md` (status PROPOSAL → DITERAPKAN, §11 detail penerapan aktual), `design-system.md` (§2 Warna, §3 Tipografi, §5 Pola Layout, §6 changelog), `tasks/tasks.md`.
+- **Blocker / butuh keputusan dari Ersa**: tidak ada — user sudah konfirmasi eksplisit ("lanjut kerjkan 1-4") untuk semua 4 keputusan yang sebelumnya diajukan sebagai pertanyaan terbuka.
+- **Next steps**: backlog #19 (audit ritme layout & whitespace) dan #20 (audit dark mode mandiri — border/shadow/surface dark belum ikut direvisi di sesi ini) masih terbuka, disepakati butuh sesi tersendiri. Token `--color-divider-strong` tersedia tapi belum dipakai di komponen manapun (#18).
+
+---
+
 ## [2026-08-01 22:00] — Claude Code
 
 - **Progress**: Diskusi layout tablet/`md` (dilanjutkan ke ChatGPT), audit alignment bug (`OperationCard` vs section lain), riset tren desain 2026 (disaring untuk konteks aplikasi pemerintah), dan implementasi motion system — semua sudah diverifikasi (type-check, lint, dan cek visual di browser untuk yang bisa diakses tanpa login). Siap di-commit.

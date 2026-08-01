@@ -37,7 +37,7 @@ export default function CopyButton({ value, label }: CopyButtonProps) {
       onClick={handleCopy}
       aria-label={`Salin ${label}`}
       title={`Salin ${label}`}
-      className="shrink-0 rounded-md p-1 text-base-content/60 transition-colors hover:bg-base-200 hover:text-primary"
+      className="shrink-0 rounded-md p-1 text-base-content/60 transition-colors hover:bg-base-200 hover:text-base-content"
     >
       {copied ? (
         <CheckIcon className="text-success" style={{ fontSize: '1rem' }} />

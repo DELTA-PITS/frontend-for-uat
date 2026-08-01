@@ -14,7 +14,7 @@ export default function DashboardHeader() {
   return (
     <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
       <div>
-        <h1 className="text-3xl font-bold text-secondary">{t.dashboard.title}</h1>
+        <h1 className="text-[2rem] font-bold text-secondary">{t.dashboard.title}</h1>
         <p className="mt-2 text-ink-secondary">{t.dashboard.subtitle}</p>
       </div>
       <Link className="btn btn-primary w-full sm:w-auto" href="/publisher">

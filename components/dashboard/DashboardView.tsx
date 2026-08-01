@@ -119,7 +119,7 @@ export default function DashboardView({ records }: DashboardViewProps) {
 
       <StatsCards records={records} />
 
-      <div className="flex flex-col gap-4 rounded-2xl border border-base-300 bg-base-100 p-5">
+      <div className="flex flex-col gap-4 rounded-2xl border border-base-300 bg-base-100 p-5 shadow-card">
         <h2 className="text-base font-semibold text-secondary">{t.table.document}</h2>
 
         <DashboardToolbar

@@ -22,14 +22,14 @@ export default function FAQSection() {
 
   return (
     <section className="mt-14 w-full pb-16">
-      <h2 className="text-center text-xl font-bold text-secondary">{t.faq.heading}</h2>
+      <h2 className="text-center text-[1.375rem] font-bold text-secondary">{t.faq.heading}</h2>
       <div className="mt-6 flex flex-col gap-3">
         {t.faq.items.map((faq, index) => {
           const isOpen = openIndex === index;
           return (
             <div
               key={faq.q}
-              className="rounded-2xl border border-base-300 bg-base-100 px-5 py-4 transition-colors hover:border-primary/30"
+              className="rounded-2xl border border-base-300 bg-base-100 px-5 py-4 shadow-card transition-colors hover:border-base-content/20"
             >
               <button
                 type="button"

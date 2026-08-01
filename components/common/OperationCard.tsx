@@ -50,7 +50,7 @@ export default function OperationCard({
           {description ? <h4 className="w-full text-secondary text-xs p-2">{description}</h4> : null}
         </section>
       ) : null}
-      <section className={`card w-full bg-base-100 card-xl border border-base-300 px-6 sm:px-10 py-6 transition-colors hover:border-primary/40 ${className ?? ''}`.trim()}>
+      <section className={`card w-full rounded-3xl bg-base-100 card-xl border border-base-300 px-6 sm:px-10 py-6 shadow-card transition-colors hover:border-base-content/20 ${className ?? ''}`.trim()}>
         <div className="card-body w-full gap-4">
           {children}
           {actions ? (

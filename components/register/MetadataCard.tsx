@@ -60,7 +60,7 @@ export default function MetadataCard({ file }: MetadataCardProps) {
         : t.metadata.empty;
 
   return (
-    <div className="w-full rounded-2xl border border-base-300 bg-base-100 p-5">
+    <div className="w-full rounded-2xl border border-base-300 bg-base-100 p-5 shadow-card">
       <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.metadata.heading}</p>
       <div className="grid grid-cols-1 gap-4">
         <Cell label={t.metadata.name} value={file?.name ?? t.metadata.empty} />
@@ -75,7 +75,7 @@ export default function MetadataCard({ file }: MetadataCardProps) {
         <Cell
           label={t.metadata.status}
           value={
-            <span className={file ? 'text-primary' : 'text-ink-muted'}>
+            <span className={file ? 'text-success' : 'text-ink-muted'}>
               {file ? t.metadata.ready : t.metadata.waiting}
             </span>
           }

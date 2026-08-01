@@ -19,22 +19,27 @@ Referensi warna, tipografi, spacing, dan komponen yang benar-benar dipakai di co
 
 ### Token daisyUI
 
+**Direvisi 2026-08-01** (`design-language-v2.md`) — `base-100`/`base-200` ditukar peran di light mode supaya card benar-benar "mengambang" dari background (sebelumnya keduanya nyaris sama terang, cuma beda dari border). Peran `primary` (merah) juga dibatasi — sebelumnya dipakai di 24 titik lintas peran (nav aktif, hover, ikon default, border dropzone), sekarang cuma di CTA/badge/state penting; nav & hover pakai token netral (`base-200`/`base-content`).
+
 | Token | Light | Dark | Dipakai untuk |
 |---|---|---|---|
-| `--color-primary` | `#E62F2A` (merah BRIN) | `#FF6B61` (merah lebih terang, kontras di background gelap) | CTA utama, link aktif, aksen halaman Verify, border dropzone |
+| `--color-primary` | `#E62F2A` (merah BRIN) | `#FF6B61` (merah lebih terang, kontras di background gelap) | **Hanya**: CTA utama, badge penting ("Akses Publik"/"Khusus Publisher"), border+bg dropzone SAAT drag aktif |
 | `--color-primary-content` | `#ffffff` | `#2a0805` | Teks di atas background primary |
-| `--color-secondary` | `#17384C` (navy-teal gelap) | `#f8fafc` (nyaris putih) | Judul halaman (`h1`), angka besar, aksen halaman Register |
+| `--color-secondary` | `#17384C` (navy-teal gelap) | `#f8fafc` (nyaris putih) | Judul halaman (`h1`), angka besar, aksen halaman Register, ikon default (`FilledIcon`) |
 | `--color-accent` | `#3AA6FF` | `#3AA6FF` | Aksen biru terbatas — link/info, sengaja beda dari primary/secondary |
-| `--color-base-100` | `#F9F9F9` | `#0a0f1d` | Background utama & card |
-| `--color-base-200` | `oklch(97% 0 0)` (abu sangat muda) | `#121b2e` | Hover state, header tabel |
-| `--color-base-300` | `#C3BEBE` (abu) | `#1e2942` | Border/divider — SATU-SATUNYA pemisah visual (tidak ada shadow di manapun) |
+| `--color-base-100` | `#FFFFFF` (putih murni — **surface/card**) | `#0a0f1d` | Card, drawer, dropdown — SELALU lebih terang dari page background |
+| `--color-base-200` | `#F5F6F8` (abu sangat muda — **page background**) | `#121b2e` | Background `<body>`, hover state, header tabel |
+| `--color-base-300` | `#E8E9EC` (abu sangat halus, sebelumnya `#C3BEBE` jauh lebih gelap) | `#1e2942` | Border — sekarang nyaris tak terlihat sendirian, "ditemani" `.shadow-card` (lihat §5) |
+| `--color-divider-strong` *(token custom, baru)* | `#D5D7DC` | `#2a3752` | Cadangan untuk pemisah yang butuh kontras lebih dari border biasa — belum ada pemakaian nyata |
 | `--color-base-content` | `#3F4854` (nyaris hitam) | `#cbd5e1` (abu terang) | Teks utama |
 | `--color-ink-secondary` *(token custom)* | `#667085` | `#94a3b8` | Teks sekunder (label, deskripsi) |
 | `--color-ink-muted` *(token custom)* | `#98A2B3` | `#64748b` | Teks tersier (micro-label, subtitle) |
-| `--color-success` | `#0F9D58` (hijau) | `#22C55E` | Badge "On-chain", indikator sukses |
+| `--color-success` | `#0F9D58` (hijau) | `#22C55E` | Badge "On-chain", indikator sukses, status "siap dikirim" (`MetadataCard`) |
 | `--color-error` | `#991B1B` (merah tua) | `#F87171` | Alert/badge gagal — **sengaja dibuat lebih gelap/beda shade dari primary** (lihat catatan risiko di bawah) |
 | `--color-warning` | `oklch(85% 0.199 91.936)` | sama | Jarang dipakai (dulu untuk notice, sekarang notice pakai `info`) |
 | `--color-info` | `#3AA6FF` | `#3AA6FF` | Kotak notice netral (mis. "Sebelum mengirim" di Register) |
+
+`--border` (ketebalan): `1px` (dari `1.5px`) di light mode — dark mode tetap `1.5px` (dark mode belum diaudit, lihat backlog #20).
 
 ### Riwayat keputusan warna
 
@@ -71,14 +76,14 @@ Lihat rasional lengkap di `_docs/design/type-scale-audit-2026-08-01.md`.
 | Tingkat | Ukuran | Kelas Tailwind | Dipakai untuk |
 |---|---|---|---|
 | Hero | 48px | `text-5xl` | (belum dipakai — cadangan untuk landing page besar) |
-| Page Title | 30px | `text-3xl` | H1 tiap halaman (Verify, Register, Dashboard, Result) — sebelumnya `text-4xl` (36px), turun karena terasa berlebihan untuk aplikasi kerja |
-| Section Title | 20px | `text-xl` | Heading section besar ("Cara Kerja Verifikasi", "Pertanyaan Umum") — sebelumnya `text-3xl` (30px) |
-| Card Title | 18px | `text-lg` | Judul card (`OperationCard`, `LoadingCard`), nama file di drawer/dropzone, stat value Dashboard — sebelumnya `text-xl` (20px) |
-| Subsection | 16px | `text-base` (bold) | Step title (How It Works), FAQ question, empty state title, heading card tabel Dashboard — sebelumnya `text-lg` (18px) |
-| Body | 14px | `text-sm` | Teks paragraf umum, subtitle hero — sebelumnya `text-base` (16px) |
-| Caption | 12px | `text-xs` | Label, deskripsi sekunder, helper text, seluruh isi tabel/drawer Dashboard — sebelumnya `text-sm` (14px), sudah di lantai terkecil skala (disatukan dengan Micro lama) |
+| Page Title | 32px | `text-[2rem]` (arbitrary — tidak match step Tailwind manapun) | H1 Dashboard/Result (flat); H1 Hero Verify/Register (tingkat `lg`, dari 3 tingkat responsif `text-2xl md:text-[1.75rem] lg:text-[2rem]` = 24/28/32) — dinaikkan dari 30px per `design-language-v2.md` §7 |
+| Section Title | 22px | `text-[1.375rem]` (arbitrary) | Heading section besar ("Cara Kerja Verifikasi", "Pertanyaan Umum") — dinaikkan dari 20px |
+| Card Title | 18px | `text-lg` | Judul card (`OperationCard`, `LoadingCard`), nama file di drawer/dropzone, stat value Dashboard — **tidak berubah** di revisi Design Language v2 |
+| Subsection | 16px | `text-base` (bold) | Step title (How It Works), FAQ question, empty state title, heading card tabel Dashboard — tidak berubah |
+| Body | 14px | `text-sm` | Teks paragraf umum, subtitle hero — tidak berubah |
+| Caption | 12px | `text-xs` | Label, deskripsi sekunder, helper text, seluruh isi tabel/drawer Dashboard — tidak berubah |
 
-Level 24px (`text-2xl`) dan 36px (`text-4xl`) sengaja tidak dipakai lagi di codebase per revisi ini — rentang aktif sekarang 12px–30px, lebih padat dan sesuai untuk aplikasi kerja/dashboard dibanding rentang lama 12px–48px. Elemen ikon (mis. `FilledIcon`, `SearchIcon`) yang kebetulan pakai class `text-lg`/`text-xl` untuk mengatur ukuran SVG **tidak ikut berubah** — itu bukan bagian dari type scale teks.
+**Revisi 2026-08-01 (Design Language v2)**: Page Title & Section Title dinaikkan lagi (30→32, 20→22) setelah riset tren 2026 menyimpulkan skala sebelumnya "terlalu datar" — beda dari Card Title (18px) terasa kurang tegas. Nilai 32px/22px tidak match step Tailwind manapun, jadi dipakai arbitrary value (`text-[2rem]`/`text-[1.375rem]`) alih-alih membulatkan ke `text-3xl`(30)/`text-2xl`(24) yang justru salah satunya sudah pernah dihapus dari hierarki. Card Title/Subsection/Body/Caption SENGAJA tidak ikut naik — sudah dianggap final dari revisi sebelumnya, cuma Title/Section yang direvisi. Elemen ikon (mis. `FilledIcon`, `SearchIcon`) yang kebetulan pakai class `text-lg`/`text-xl` untuk mengatur ukuran SVG **tidak ikut berubah** — itu bukan bagian dari type scale teks.
 
 **Bug ikut diperbaiki** (bukan bagian dari type scale, tapi ditemukan lewat audit yang sama): `text-xxl` di `OperationCard.tsx` dan `text-md` di `DocumentPreview.tsx` bukan class Tailwind valid (elemen efektif tanpa ukuran font eksplisit) — keduanya diganti ke `text-xl`/`text-base`.
 
@@ -111,10 +116,12 @@ Level 24px (`text-2xl`) dan 36px (`text-4xl`) sengaja tidak dipakai lagi di code
 
 ## 5. Pola Layout
 
-- **Card border-only** (`border border-base-300 bg-base-100 rounded-xl`, `hover:border-primary/40`) — konsisten di SELURUH app, termasuk `OperationCard` (Verify/Register/Result) yang dulu masih pakai shadow.
+- **Card border halus + shadow tipis** (`border border-base-300 bg-base-100 rounded-2xl shadow-card`) — **direvisi 2026-08-01** (Design Language v2): sebelumnya border-only tanpa shadow sama sekali, sekarang SEMUA card besar dapat `.shadow-card` (nyaris tak terlihat, `0 1px 2px rgba(15,23,42,.04)`) supaya card "mengambang" dari page background, bukan cuma terlihat dari border. Overlay (drawer) tetap `shadow-2xl`, jauh lebih kuat, supaya beda tingkat elevasi dari card biasa. Hover border card (yang genuinely clickable) pakai `hover:border-base-content/20` — netral, BUKAN `hover:border-primary/40` lagi (lihat §2, batasi peran merah).
+- **`OperationCard` dapat `rounded-3xl`** (bukan `rounded-2xl` seperti card lain) — satu-satunya "hero-level card" di app.
 - **Navbar 1 baris utama + sub-nav kondisional (desktop/tablet), hamburger drawer (mobile)**:
-  - **≥sm**: baris utama — logo + nama + subtitle institusi, lalu di sisi kanan tombol **Layanan Dokumen** (highlight aktif saat di halaman Registrasi/Verifikasi, klik navigasi ke halaman dokumen pertama yang tersedia), **Dashboard** (kalau login), `LanguageSwitcher` (toggle ID/EN), dan Masuk/Keluar. Sub-nav (`bg-base-200/40`, `border-b-[3px]` + `bg-primary/10` + `font-semibold` untuk tab aktif) berisi tab Registrasi/Verifikasi — hanya dirender saat pathname ada di dalam section "Layanan Dokumen".
+  - **≥sm**: baris utama — logo + nama + subtitle institusi, lalu di sisi kanan tombol **Layanan Dokumen** (highlight aktif saat di halaman Registrasi/Verifikasi, klik navigasi ke halaman dokumen pertama yang tersedia), **Dashboard** (kalau login), `LanguageSwitcher` (toggle ID/EN), dan Masuk/Keluar. Sub-nav (`bg-base-200/40`, `border-b-2` + `bg-base-200` + `font-semibold` untuk tab aktif — **netral, bukan merah lagi**) berisi tab Registrasi/Verifikasi — hanya dirender saat pathname ada di dalam section "Layanan Dokumen".
   - **<sm**: baris utama hanya menyisakan logo + tombol hamburger (`MenuIcon`). Tap membuka drawer full-screen dari kanan berisi: Dashboard, grup "Layanan Dokumen" (Registrasi/Verifikasi terindentasi), pemisah, toggle bahasa, Masuk/Keluar — satu daftar vertikal, bukan mengompres baris menu jadi ikon-ikon kecil.
+  - **Shadow-on-scroll** (baru): navbar TIDAK punya border bawah statis lagi — `bg-base-100/90 backdrop-blur-sm`, `shadow-sm` cuma muncul setelah `window.scrollY > 4` (state React + scroll listener). Di posisi paling atas, navbar menyatu rata dengan halaman tanpa garis pemisah.
 - **Dashboard**: 4 stat tile setara tinggi (`grid-cols-2 lg:grid-cols-4` — 2 kolom di mobile/tablet, 4 kolom di desktop) di atas, lalu SATU card besar berisi heading "Dokumen" + toolbar + tabel + pagination — toolbar tidak lagi jadi section terpisah, melainkan menyatu visual dengan tabel. Tabel jadi daftar kartu bertumpuk di mobile (`md:hidden`), tabel penuh di ≥md. CTA "Daftarkan Dokumen" full-width di mobile, auto-width di ≥sm.
 - **Hero Verify & Register**: struktur dan ukuran diseragamkan penuh (lihat §4, "Pola hero terunifikasi") — hanya beda warna aksen dan copy.
 - **Pagination**: dua tombol persegi ghost (`btn-square btn-ghost border border-base-300`) mengapit label teks polos "Halaman X / Y" — BUKAN `.join` dengan `<span className="btn ...">` di tengah (pola lama ini terlihat rusak karena styling `.btn` diterapkan ke elemen non-tombol).
@@ -167,7 +174,8 @@ Level 24px (`text-2xl`) dan 36px (`text-4xl`) sengaja tidak dipakai lagi di code
 | `RecordDetailDrawer` lebar flat `max-w-md` → bertingkat `sm:max-w-md lg:max-w-lg xl:max-w-xl` | Detail record terasa lega di layar lebar, bukan tetap 448px sampai selebar apapun monitor |
 | `FAQSection` `max-w-3xl` sendiri → ikut lebar `content` (5xl) seperti section lain, keterbacaan dijaga cukup lewat `max-w-2xl` di `<p>` jawaban | Section terlihat "tidak lurus" dibanding section lain saat di-scroll — dikonfirmasi lewat DOM measurement |
 | `OperationCard` title/description dihapus dari Verify & Register (`title`/`description` sekarang opsional, section header tidak render kalau kosong) | Redundan — Hero di atasnya sudah bilang hal yang sama dengan kalimat berbeda ("Registrasi Dokumen" + subtitle, lalu diulang lagi "Daftarkan Dokumen Baru" + deskripsi serupa) |
-| Verify: section band ditambah — Hero (gradient), Form+Tips (`bg-base-100`, blend dengan halaman), Cara Kerja+FAQ (`bg-base-200` solid, card putih mengambang di atasnya) | Sebelumnya semua section menyatu di background yang sama, sulit membedakan batas antar section |
+| Verify: section band ditambah — Hero (gradient), Form+Tips (`bg-base-100`, putih, menonjol dari page bg abu di sekitarnya), Cara Kerja+FAQ (`bg-base-200`, senada dengan page bg default, card putih mengambang di atasnya lewat `.shadow-card`) | Sebelumnya semua section menyatu di background yang sama, sulit membedakan batas antar section. **Catatan**: setelah revisi Design Language v2 (base-100/200 tukar peran, lihat §2), mekanismenya berbalik — `bg-base-100` sekarang yang "menonjol" (putih), bukan `bg-base-200` — tapi class di kode tidak berubah, cuma makna tokennya |
+| **Design Language v2 diterapkan** (`design-language-v2.md`): `base-100`↔`base-200` tukar peran (card sekarang putih murni, page bg abu `#F5F6F8`, sebelumnya nyaris sama), border jadi jauh lebih halus (`#C3BEBE`→`#E8E9EC`, `1.5px`→`1px`), `.shadow-card` ditambah ke SEMUA card besar (sebelumnya border-only tanpa shadow sama sekali), navbar shadow-on-scroll (border statis dihapus, `shadow-sm` muncul cuma saat scroll), `OperationCard` dapat `rounded-3xl`, peran warna primary (merah) dibatasi dari 24 titik pemakaian lintas-peran jadi hanya CTA/badge/state penting (nav aktif & hover, ikon default, border dropzone idle, hover border card semua diganti netral), Page Title & Section Title dinaikkan (30→32px, 20→22px, pakai arbitrary value karena tidak match step Tailwind) | Kesimpulan riset tren 2026 + kritik user: PITS "terlalu utilitarian" karena satu shade abu dipakai untuk segalanya (border navbar/card/table/input identik) dan merah BRIN dipakai di terlalu banyak peran sekaligus sehingga CTA tidak lagi menonjol dari elemen lain |
 
 ---
 

@@ -143,7 +143,7 @@ export default function ResultView({ status }: ResultViewProps) {
           <div className="flex flex-col gap-6 text-left">
             <div className="flex flex-col items-center gap-3 text-center">
               <StatusIcon tone="success" icon={<CheckIcon style={{ fontSize: '2.5rem' }} />} />
-              <h1 className="text-3xl font-bold text-secondary">{t.result.registerSuccessTitle}</h1>
+              <h1 className="text-[2rem] font-bold text-secondary">{t.result.registerSuccessTitle}</h1>
               <p className="text-xs text-ink-secondary">{t.result.registerSuccessBody}</p>
             </div>
 
@@ -168,7 +168,7 @@ export default function ResultView({ status }: ResultViewProps) {
           <div className="flex flex-col gap-6 text-left">
             <div className="flex flex-col items-center gap-3 text-center">
               <StatusIcon tone="success" icon={<GppGoodOutlinedIcon style={{ fontSize: '2.5rem' }} />} />
-              <h1 className="text-3xl font-bold text-secondary">{t.result.verifySuccessTitle}</h1>
+              <h1 className="text-[2rem] font-bold text-secondary">{t.result.verifySuccessTitle}</h1>
               <p className="max-w-sm text-xs text-ink-secondary">{t.result.verifySuccessBody}</p>
             </div>
 
@@ -205,7 +205,7 @@ export default function ResultView({ status }: ResultViewProps) {
         <div className="flex flex-col gap-6 text-left">
           <div className="flex flex-col items-center gap-3 text-center">
             <StatusIcon tone="error" icon={<SearchOffOutlinedIcon style={{ fontSize: '2.5rem' }} />} />
-            <h1 className="text-3xl font-bold text-secondary">{t.result.notFoundTitle}</h1>
+            <h1 className="text-[2rem] font-bold text-secondary">{t.result.notFoundTitle}</h1>
             <p className="max-w-sm text-xs text-ink-secondary">{t.result.notFoundBody}</p>
           </div>
 
@@ -222,7 +222,7 @@ export default function ResultView({ status }: ResultViewProps) {
         <div className="flex flex-col gap-6 text-left">
           <div className="flex flex-col items-center gap-3 text-center">
             <StatusIcon tone="error" icon={<CloseIcon style={{ fontSize: '2.5rem' }} />} />
-            <h1 className="text-3xl font-bold text-secondary">
+            <h1 className="text-[2rem] font-bold text-secondary">
               {isRegistration ? t.result.registerFailTitle : t.result.genericErrorTitle}
             </h1>
           </div>

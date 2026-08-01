@@ -19,14 +19,17 @@ export interface DropzoneProps {
   accent?: 'primary' | 'secondary';
 }
 
+/* Idle state is always neutral (border-base-300) regardless of accent —
+   the accent color is reserved for when the user is actually dragging a
+   file over the zone (isDragActive), not as permanent decoration. */
 const ACCENT_CLASSES = {
   primary: {
-    idle: 'border-primary bg-base-100 hover:bg-base-200 hover:border-primary',
+    idle: 'border-base-300 bg-base-100 hover:bg-base-200 hover:border-base-content/30',
     active: 'border-primary bg-primary/10 hover:bg-primary/20 hover:border-primary',
     text: 'text-primary',
   },
   secondary: {
-    idle: 'border-secondary/60 bg-base-100 hover:bg-base-200 hover:border-secondary',
+    idle: 'border-base-300 bg-base-100 hover:bg-base-200 hover:border-base-content/30',
     active: 'border-secondary bg-secondary/10 hover:bg-secondary/20 hover:border-secondary',
     text: 'text-secondary',
   },

@@ -12,7 +12,7 @@ export default function RequirementCard() {
   const { t } = useLocale();
 
   return (
-    <div className="w-full rounded-2xl border border-base-300 bg-base-100 p-5">
+    <div className="w-full rounded-2xl border border-base-300 bg-base-100 p-5 shadow-card">
       <div className="mb-3 flex items-center gap-2">
         <RuleOutlinedIcon className="text-secondary" style={{ fontSize: '1.2rem' }} />
         <p className="text-xs font-semibold text-base-content">{t.requirement.heading}</p>

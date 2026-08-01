@@ -22,7 +22,7 @@ export default function TableSkeleton({ rows = 10 }: TableSkeletonProps) {
 
       <div className="h-11 w-full animate-pulse rounded-lg border border-base-300 bg-base-200 sm:max-w-md" />
 
-      <div className="overflow-hidden rounded-2xl border border-base-300 bg-base-100">
+      <div className="overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-card">
         {Array.from({ length: rows }).map((_, index) => (
           <div
             key={index}

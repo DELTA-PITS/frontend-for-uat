@@ -35,8 +35,18 @@ export function Header({ session }: HeaderProps) {
   const router = useRouter();
   const { t } = useLocale();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const isLoggedIn = Boolean(session?.user);
+
+  // Border only appears once the page has scrolled — a flat top edge reads
+  // as less "boxed in" than an always-on border under the navbar.
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const documentNavLinks = isLoggedIn
     ? [
@@ -58,7 +68,10 @@ export function Header({ session }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-base-100 border-b border-base-300">
+    <header
+      className={`sticky top-0 z-50 w-full bg-base-100/90 backdrop-blur-sm transition-shadow duration-200 ${isScrolled ? 'shadow-sm' : ''
+        }`}
+    >
       {/* Brand row — institutional identity + main menu */}
       <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
         <button
@@ -91,8 +104,8 @@ export function Header({ session }: HeaderProps) {
             onClick={() => router.push(documentNavLinks[0].href)}
             title={t.header.navGroupLabel}
             className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${isDocumentSection
-              ? 'bg-primary/10 font-medium text-primary'
-              : 'text-base-content hover:bg-base-200 hover:text-primary'
+              ? 'bg-base-200 font-semibold text-base-content'
+              : 'text-base-content hover:bg-base-200'
               }`}
           >
             <DescriptionOutlinedIcon style={{ fontSize: '1.1rem' }} />
@@ -105,8 +118,8 @@ export function Header({ session }: HeaderProps) {
               onClick={() => router.push('/dashboard')}
               title={t.header.navDashboard}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${pathname === '/dashboard'
-                ? 'bg-primary/10 font-medium text-primary'
-                : 'text-base-content hover:bg-base-200 hover:text-primary'
+                ? 'bg-base-200 font-semibold text-base-content'
+                : 'text-base-content hover:bg-base-200'
                 }`}
             >
               <SpaceDashboardOutlinedIcon style={{ fontSize: '1.1rem' }} />
@@ -117,12 +130,12 @@ export function Header({ session }: HeaderProps) {
           <LanguageSwitcher />
 
           {isLoggedIn ? (
-            <SignOut className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-base-content hover:bg-base-200 hover:text-primary transition-colors">
+            <SignOut className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-base-content hover:bg-base-200 transition-colors">
               <LogoutOutlinedIcon style={{ fontSize: '1.1rem' }} />
               <span>{t.header.signOut}</span>
             </SignOut>
           ) : (
-            <SignIn className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-base-content hover:bg-base-200 hover:text-primary transition-colors">
+            <SignIn className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-base-content hover:bg-base-200 transition-colors">
               <LoginOutlinedIcon style={{ fontSize: '1.1rem' }} />
               <span>{t.header.signIn}</span>
             </SignIn>
@@ -152,9 +165,9 @@ export function Header({ session }: HeaderProps) {
                 type="button"
                 onClick={() => router.push(href)}
                 title={label}
-                className={`flex cursor-pointer items-center gap-2 border-b-[3px] px-4 py-3 text-sm transition-colors ${isActive
-                  ? 'border-primary bg-primary/10 font-semibold text-primary'
-                  : 'border-transparent text-base-content hover:bg-base-200 hover:text-primary'
+                className={`flex cursor-pointer items-center gap-2 border-b-2 px-4 py-3 text-sm transition-colors ${isActive
+                  ? 'border-base-content bg-base-200 font-semibold text-base-content'
+                  : 'border-transparent text-base-content hover:bg-base-200'
                   }`}
               >
                 <NavIcon style={{ fontSize: '1.2rem' }} />
@@ -192,7 +205,7 @@ export function Header({ session }: HeaderProps) {
                 type="button"
                 onClick={() => goTo('/dashboard')}
                 className={`flex items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm ${pathname === '/dashboard'
-                  ? 'bg-primary/10 font-medium text-primary'
+                  ? 'bg-base-200 font-semibold text-base-content'
                   : 'text-base-content hover:bg-base-200'
                   }`}
               >
@@ -212,7 +225,7 @@ export function Header({ session }: HeaderProps) {
                   type="button"
                   onClick={() => goTo(href)}
                   className={`flex items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm ${isActive
-                    ? 'bg-primary/10 font-medium text-primary'
+                    ? 'bg-base-200 font-semibold text-base-content'
                     : 'text-base-content hover:bg-base-200'
                     }`}
                 >

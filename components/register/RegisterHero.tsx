@@ -23,7 +23,7 @@ export default function RegisterHero() {
           <CloudUploadOutlinedIcon style={{ fontSize: '1rem' }} />
           {t.registerHero.badge}
         </span>
-        <h1 className="text-2xl font-bold text-secondary md:text-3xl lg:text-4xl">{t.registerHero.title}</h1>
+        <h1 className="text-2xl font-bold text-secondary md:text-[1.75rem] lg:text-[2rem]">{t.registerHero.title}</h1>
         <p className="mt-2 max-w-xl text-sm text-ink-secondary">{t.registerHero.subtitle}</p>
       </PageContainer>
     </section>

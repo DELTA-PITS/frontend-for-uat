@@ -23,7 +23,7 @@ export default function VerifyHero() {
           <GppGoodOutlinedIcon style={{ fontSize: '1rem' }} />
           {t.verifyHero.badge}
         </span>
-        <h1 className="text-2xl font-bold text-secondary md:text-3xl lg:text-4xl">{t.verifyHero.title}</h1>
+        <h1 className="text-2xl font-bold text-secondary md:text-[1.75rem] lg:text-[2rem]">{t.verifyHero.title}</h1>
         <p className="mt-2 max-w-xl text-sm text-ink-secondary">{t.verifyHero.subtitle}</p>
         <p className="mt-2 text-xs text-ink-muted">{t.verifyHero.meta}</p>
       </PageContainer>
