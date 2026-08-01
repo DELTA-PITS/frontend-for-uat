@@ -6,6 +6,7 @@ import RegisterHero from '@components/register/RegisterHero';
 import MetadataCard from '@components/register/MetadataCard';
 import RequirementCard from '@components/register/RequirementCard';
 import BeforeSubmitChecklist from '@components/register/BeforeSubmitChecklist';
+import PageContainer from '@components/layout/PageContainer';
 import { useLocale } from '@lib/i18n/LocaleContext';
 
 /**
@@ -22,26 +23,26 @@ export default function PublisherPortal() {
     <div className="flex w-full flex-col">
       <RegisterHero />
 
-      <div className="px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <FileUpload
-          mode="register"
-          title={t.registerForm.title}
-          description={t.registerForm.description}
-          buttonLabel={t.registerForm.button}
-          accent="secondary"
-          file={file}
-          isUploading={isUploading}
-          onFileChange={handleFileChange}
-          onSubmit={handleSubmit}
-          extraBeforeSubmit={file ? <BeforeSubmitChecklist /> : undefined}
-        />
-        {!isUploading ? (
-          <>
-            <MetadataCard file={file} />
-            <RequirementCard />
-          </>
-        ) : null}
-      </div>
+      <section className="w-full bg-base-100">
+        <PageContainer variant="content" className="py-8 sm:py-10">
+          <FileUpload
+            mode="register"
+            buttonLabel={t.registerForm.button}
+            accent="secondary"
+            file={file}
+            isUploading={isUploading}
+            onFileChange={handleFileChange}
+            onSubmit={handleSubmit}
+            extraBeforeSubmit={file ? <BeforeSubmitChecklist /> : undefined}
+          />
+          {!isUploading ? (
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <MetadataCard file={file} />
+              <RequirementCard />
+            </div>
+          ) : null}
+        </PageContainer>
+      </section>
     </div>
   );
 }

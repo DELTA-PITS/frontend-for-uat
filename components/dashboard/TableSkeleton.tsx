@@ -12,17 +12,17 @@ export default function TableSkeleton({ rows = 10 }: TableSkeletonProps) {
   return (
     <div className="flex flex-col gap-6" aria-busy="true" aria-label="Memuat dokumen">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
-        <div className="h-32 flex-1 animate-pulse rounded-xl border border-base-300 bg-base-200" />
+        <div className="h-32 flex-1 animate-pulse rounded-2xl border border-base-300 bg-base-200" />
         <div className="grid grid-cols-3 gap-3 lg:w-80 lg:grid-cols-1">
           {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="h-16 animate-pulse rounded-xl border border-base-300 bg-base-200" />
+            <div key={index} className="h-16 animate-pulse rounded-2xl border border-base-300 bg-base-200" />
           ))}
         </div>
       </div>
 
       <div className="h-11 w-full animate-pulse rounded-lg border border-base-300 bg-base-200 sm:max-w-md" />
 
-      <div className="overflow-hidden rounded-xl border border-base-300 bg-base-100">
+      <div className="overflow-hidden rounded-2xl border border-base-300 bg-base-100">
         {Array.from({ length: rows }).map((_, index) => (
           <div
             key={index}

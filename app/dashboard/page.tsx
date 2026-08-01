@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import DashboardView from '@components/dashboard/DashboardView';
 import DashboardHeader from '@components/dashboard/DashboardHeader';
 import DashboardErrorAlert, { type DashboardErrorCode } from '@components/dashboard/DashboardErrorAlert';
+import PageContainer from '@components/layout/PageContainer';
 import type { RecordItem } from '@/types/files.types';
 
 const BACKEND_RECORDS_URL = process.env.PITS_BACKEND_RECORDS_URL;
@@ -35,10 +36,10 @@ export default async function DashboardPage() {
   const { records, errorCode } = await fetchRecords();
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <PageContainer as="main" variant="wide" className="py-8 sm:py-10">
       <DashboardHeader />
 
       {errorCode ? <DashboardErrorAlert code={errorCode} /> : <DashboardView records={records} />}
-    </main>
+    </PageContainer>
   );
 }

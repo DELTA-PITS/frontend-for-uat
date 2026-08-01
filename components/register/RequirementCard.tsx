@@ -12,12 +12,12 @@ export default function RequirementCard() {
   const { t } = useLocale();
 
   return (
-    <div className="mx-auto mt-6 w-full max-w-3xl rounded-xl border border-base-300 bg-base-100 p-5">
+    <div className="w-full rounded-2xl border border-base-300 bg-base-100 p-5">
       <div className="mb-3 flex items-center gap-2">
         <RuleOutlinedIcon className="text-secondary" style={{ fontSize: '1.2rem' }} />
         <p className="text-xs font-semibold text-base-content">{t.requirement.heading}</p>
       </div>
-      <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <ul className="grid grid-cols-1 gap-2">
         {t.requirement.items.map((item) => (
           <li key={item} className="flex items-start gap-2 text-xs text-ink-secondary">
             <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary/50" />

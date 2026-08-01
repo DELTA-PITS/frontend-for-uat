@@ -38,8 +38,10 @@ Pastikan backend PITS sudah jalan (`../backend-for-uat/`) sebelum test fitur reg
 - **Validasi upload baru ada di client** (`components/common/Dropzone.tsx`: PDF-only, max 20MB, pesan error inline via `t.dropzone.*`). Validasi **server** (`app/api/_lib/parseUpload.ts`) masih cuma cek `file instanceof File` — jangan asumsikan server sudah aman. Backlog terbuka: `_docs/tasks/tasks.md` #2b.
 - **Setup test masih membingungkan**: ada `jest.config.ts` DAN `vitest.config.ts`, tapi nol file test (`*.test.ts*`) di repo. Vitest yang benar-benar wired (lewat Storybook addon), Jest tidak efektif. Kalau menambah unit test, pakai Vitest. Backlog: `_docs/tasks/tasks.md` #3.
 - **Dua set env var Keycloak** (server `AUTH_KEYCLOAK_*` vs client `NEXT_PUBLIC_AUTH_KEYCLOAK_*`) harus selalu diubah bersamaan.
-- **Dashboard detail dokumen pakai drawer kanan** (`RecordDetailDrawer.tsx`), bukan modal tengah — pola ini disengaja supaya tabel tetap terlihat di belakang. Ikuti pola ini untuk panel detail baru, jangan balik ke `<dialog>` modal.
-- **Card selalu border-only, tanpa shadow** (`border border-base-300 bg-base-100 rounded-xl`) — konsisten di seluruh app.
+- **Dashboard detail dokumen pakai drawer kanan (`≥sm`) / bottom sheet (`<sm`)** (`RecordDetailDrawer.tsx`), bukan modal tengah — pola ini disengaja supaya tabel tetap terlihat di belakang. Ikuti pola ini untuk panel detail baru, jangan balik ke `<dialog>` modal.
+- **Card selalu border-only, tanpa shadow** (`border border-base-300 bg-base-100 rounded-2xl`) — konsisten di seluruh app. **Kecuali overlay** (drawer, drawer mobile navbar) yang sengaja diberi `shadow-2xl` karena benar-benar melayang di atas konten — jangan tambah shadow ke card biasa, itu bukan bug yang perlu "diperbaiki" jadi konsisten.
+- **Lebar halaman selalu lewat `PageContainer`** (`components/layout/PageContainer.tsx`, variant `narrow`/`content`/`wide`/`full`) — jangan tulis `max-w-*` + `mx-auto` + padding manual sendiri di halaman baru. Lihat `_docs/design/design-system.md` §7.
+- **Motion sudah ada standarnya**: hover-lift (150ms) hanya di elemen yang benar-benar bisa diklik (jangan ditaruh di card statis), overlay (drawer) slide 200ms pakai varian Tailwind v4 `starting:` (`@starting-style`, CSS murni tanpa JS), accordion pakai trik `grid-template-rows` (bukan native `<details>`, supaya bisa dianimasikan). Lihat `_docs/design/design-system.md` §8.
 
 ## 4. Alur Kerja yang Diharapkan
 

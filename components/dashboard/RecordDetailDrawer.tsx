@@ -54,10 +54,10 @@ export default function RecordDetailDrawer({ record, onClose }: RecordDetailDraw
       <button
         type="button"
         aria-label={t.drawer.close}
-        className="absolute inset-0 cursor-default bg-black/30"
+        className="absolute inset-0 cursor-default bg-black/30 transition-opacity duration-200 starting:opacity-0"
         onClick={onClose}
       />
-      <div className="relative flex max-h-[85vh] w-full flex-col overflow-y-auto rounded-t-2xl border-t border-base-300 bg-base-100 p-6 sm:h-full sm:max-h-none sm:w-full sm:max-w-md sm:rounded-t-none sm:border-t-0 sm:border-l">
+      <div className="relative flex max-h-[85vh] w-full flex-col overflow-y-auto rounded-t-2xl border-t border-base-300 bg-base-100 p-6 shadow-2xl transition-transform duration-200 ease-out starting:translate-y-full sm:h-full sm:max-h-none sm:w-full sm:max-w-md sm:rounded-t-none sm:border-t-0 sm:border-l sm:starting:translate-x-full sm:starting:translate-y-0 lg:max-w-lg xl:max-w-xl">
         <div className="mx-auto mb-2 h-1.5 w-12 shrink-0 rounded-full bg-base-300 sm:hidden" />
         <div className="mb-2 flex items-start gap-3">
           <FileIcon style={{ fontSize: '1.8rem', color: fileColor }} className="mt-1 shrink-0" aria-hidden="true" />

@@ -13,7 +13,7 @@ export default function TipsCard() {
   const { t } = useLocale();
 
   return (
-    <div className="mx-auto mt-6 w-full max-w-3xl rounded-xl border border-base-300 bg-base-100 p-5">
+    <div className="mt-6 w-full rounded-2xl border border-base-300 bg-base-100 p-5">
       <p className="mb-3 text-xs font-semibold text-base-content">{t.tips.heading}</p>
       <ul className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
         {t.tips.items.map((reason) => (

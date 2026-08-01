@@ -23,11 +23,11 @@ export default function HowItWorks() {
   const { t } = useLocale();
 
   return (
-    <section className="mx-auto mt-14 w-full max-w-3xl">
+    <section className="mt-14 w-full">
       <h2 className="text-center text-xl font-bold text-secondary">{t.howItWorks.heading}</h2>
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {t.howItWorks.steps.map((step, index) => (
-          <div key={step.title} className="flex items-start gap-4 rounded-xl border border-base-300 bg-base-100 p-5">
+          <div key={step.title} className="flex items-start gap-4 rounded-2xl border border-base-300 bg-base-100 p-5">
             <FilledIcon icon={STEP_ICONS[index]} className="text-xl" />
             <div>
               <p className="text-xs font-semibold text-ink-muted">

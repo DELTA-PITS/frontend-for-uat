@@ -1,4 +1,5 @@
 import TableSkeleton from '@components/dashboard/TableSkeleton';
+import PageContainer from '@components/layout/PageContainer';
 
 /**
  * Route-level loading UI shown by Next.js while the dashboard Server
@@ -7,9 +8,9 @@ import TableSkeleton from '@components/dashboard/TableSkeleton';
  */
 export default function DashboardLoading() {
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <PageContainer as="main" variant="wide" className="py-8 sm:py-10">
       <div className="mb-8 h-16 w-full max-w-xl animate-pulse rounded-lg bg-base-200" />
       <TableSkeleton />
-    </main>
+    </PageContainer>
   );
 }

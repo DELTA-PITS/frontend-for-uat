@@ -41,11 +41,11 @@ export default function StatsCards({ records }: StatsCardsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="flex items-center gap-3 rounded-xl border border-base-300 bg-base-100 p-4"
+          className="flex items-center gap-3 rounded-2xl border border-base-300 bg-base-100 p-4"
         >
           <FilledIcon icon={stat.icon} className="text-lg" />
           <div className="min-w-0">
@@ -55,7 +55,7 @@ export default function StatsCards({ records }: StatsCardsProps) {
         </div>
       ))}
 
-      <div className="flex items-center gap-3 rounded-xl border border-base-300 bg-base-100 p-4">
+      <div className="flex items-center gap-3 rounded-2xl border border-base-300 bg-base-100 p-4 md:col-span-3 xl:col-span-1">
         <FilledIcon icon={<CheckCircleOutlinedIcon />} className="text-lg bg-success/10 text-success" />
         <div className="min-w-0">
           <p className="truncate text-xs font-medium text-ink-secondary">{t.stats.status}</p>

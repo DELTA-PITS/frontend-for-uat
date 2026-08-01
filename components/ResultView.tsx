@@ -134,7 +134,7 @@ export default function ResultView({ status }: ResultViewProps) {
       title=""
       description=""
       className="mx-auto my-auto"
-      containerClassName="lg:max-w-2xl"
+      containerClassName="!max-w-2xl"
     >
       {payload?.status !== status ? <p className="text-warning">{t.result.mismatchWarning}</p> : null}
 
@@ -147,7 +147,7 @@ export default function ResultView({ status }: ResultViewProps) {
               <p className="text-xs text-ink-secondary">{t.result.registerSuccessBody}</p>
             </div>
 
-            <div className="rounded-xl border border-base-300 p-5">
+            <div className="rounded-2xl border border-base-300 p-5">
               <SectionLabel>{t.result.documentSection}</SectionLabel>
               <DetailRow label={t.result.filename} value={registerData.filename} notAvailable={t.result.notAvailable} />
               <DetailRow
@@ -173,14 +173,14 @@ export default function ResultView({ status }: ResultViewProps) {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center gap-2 rounded-xl border border-success/20 bg-success/5 px-4 py-3">
+              <div className="flex items-center gap-2 rounded-2xl border border-success/20 bg-success/5 px-4 py-3">
                 <CheckIcon className="text-success" style={{ fontSize: '1.2rem' }} />
                 <div>
                   <p className="text-xs text-ink-muted">{t.result.integrity}</p>
                   <p className="text-xs font-semibold text-success">{t.result.valid}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 rounded-xl border border-success/20 bg-success/5 px-4 py-3">
+              <div className="flex items-center gap-2 rounded-2xl border border-success/20 bg-success/5 px-4 py-3">
                 <CheckIcon className="text-success" style={{ fontSize: '1.2rem' }} />
                 <div>
                   <p className="text-xs text-ink-muted">{t.result.blockchain}</p>
@@ -189,7 +189,7 @@ export default function ResultView({ status }: ResultViewProps) {
               </div>
             </div>
 
-            <div className="rounded-xl border border-base-300 p-5">
+            <div className="rounded-2xl border border-base-300 p-5">
               <DetailRow label={t.result.recordId} value={verifyData.record_id} copyable notAvailable={t.result.notAvailable} />
               <DetailRow
                 label={t.result.registeredAt}
@@ -209,7 +209,7 @@ export default function ResultView({ status }: ResultViewProps) {
             <p className="max-w-sm text-xs text-ink-secondary">{t.result.notFoundBody}</p>
           </div>
 
-          <div className="rounded-xl border border-base-300 p-5">
+          <div className="rounded-2xl border border-base-300 p-5">
             <p className="mb-3 text-xs font-semibold text-base-content">{t.result.possibleCauses}</p>
             <ul className="flex flex-col gap-2 text-xs text-ink-secondary">
               <li>&bull; {t.result.causeWrongFile}</li>
@@ -226,7 +226,7 @@ export default function ResultView({ status }: ResultViewProps) {
               {isRegistration ? t.result.registerFailTitle : t.result.genericErrorTitle}
             </h1>
           </div>
-          <div className="flex items-start gap-3 rounded-xl border border-error/20 bg-error/5 p-4">
+          <div className="flex items-start gap-3 rounded-2xl border border-error/20 bg-error/5 p-4">
             <ErrorOutlineOutlinedIcon className="mt-0.5 shrink-0 text-error" />
             <p className="text-xs text-base-content">{failureMessage}</p>
           </div>

@@ -16,7 +16,8 @@ Aplikasi Next.js untuk Public Information Trust System — Publisher Portal & Ve
 | "Kenapa keputusan arsitektur ini diambil?" | [decisions/README.md](decisions/) |
 | "Arsitektur sistem?" | [architecture/system-overview.md](architecture/system-overview.md) |
 | "Code style & aturan project?" | [referensi/coding-standards.md](referensi/coding-standards.md) |
-| "Warna, tipografi, komponen, riwayat keputusan desain?" | [design/design-system.md](design/design-system.md) |
+| "Warna, tipografi, komponen, layout system, riwayat keputusan desain?" | [design/design-system.md](design/design-system.md) |
+| "Riset/audit desain mendalam (type scale, layout tablet, tren 2026)?" | [design/](design/) — lihat `type-scale-audit-*.md`, `layout-md-breakpoint-audit-*.md`, `2026-design-trend-research.md` |
 | "Kapan boleh mulai coding?" | [quality/definition-of-ready.md](quality/definition-of-ready.md) |
 | "Kapan fitur dianggap selesai?" | [quality/definition-of-done.md](quality/definition-of-done.md) |
 | "Checklist AI sebelum lapor selesai?" | [ai/review-checklist.md](ai/review-checklist.md) |

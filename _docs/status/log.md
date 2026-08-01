@@ -4,6 +4,25 @@ File ini diupdate Claude Code **setiap sesi kerja selesai**. Entry terbaru selal
 
 ---
 
+## [2026-08-01 22:00] — Claude Code
+
+- **Progress**: Diskusi layout tablet/`md` (dilanjutkan ke ChatGPT), audit alignment bug (`OperationCard` vs section lain), riset tren desain 2026 (disaring untuk konteks aplikasi pemerintah), dan implementasi motion system — semua sudah diverifikasi (type-check, lint, dan cek visual di browser untuk yang bisa diakses tanpa login). Siap di-commit.
+- **Selesai sesi ini**:
+  - **Layout system dibangun**: komponen baru `components/layout/PageContainer.tsx` (`narrow`/`content`/`wide`/`full`) jadi satu-satunya sumber lebar+padding halaman, menggantikan `max-w`/`mx-auto`/padding manual ad hoc per halaman. Diterapkan ke Verify, Register, Dashboard.
+  - **Bug alignment ditemukan & diperbaiki 2x**: (1) `OperationCard` (`max-w-4xl`) vs card lain (`max-w-3xl`) di Verify/Register — beda lebar independen-center bikin tidak sejajar (screenshot user). (2) `FAQSection` yang sengaja dibuat lebih sempit demi keterbacaan malah terlihat "tidak lurus" saat scroll — diperbaiki dengan cap lebar di teks jawaban saja (`max-w-2xl` pada `<p>`), bukan di seluruh section. Root-cause kedua kasus: pengecualian lebar di level section berisiko terbaca sebagai bug, lebih aman batasi di level elemen kecil.
+  - **Judul redundan dihapus**: `OperationCard` title/description ("Verifikasi Dokumen"/"Registrasi Dokumen Baru" + deskripsi) yang mengulang isi Hero di atasnya dihapus dari Verify & Register — prop jadi opsional, section header tidak render kalau kosong. Key i18n mati (`verifyForm.title/description`, `registerForm.title/description`) dibersihkan dari kedua bahasa.
+  - **Background band per section** ditambahkan di halaman Verify (Hero gradient → Form+Tips polos → Cara Kerja+FAQ `bg-base-200`) supaya batas antar section terlihat jelas, tidak menyatu.
+  - **Riset tren desain 2026** (`_docs/design/2026-design-trend-research.md`) — web search utk tren UI/UX 2026, dashboard SaaS enterprise, GOV.UK/USWDS, lalu disaring khusus untuk PITS sebagai aplikasi pemerintah (banyak tren seperti Y2K color, 3D/AR, glassmorphism dekoratif, bento grid EKSPLISIT direkomendasikan dihindari karena merusak kredibilitas). Kesimpulan bareng user: PITS bukan "jadul", tapi "terlalu utilitarian" — kurang di hierarki visual, ritme layout, motion, dan depth, bukan di palet/tipografi/struktur yang sudah solid.
+  - **Motion system diimplementasikan** sesuai prioritas ROI tertinggi dari user: hover-lift (150ms) hanya di elemen clickable (card record mobile), slide-in 200ms untuk `RecordDetailDrawer` + drawer mobile navbar (pakai varian `starting:` Tailwind v4 / `@starting-style`, CSS murni), FAQ accordion diganti dari native `<details>` (instan) jadi `<button aria-expanded>` + trik `grid-template-rows` (animasi 200ms, tetap accessible) — sudah diverifikasi bekerja di browser.
+  - **Depth terbatas untuk overlay**: `shadow-2xl` ditambahkan HANYA ke `RecordDetailDrawer` dan drawer mobile navbar (satu-satunya elemen dengan shadow di seluruh app) — prinsip border-only untuk card biasa dipertahankan sesuai keinginan user.
+  - **Border radius hierarki**: card besar (`OperationCard`, stat tile, step card, FAQ box, tabel wrapper, dll) `rounded-xl` → `rounded-2xl`; elemen kecil tetap radius lebih kecil.
+  - **Progressive disclosure Dashboard**: `StatusSummary` baru di `DashboardView.tsx` — ringkasan "Semua N dokumen tercatat on-chain" ditampilkan SEBELUM stat card detail, sesuai pola dashboard SaaS 2026 (jawaban singkat dulu, breakdown belakangan).
+  - Dokumentasi disinkronkan menyeluruh: `design-system.md` (§7 Layout System dirombak, §8 Motion System baru, §9 backlog diperbarui), `architecture/system-overview.md` (navbar, FAQ, Dashboard, PageContainer, EmptyState), `ONBOARDING.md` (aturan card+shadow+motion+PageContainer), `referensi/coding-standards.md` (aturan sama), `_docs/README.md` (link riset baru), `tasks/tasks.md`.
+- **Blocker / butuh keputusan dari Ersa**: tidak ada.
+- **Next steps**: backlog baru dari riset tren (#19 audit ritme layout & whitespace, #20 audit dark mode mandiri, #21 diferensiasi Upload vs Verify) — semua sengaja ditunda, butuh sesi tersendiri. Backlog lama masih terbuka: #2b (validasi server), #3 (cleanup test), #16 (quick-action Verifikasi di Dashboard).
+
+---
+
 ## [2026-08-01 18:00] — Claude Code
 
 - **Progress**: Navbar direstrukturisasi ("Layanan Dokumen" jadi menu utama), type scale diaudit dan direvisi 2x (termasuk ditemukan bug CSS global kritis), lalu review desain menyeluruh (skor 9/10-an dari user) diikuti perbaikan layout & mobile responsiveness — semua sudah diverifikasi visual di browser (desktop & mobile 375px). Akan di-commit ke branch baru (bukan `main`), tidak di-push.

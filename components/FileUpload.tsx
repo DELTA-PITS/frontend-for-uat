@@ -14,10 +14,10 @@ import { useLocale } from '@lib/i18n/LocaleContext';
 export interface FileUploadProps {
   /** The upload mode ('register' | 'verify') driving the workflow and labels */
   mode: UploadMode;
-  /** The title displayed in the operation card header */
-  title: string;
-  /** A brief description displayed below the title in the operation card */
-  description: string;
+  /** The title displayed in the operation card header. Omit when the page already has its own heading (hero) — avoids restating it. */
+  title?: string;
+  /** A brief description displayed below the title in the operation card. Omit along with `title`. */
+  description?: string;
   /** Custom label for the submit button. Defaults to 'Kirim Dokumen' */
   buttonLabel?: string;
   /** Additional CSS class names for custom styling */

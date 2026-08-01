@@ -142,7 +142,7 @@ export function Header({ session }: HeaderProps) {
 
       {/* Sub-nav row (desktop/tablet only) — only within the "Layanan Dokumen" section */}
       {isDocumentSection ? (
-        <nav className="hidden items-center gap-2 border-t border-base-300 bg-base-200/40 px-6 sm:flex">
+        <nav className="hidden items-center justify-center gap-8 border-t border-base-300 bg-base-200/40 px-6 sm:flex">
           {documentNavLinks.map(({ label, href, icon: NavIcon }) => {
             const isActive = pathname === href;
 
@@ -171,10 +171,10 @@ export function Header({ session }: HeaderProps) {
           <button
             type="button"
             aria-label={t.header.closeMenu}
-            className="absolute inset-0 bg-black/30"
+            className="absolute inset-0 bg-black/30 transition-opacity duration-200 starting:opacity-0"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <div className="absolute inset-y-0 right-0 flex w-full max-w-xs flex-col gap-1 overflow-y-auto border-l border-base-300 bg-base-100 p-4">
+          <div className="absolute inset-y-0 right-0 flex w-full max-w-xs flex-col gap-1 overflow-y-auto border-l border-base-300 bg-base-100 p-4 shadow-2xl transition-transform duration-200 ease-out starting:translate-x-full">
             <div className="mb-2 flex items-center justify-between">
               <span className="font-heading text-base font-semibold text-secondary">{t.header.orgName}</span>
               <button

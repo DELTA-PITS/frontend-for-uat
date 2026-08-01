@@ -60,9 +60,9 @@ export default function MetadataCard({ file }: MetadataCardProps) {
         : t.metadata.empty;
 
   return (
-    <div className="mx-auto mt-6 w-full max-w-3xl rounded-xl border border-base-300 bg-base-100 p-5">
+    <div className="w-full rounded-2xl border border-base-300 bg-base-100 p-5">
       <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-ink-muted">{t.metadata.heading}</p>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4">
         <Cell label={t.metadata.name} value={file?.name ?? t.metadata.empty} />
         <Cell label={t.metadata.size} value={file ? getFileSize(file) : t.metadata.empty} />
         <div className="flex flex-col gap-0.5">

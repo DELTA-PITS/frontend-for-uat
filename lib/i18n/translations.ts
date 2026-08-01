@@ -24,8 +24,6 @@ export const translations = {
       meta: 'PDF saja • Maksimal 20 MB • Tanpa akun',
     },
     verifyForm: {
-      title: 'Verifikasi Dokumen',
-      description: 'Unggah dokumen PDF untuk memastikan dokumen masih asli dan belum mengalami perubahan.',
       button: 'Verifikasi Dokumen',
     },
     tips: {
@@ -76,8 +74,6 @@ export const translations = {
       subtitle: 'Daftarkan dokumen institusi sebagai arsip digital yang dapat diverifikasi melalui blockchain.',
     },
     registerForm: {
-      title: 'Daftarkan Dokumen Baru',
-      description: 'Unggah dan daftarkan dokumen baru ke sistem',
       button: 'Kirim Dokumen',
     },
     beforeSubmit: {
@@ -133,6 +129,8 @@ export const translations = {
       errorNoToken: 'Token akses Keycloak tidak ditemukan',
       errorLoad: 'Gagal memuat data dokumen',
       errorConn: 'Tidak bisa terhubung ke layanan backend',
+      statusSummary: (count: number) =>
+        `Semua ${count.toLocaleString('id-ID')} dokumen berhasil tercatat on-chain — tidak ada isu terdeteksi.`,
     },
     stats: {
       total: 'Total Dokumen',
@@ -261,8 +259,6 @@ export const translations = {
       meta: 'PDF only • Max 20 MB • No account needed',
     },
     verifyForm: {
-      title: 'Verify Document',
-      description: 'Upload a PDF document to confirm it is authentic and has not been altered.',
       button: 'Verify Document',
     },
     tips: {
@@ -313,8 +309,6 @@ export const translations = {
       subtitle: 'Register an institutional document as a digital archive that can be verified via blockchain.',
     },
     registerForm: {
-      title: 'Register a New Document',
-      description: 'Upload and register a new document to the system',
       button: 'Submit Document',
     },
     beforeSubmit: {
@@ -365,6 +359,8 @@ export const translations = {
       errorNoToken: 'Keycloak access token not found',
       errorLoad: 'Failed to load document data',
       errorConn: 'Could not reach the backend service',
+      statusSummary: (count: number) =>
+        `All ${count.toLocaleString('en-US')} documents are recorded on-chain — no issues detected.`,
     },
     stats: {
       total: 'Total Documents',

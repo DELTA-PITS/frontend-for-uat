@@ -103,6 +103,7 @@ Level 24px (`text-2xl`) dan 36px (`text-4xl`) sengaja tidak dipakai lagi di code
 | `DashboardErrorAlert` | `components/dashboard/DashboardErrorAlert.tsx` | Terima kode error (`no_backend`/`no_token`/`load_failed`/`conn_failed`) dari server, terjemahkan & render alert di client |
 | `EmptyState` | `components/common/EmptyState.tsx` | Pola empty-state tunggal: ikon → judul → deskripsi → tombol aksi opsional. Semua empty state baru wajib pakai ini |
 | `TableSkeleton` | `components/dashboard/TableSkeleton.tsx` | Skeleton (bukan spinner) untuk `app/dashboard/loading.tsx` — dipakai Next.js saat Server Component Dashboard masih fetch data |
+| `PageContainer` | `components/layout/PageContainer.tsx` | Satu-satunya sumber lebar halaman (`narrow`/`content`/`wide`/`full`) + padding responsif bawaan — lihat §7 |
 
 **Pola hero terunifikasi**: `VerifyHero.tsx` dan `RegisterHero.tsx` berbagi struktur & ukuran identik — badge kecil dengan ikon inline (BUKAN lagi avatar lingkaran besar `h-16 w-16`, dihapus 2026-08-01 karena Verify/Register adalah halaman workflow yang dilewati cepat, bukan landing page untuk berlama-lama), judul `text-2xl sm:text-3xl` (Page Title, kecil di mobile), gradient tipis `from-base-100 to-primary/5` atau `to-base-200`, rata kiri, padding `py-8 sm:py-10` (dipadatkan dari `py-12`) — hanya beda warna aksen (primary untuk Verify, secondary untuk Register) dan copy. Jangan ubah salah satu tanpa menyamakan yang lain.
 
@@ -157,26 +158,71 @@ Level 24px (`text-2xl`) dan 36px (`text-4xl`) sengaja tidak dipakai lagi di code
 | Empty state `RecordsTable` inline → diekstrak jadi `components/common/EmptyState.tsx` reusable | Distandarkan supaya empty state baru di halaman lain tidak reinvent layout |
 | Focus state eksplisit (`*:focus-visible`, ring primary 2px) ditambahkan — sebelumnya hanya mengandalkan default browser/daisyUI | Aksesibilitas keyboard belum eksplisit didokumentasikan/dijamin konsisten di elemen custom (bukan native button/input) |
 | Padding halaman `px-6` flat → `px-4 sm:px-6 lg:px-8` di semua halaman utama | Selaras dengan rekomendasi breakpoint: mobile lebih rapat, desktop lebih lega |
+| **Layout system dibangun**: tiap halaman punya `max-w` sendiri secara ad hoc (Verify/Register `max-w-3xl`, Dashboard `max-w-7xl`) → satu komponen `PageContainer` dengan 4 variant tetap (`narrow`/`content`/`wide`/`full`) | Aplikasi terasa seperti beberapa app disatukan karena tiap halaman punya filosofi lebar sendiri; lihat `layout-md-breakpoint-audit-2026-08-01.md` |
+| Verify/Register: `OperationCard` `max-w-3xl`→`max-w-5xl`; Register: `MetadataCard`+`RequirementCard` jadi `grid md:grid-cols-2` (dulu ditumpuk `max-w-3xl` masing-masing) | Memanfaatkan ruang tablet/desktop yang sebelumnya terbuang karena kolom konten mentok sempit di semua ukuran layar |
+| Hero Verify/Register: judul & padding flat sejak `sm` → 3 tingkat (`text-2xl`/`md:text-3xl`/`lg:text-4xl`, `py-8`/`md:py-10`/`lg:py-14`) | Tablet/desktop terasa lebih lapang; Hero sengaja dibedakan dari Page Title flat Dashboard/Result karena perannya presentasional, bukan judul workspace |
+| Sub-nav navbar rata kiri (strip kosong di kanan) → `justify-center` | Timpang dibanding baris utama yang full-width di layar lebar |
+| Dashboard stat card `grid-cols-2 lg:grid-cols-4` (loncat, tanpa transisi tablet) → `grid-cols-2 md:grid-cols-3 xl:grid-cols-4` + card ke-4 `md:col-span-3 xl:col-span-1` | Tablet (768–1023px) sebelumnya tidak memanfaatkan ruang ekstra; span-fix mencegah kartu ke-4 jadi yatim piatu di grid 3 kolom |
+| Dashboard tabel: breakpoint kartu→tabel `md` (768px) → `lg` (1024px) | 768px pas berimpit lebar iPad portrait, kolom tabel jadi sesak begitu baru saja beralih |
+| `RecordDetailDrawer` lebar flat `max-w-md` → bertingkat `sm:max-w-md lg:max-w-lg xl:max-w-xl` | Detail record terasa lega di layar lebar, bukan tetap 448px sampai selebar apapun monitor |
+| `FAQSection` `max-w-3xl` sendiri → ikut lebar `content` (5xl) seperti section lain, keterbacaan dijaga cukup lewat `max-w-2xl` di `<p>` jawaban | Section terlihat "tidak lurus" dibanding section lain saat di-scroll — dikonfirmasi lewat DOM measurement |
+| `OperationCard` title/description dihapus dari Verify & Register (`title`/`description` sekarang opsional, section header tidak render kalau kosong) | Redundan — Hero di atasnya sudah bilang hal yang sama dengan kalimat berbeda ("Registrasi Dokumen" + subtitle, lalu diulang lagi "Daftarkan Dokumen Baru" + deskripsi serupa) |
+| Verify: section band ditambah — Hero (gradient), Form+Tips (`bg-base-100`, blend dengan halaman), Cara Kerja+FAQ (`bg-base-200` solid, card putih mengambang di atasnya) | Sebelumnya semua section menyatu di background yang sama, sulit membedakan batas antar section |
 
 ---
 
-## 7. Breakpoint & Layout
+## 7. Layout System (`PageContainer`)
 
-Breakpoint Tailwind default dipakai apa adanya (tidak ada breakpoint custom): `sm` 640px, `md` 768px, `lg` 1024px.
+**Direvisi total 2026-08-01** setelah audit menemukan tiap halaman punya "keluarga lebar" sendiri secara ad hoc (Verify/Register `max-w-3xl`, Dashboard `max-w-7xl`, navbar full-width tapi sub-nav ikut isi) — bikin aplikasi terasa seperti beberapa app yang disatukan. Lihat rasional lengkap di `_docs/design/layout-md-breakpoint-audit-2026-08-01.md`.
 
-| Rentang | Perilaku |
+Sekarang HANYA ada 4 lebar halaman yang sah, dikontrol lewat satu komponen bersama: **`components/layout/PageContainer.tsx`** (`variant` + `as`, padding responsif `px-4 sm:px-6 lg:px-8` sudah built-in — jangan tulis ulang padding manual di halaman).
+
+| Variant | Class | Dipakai untuk |
+|---|---|---|
+| `narrow` | `max-w-3xl` | Cadangan untuk form berdiri sendiri yang sengaja sempit (belum ada pemakaian nyata) |
+| `content` | `max-w-5xl` | Verify, Register — hero + `OperationCard` + kartu pendukung, semua dalam SATU `PageContainer` supaya sejajar |
+| `wide` | `max-w-7xl` | Dashboard (`as="main"`) |
+| `full` | `w-full` (tanpa max-w) | Cadangan untuk landing/full-bleed |
+
+**Result** (`ResultView`) bukan pemakai `PageContainer` langsung — dia tetap pakai `OperationCard` dengan `containerClassName="!max-w-2xl"` (perlu `!` supaya menang atas default `max-w-5xl` milik `OperationCard` di semua breakpoint, bukan cuma di `lg` seperti sebelumnya) karena halamannya cuma satu card tunggal, tidak ada saudara sejajar yang perlu disamakan lebarnya.
+
+**Revisi 2026-08-01 (sesi sama)**: `FAQSection` semula dibuat sengaja lebih sempit (`max-w-3xl` sendiri, bukan ikut `content` 5xl) demi keterbacaan jawaban — tapi ini malah bikin section-nya kelihatan "tidak sejajar/tidak lurus" dibanding section lain saat di-scroll (feedback user, dikonfirmasi lewat DOM: box FAQ mulai di `left: 128px` sementara section lain di `left: 0`). **Diperbaiki**: `FAQSection` sekarang ikut lebar penuh `content` (5xl) seperti section lain — keterbacaan jawaban dijaga dengan cara lain, cukup `max-w-2xl` pada `<p>` jawabannya saja, bukan pada seluruh section. Pelajaran: pengecualian lebar per-section (biarpun beralasan) berisiko terasa sebagai bug alignment kalau pengguna tidak tahu itu disengaja — lebih aman batasi lebar di level teks/elemen kecil, bukan di level section.
+
+### Breakpoint (Tailwind default, tidak ada custom): `sm` 640px, `md` 768px, `lg` 1024px, `xl` 1280px
+
+| Elemen | Perilaku per breakpoint |
 |---|---|
-| `<640px` (mobile) | Navbar jadi hamburger + drawer; hero dipadatkan tanpa avatar ikon; dropzone hanya menampilkan aksi utama; tombol submit sticky di bawah; tabel Dashboard jadi kartu bertumpuk; stat card 2 kolom; drawer detail jadi bottom sheet; padding halaman `px-4`. |
-| `640–1023px` (tablet, `sm`–`lg`) | Navbar baris utama + sub-nav penuh (bukan hamburger); stat card tetap 2 kolom (baru naik ke 4 di `lg`); tabel Dashboard masih dalam mode kartu sampai `md` (768px), baru jadi tabel penuh di `md` ke atas; padding halaman `px-6`. |
-| `≥1024px` (desktop, `lg`) | Stat card 4 kolom sejajar; drawer detail sisi kanan penuh tinggi; padding halaman `px-8`. |
+| Navbar | Hamburger+drawer `<sm`; baris utama + sub-nav `≥sm` — sub-nav sekarang **`justify-center`** (bukan rata kiri) supaya tab Registrasi/Verifikasi tidak menyisakan strip kosong timpang di layar lebar. |
+| Hero (Verify/Register) | Judul 3 tingkat: `text-2xl` mobile → `md:text-3xl` tablet → `lg:text-4xl` desktop. Padding: `py-8` → `md:py-10` → `lg:py-14`. **Sengaja beda dari Page Title Dashboard/Result** (flat `text-3xl`) — Hero adalah band presentasional (gradient, badge), bukan judul workspace polos, jadi wajar kalau perannya beda dan boleh membesar di layar lebar. |
+| Kartu pendukung Register (`MetadataCard` + `RequirementCard`) | `grid grid-cols-1 md:grid-cols-2 gap-6` — 1 kolom di mobile, sejajar 2 kolom mulai `md`. Grid internal masing-masing card (dulu `sm:grid-cols-2`) dihapus supaya tidak terjadi grid-dalam-grid yang bikin sesak begitu card sudah dipersempit jadi setengah lebar. |
+| Kartu pendukung Verify (`TipsCard`) | Cuma satu card (tidak ada pasangan) — tetap 1 kolom, tapi ikut lebar penuh `content` (5xl), grid internal checklist-nya (`sm:grid-cols-2`) dipertahankan karena di sini dia punya ruang penuh untuk 2 kolom. |
+| Dashboard — stat card | `grid-cols-2` mobile → `md:grid-cols-3` tablet → `xl:grid-cols-4` desktop (BUKAN `lg`, sengaja — 1024px masih terasa sempit untuk 4 card + padding + sidebar). Card ke-4 ("Status Sistem") diberi `md:col-span-3 xl:col-span-1` supaya di rentang `md`–`lg` (3 kolom, 4 item) dia jadi banner lebar di baris kedua, bukan kartu yatim piatu setengah kosong. |
+| Dashboard — tabel vs kartu | Breakpoint switch dinaikkan dari `md` ke **`lg`** — mode kartu bertahan sampai tablet penuh (termasuk landscape), tabel penuh baru muncul di `≥lg` supaya kolom-kolomnya tidak sesak persis di lebar iPad. |
+| `RecordDetailDrawer` | Lebar bertingkat: `sm:max-w-md` → `lg:max-w-lg` → `xl:max-w-xl` (sebelumnya flat `max-w-md` di semua ukuran ≥`sm`). |
 
-Catatan: breakpoint tabel Dashboard (`md`, 768px) sengaja tidak disamakan dengan breakpoint navbar/hero (`sm`, 640px) — tabel butuh lebar lebih untuk kolom-kolomnya tetap terbaca, sementara navbar/hero cukup ruang sempit untuk beralih ke bentuk ringkasnya.
+## 8. Motion System
 
-## 8. Backlog Desain (belum dikerjakan di revisi ini)
+**Ditambahkan 2026-08-01** setelah riset tren desain 2026 (`2026-design-trend-research.md`) menyimpulkan motion adalah perubahan dengan ROI tertinggi (dampak besar, risiko kecil) untuk membuat PITS terasa modern tanpa mengubah identitas visual (tetap border-only, tanpa shadow di card biasa).
+
+| Elemen | Motion | Cara |
+|---|---|---|
+| Hover (elemen benar-benar clickable saja, bukan semua card) | 150ms, translate tipis + border/shadow | `transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md` — dipakai di kartu record mobile (`RecordsTable`), TIDAK di card statis (`TipsCard`, `RequirementCard`, dll — card itu bukan tombol, hover-lift di situ menyesatkan) |
+| `RecordDetailDrawer` & drawer mobile navbar | Slide masuk 200ms, backdrop fade 200ms | `transition-transform duration-200 ease-out starting:translate-x-full` (atau `translate-y-full` untuk bottom sheet mobile) — pakai varian `starting:` Tailwind v4 (`@starting-style`), murni CSS tanpa JS animasi |
+| FAQ accordion | Expand/collapse 200ms | Native `<details>` diganti `<button aria-expanded>` + `<div>` dengan trik `grid-template-rows: 0fr → 1fr` — accordion asli tidak bisa animasi height tanpa JS, trik ini CSS murni dan tetap accessible (button asli, bukan div) |
+
+**Depth terbatas untuk overlay saja** (bukan semua card, sesuai prinsip border-only yang dipertahankan): `RecordDetailDrawer` dan drawer mobile navbar diberi `shadow-2xl` — satu-satunya elemen di app yang punya shadow, karena keduanya benar-benar melayang di atas konten lain (z-50, fixed overlay). Card biasa tetap border-only, tanpa shadow.
+
+**Border radius hierarki**: card besar (`OperationCard`, stat tile, step card, FAQ box, tabel wrapper, dll) dinaikkan dari `rounded-xl` ke `rounded-2xl` — elemen kecil (button, badge, ikon tile) tetap radius lebih kecil (`rounded-lg`/default daisyUI). Sebelumnya semua ukuran radius seragam, sekarang ada tingkatan sesuai ukuran elemen.
+
+**Progressive disclosure di Dashboard**: satu baris ringkasan status (`StatusSummary` di `DashboardView.tsx`) ditambahkan SEBELUM stat card — "Semua N dokumen berhasil tercatat on-chain — tidak ada isu terdeteksi." Jawaban "apakah semuanya baik-baik saja?" diberi duluan, baru breakdown detail (stat card → tabel). Disembunyikan otomatis kalau belum ada dokumen (empty state di bawahnya sudah cukup).
+
+## 9. Backlog Desain (belum dikerjakan di revisi ini)
 
 Item dari review desain 2026-08-01 yang sengaja **belum** diimplementasikan — dicatat di `_docs/tasks/tasks.md` supaya tidak hilang:
 
-- Animasi masuk/keluar untuk `RecordDetailDrawer` (slide) dan FAQ accordion (native `<details>`) — saat ini transisi hover sudah 150ms (`transition-colors` default), tapi belum ada durasi eksplisit untuk drawer (usul: 250ms) atau accordion (usul: 200ms).
 - Tombol quick-action "Verifikasi Dokumen" di samping "Daftarkan Dokumen" pada `DashboardHeader` (saat ini hanya ada Registrasi) — akses ke Verifikasi dari Dashboard masih lewat navbar.
 - Komponen generik tambahan yang diusulkan (`PageHeader`, `SectionHeader`, `FilterBar`, `ConfirmDialog`, `StatCard` generik) — belum diekstrak karena baru ada satu use-case nyata per pola; ekstraksi baru bernilai kalau ada use-case kedua (hindari abstraksi prematur).
 - Border hierarchy 4 tingkat (`border-base-300` card utama / `border-base-200` card sekunder / `hover:border-primary/40` / `focus:border-primary`) — saat ini sebagian besar card seragam pakai `border-base-300`, belum ada varian "sekunder" karena belum ada kebutuhan visual bertingkat yang konkret.
+- Spacing system `gap`/`py` per breakpoint (`px-4/gap-4/py-8` mobile → `px-6/gap-6/py-10` tablet → `px-8/gap-8/py-12` desktop) baru diterapkan konsisten di grid/padding BARU yang dibuat sesi ini (Register 2-col grid, Hero) — retrofit penuh ke gap-gap lama yang belum ikut pola ini belum dilakukan (risiko regresi terlalu besar untuk dikerjakan sekaligus tanpa verifikasi per halaman).
+- **Audit ritme layout & whitespace menyeluruh** dan **audit dark mode sebagai desain mandiri** (bukan sekadar invert warna: border lebih redup, shadow nyaris hilang, surface lebih banyak) — keduanya disepakati layak dikerjakan tapi butuh sesi tersendiri, bukan dikerjakan tergesa bareng motion system.
+- Role-based personalization lebih dalam untuk Dashboard — butuh data pemakaian nyata dulu, spekulatif tanpa itu.

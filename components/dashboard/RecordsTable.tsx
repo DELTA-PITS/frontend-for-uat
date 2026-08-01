@@ -79,8 +79,8 @@ export default function RecordsTable({ records, onSelect, density, hasAnyRecords
 
   return (
     <>
-      {/* Desktop / tablet table */}
-      <div className="hidden overflow-x-auto rounded-xl border border-base-300 bg-base-100 md:block">
+      {/* Desktop table (>=lg) — table stays a card list on tablet portrait since columns felt cramped there */}
+      <div className="hidden overflow-x-auto rounded-2xl border border-base-300 bg-base-100 lg:block">
         <table className="table">
           <thead>
             <tr className="bg-base-200 text-xs font-semibold uppercase tracking-wide text-base-content/80">
@@ -138,8 +138,8 @@ export default function RecordsTable({ records, onSelect, density, hasAnyRecords
         </table>
       </div>
 
-      {/* Mobile card list */}
-      <div className="flex flex-col gap-3 md:hidden">
+      {/* Card list (<lg) — covers mobile and tablet portrait/landscape */}
+      <div className="flex flex-col gap-3 lg:hidden">
         {records.map((record) => {
           const { Icon: FileIcon, color } = getFileIconConfig(record.filename ?? '');
           return (
@@ -147,7 +147,7 @@ export default function RecordsTable({ records, onSelect, density, hasAnyRecords
               key={record.record_id}
               type="button"
               onClick={() => onSelect(record)}
-              className="flex flex-col gap-3 rounded-xl border border-base-300 bg-base-100 p-4 text-left"
+              className="flex flex-col gap-3 rounded-2xl border border-base-300 bg-base-100 p-4 text-left transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <FileIcon style={{ fontSize: '1.6rem', color }} className="shrink-0" aria-hidden="true" />

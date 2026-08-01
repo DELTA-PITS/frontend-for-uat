@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import StatsCards from '@components/dashboard/StatsCards';
 import DashboardToolbar, { type SortOption } from '@components/dashboard/DashboardToolbar';
 import RecordsTable from '@components/dashboard/RecordsTable';
@@ -24,6 +25,22 @@ function formatClock(date: Date): string {
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
   return `${hours}.${minutes}`;
+}
+
+/**
+ * One-line "is everything okay?" answer shown before the stat tiles —
+ * progressive disclosure: give the confident summary first, let staff drill
+ * into the stat breakdown and table only if they want more. Hidden when
+ * there are no records yet since the empty state below already covers that.
+ */
+function StatusSummary({ count, label }: { count: number; label: string }) {
+  if (count === 0) return null;
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-success/20 bg-success/5 px-5 py-4">
+      <CheckCircleOutlinedIcon className="shrink-0 text-success" style={{ fontSize: '1.4rem' }} />
+      <p className="text-sm text-base-content">{label}</p>
+    </div>
+  );
 }
 
 /**
@@ -98,9 +115,11 @@ export default function DashboardView({ records }: DashboardViewProps) {
 
   return (
     <div className="flex flex-col gap-8">
+      <StatusSummary count={records.length} label={t.dashboard.statusSummary(records.length)} />
+
       <StatsCards records={records} />
 
-      <div className="flex flex-col gap-4 rounded-xl border border-base-300 bg-base-100 p-5">
+      <div className="flex flex-col gap-4 rounded-2xl border border-base-300 bg-base-100 p-5">
         <h2 className="text-base font-semibold text-secondary">{t.table.document}</h2>
 
         <DashboardToolbar

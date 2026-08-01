@@ -30,8 +30,9 @@ Aplikasi Next.js App Router dengan tiga area: **Verify** (publik, `/`), **Regist
 ### Navbar (global)
 | File | Catatan |
 |---|---|
-| `components/layout/Header.tsx` | 2 baris: identitas institusi + Dashboard + `LanguageSwitcher` + Masuk/Keluar (atas), menu "Layanan Dokumen" — Registrasi/Verifikasi (bawah) |
-| `components/layout/LanguageSwitcher.tsx` | Toggle ID/EN, baca-tulis `LocaleContext` |
+| `components/layout/Header.tsx` | **≥sm**: 1 baris utama (Layanan Dokumen, Dashboard, `LanguageSwitcher`, Masuk/Keluar) + sub-nav Registrasi/Verifikasi (hanya tampil di section dokumen). **<sm**: logo + hamburger, membuka drawer full-screen (slide 200ms) berisi daftar menu vertikal |
+| `components/layout/LanguageSwitcher.tsx` | Toggle ID/EN, baca-tulis `LocaleContext`, dipakai di navbar dan drawer mobile |
+| `components/layout/PageContainer.tsx` | Satu-satunya sumber lebar+padding halaman — variant `narrow`/`content`/`wide`/`full` (lihat `_docs/design/design-system.md` §7) |
 
 ### Verify (`/`, publik)
 | File | Catatan |
@@ -40,7 +41,7 @@ Aplikasi Next.js App Router dengan tiga area: **Verify** (publik, `/`), **Regist
 | `components/verify/VerifyHero.tsx` | Hero teal/primary, badge "Akses Publik" |
 | `components/verify/TipsCard.tsx` | "Mengapa menggunakan sistem ini?" |
 | `components/verify/HowItWorks.tsx` | 4 langkah cara kerja |
-| `components/verify/FAQSection.tsx` | 3 pertanyaan (accordion native `<details>`) |
+| `components/verify/FAQSection.tsx` | 3 pertanyaan, accordion terkontrol (`<button aria-expanded>` + trik `grid-template-rows`, animasi 200ms — bukan native `<details>`) |
 
 ### Register (`/publisher`, butuh role publisher)
 | File | Catatan |
@@ -56,22 +57,25 @@ Aplikasi Next.js App Router dengan tiga area: **Verify** (publik, `/`), **Regist
 |---|---|
 | `components/FileUpload.tsx` | **Controlled component** — state `file`/`isUploading` diangkat ke halaman (`useFileUpload`), bukan dikelola sendiri. Prop `accent` (`primary`/`secondary`) mewarnai `Dropzone`. |
 | `components/common/Dropzone.tsx` | Validasi client-side PDF-only + max 20MB, pesan error inline |
-| `components/common/DocumentPreview.tsx`, `components/common/LoadingCard.tsx`, `components/common/OperationCard.tsx`, `components/common/OperationButton.tsx` | Border-only (tanpa shadow), semua sudah pakai `useLocale()` |
+| `components/common/DocumentPreview.tsx`, `components/common/LoadingCard.tsx`, `components/common/OperationCard.tsx`, `components/common/OperationButton.tsx` | Border-only (tanpa shadow), semua sudah pakai `useLocale()`. `OperationCard`: `title`/`description` opsional (dikosongkan di Verify/Register karena Hero sudah menjelaskan, dead tanpa render kalau kosong) |
+| `components/common/EmptyState.tsx` | Pola empty-state tunggal (ikon → judul → deskripsi → tombol aksi), dipakai `RecordsTable` |
 | `hooks/useUpload.ts` | Submit logic, redirect ke `/result/*` via `lib/resultPayload.ts` |
 
 ### Dashboard (`/dashboard`, butuh role publisher)
 | File | Catatan |
 |---|---|
-| `app/dashboard/page.tsx` | Server Component — fetch `records` server-side, tidak ada `useEffect` fetch |
-| `components/dashboard/DashboardHeader.tsx` | Client component kecil untuk judul+CTA yang perlu ikut locale |
+| `app/dashboard/page.tsx` | Server Component — fetch `records` server-side, tidak ada `useEffect` fetch. Pakai `PageContainer as="main" variant="wide"` |
+| `app/dashboard/loading.tsx` | Skeleton (`TableSkeleton`), bukan spinner, saat Server Component masih fetch |
+| `components/dashboard/DashboardHeader.tsx` | Client component kecil untuk judul+CTA (full-width di mobile) yang perlu ikut locale |
 | `components/dashboard/DashboardErrorAlert.tsx` | Maps error **code** (`no_backend`/`no_token`/`load_failed`/`conn_failed`) dari server ke pesan terjemahan di client |
-| `components/dashboard/DashboardView.tsx` | Orkestrasi state (search/filter/sort/density/pagination/drawer) |
-| `components/dashboard/StatsCards.tsx` | 4 kartu setara: Total, Publisher, Bulan Ini, Status Sistem |
+| `components/dashboard/DashboardView.tsx` | Orkestrasi state (search/filter/sort/density/pagination/drawer). Render `StatusSummary` (progressive disclosure — "Semua N dokumen tercatat on-chain") sebelum `StatsCards` |
+| `components/dashboard/StatsCards.tsx` | 4 kartu: Total, Publisher, Bulan Ini, Status Sistem — grid `2/3/4` kolom (mobile/`md`/`xl`), kartu Status span 3 kolom di rentang tablet supaya tidak jadi yatim piatu |
 | `components/dashboard/DashboardToolbar.tsx` | Search (baris sendiri) + filter/sort/density/refresh (baris kedua) |
-| `components/dashboard/RecordsTable.tsx` | Tabel (desktop) + card (mobile), TANPA kolom hash |
+| `components/dashboard/RecordsTable.tsx` | Tabel (`≥lg`) + card (`<lg`, termasuk tablet portrait), TANPA kolom hash. Hover-lift di card mobile (elemen clickable) |
 | `components/dashboard/Pagination.tsx` | Client-side, atas seluruh data yang sudah di-fetch |
-| `components/dashboard/RecordDetailDrawer.tsx` | **Drawer kanan** (bukan modal tengah) — tabel tetap terlihat di belakang |
+| `components/dashboard/RecordDetailDrawer.tsx` | Drawer kanan (`≥sm`, lebar bertingkat `md/lg/xl`) / bottom sheet (`<sm`) — tabel tetap terlihat di belakang. Slide-in 200ms + `shadow-2xl` (satu-satunya elemen dengan shadow di app, karena overlay) |
 | `components/dashboard/CopyButton.tsx` | Copy-to-clipboard kecil, dipakai drawer & result page |
+| `components/dashboard/TableSkeleton.tsx` | Skeleton loading untuk `app/dashboard/loading.tsx` |
 
 ### Result (`/result/success`, `/result/failure`)
 | File | Catatan |
