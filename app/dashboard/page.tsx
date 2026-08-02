@@ -57,7 +57,7 @@ export default async function DashboardPage() {
   const { records, errorCode } = await fetchRecords(session);
 
   return (
-    <PageContainer as="main" variant="wide" className="py-8 sm:py-10">
+    <PageContainer variant="wide" className="py-8 sm:py-10">
       <DashboardHeader />
 
       {errorCode ? <DashboardErrorAlert code={errorCode} /> : <DashboardView records={records} />}

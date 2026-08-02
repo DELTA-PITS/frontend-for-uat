@@ -30,7 +30,16 @@ export default async function RootLayout({ children }: { readonly children: Reac
         <LocaleProvider>
           <BfcacheRefresh />
           <Header session={session} />
-          <main className="flex-1 flex items-center justify-center">
+          {/* Plain flex-col, not `items-center justify-center` — that would
+              force every page to be vertically centered like a landing-page
+              card. Pages that want centering (Verify/Register upload card,
+              ResultView) already do it themselves via `mx-auto my-auto`,
+              which still works here (flex-item auto margins absorb free
+              space regardless of the parent's align-items/justify-content).
+              Content-heavy top-anchored pages (Dashboard) render normally
+              instead of floating in the middle of a tall viewport when
+              their content is short (e.g. an error/empty state). */}
+          <main className="flex-1 flex flex-col">
             {children}
           </main>
           <footer />

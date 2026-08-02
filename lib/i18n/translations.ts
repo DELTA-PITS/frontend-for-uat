@@ -131,6 +131,9 @@ export const translations = {
       errorLoad: 'Gagal memuat data dokumen',
       errorConn: 'Tidak bisa terhubung ke layanan backend',
       errorSessionExpired: 'Sesi kamu sudah berakhir. Silakan masuk kembali.',
+      errorLoadTitle: 'Gagal Memuat Dokumen',
+      errorSessionExpiredTitle: 'Sesi Berakhir',
+      retry: 'Coba Lagi',
       statusSummary: (count: number) =>
         `Semua ${count.toLocaleString('id-ID')} dokumen berhasil diregistrasikan dan tercatat di blockchain.`,
     },
@@ -363,6 +366,9 @@ export const translations = {
       errorLoad: 'Failed to load document data',
       errorConn: 'Could not reach the backend service',
       errorSessionExpired: 'Your session has expired. Please sign in again.',
+      errorLoadTitle: 'Failed to Load Documents',
+      errorSessionExpiredTitle: 'Session Expired',
+      retry: 'Try Again',
       statusSummary: (count: number) =>
         `All ${count.toLocaleString('en-US')} documents have been successfully registered and recorded on the blockchain.`,
     },

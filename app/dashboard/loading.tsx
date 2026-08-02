@@ -8,7 +8,7 @@ import PageContainer from '@components/layout/PageContainer';
  */
 export default function DashboardLoading() {
   return (
-    <PageContainer as="main" variant="wide" className="py-8 sm:py-10">
+    <PageContainer variant="wide" className="py-8 sm:py-10">
       <div className="mb-8 h-16 w-full max-w-xl animate-pulse rounded-lg bg-base-200" />
       <TableSkeleton />
     </PageContainer>
