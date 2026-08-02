@@ -56,11 +56,22 @@ export default async function DashboardPage() {
 
   const { records, errorCode } = await fetchRecords(session);
 
+  if (errorCode) {
+    // No DashboardHeader here on purpose — "Registered Documents" title and
+    // the "Register Document" CTA don't make sense next to a state the user
+    // can't act on through the dashboard (expired session, unreachable
+    // backend, etc).
+    return (
+      <PageContainer variant="wide" className="py-8 sm:py-10">
+        <DashboardErrorAlert code={errorCode} />
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer variant="wide" className="py-8 sm:py-10">
       <DashboardHeader />
-
-      {errorCode ? <DashboardErrorAlert code={errorCode} /> : <DashboardView records={records} />}
+      <DashboardView records={records} />
     </PageContainer>
   );
 }

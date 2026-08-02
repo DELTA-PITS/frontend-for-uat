@@ -8,16 +8,18 @@ import { useLocale } from '@lib/i18n/LocaleContext';
 export type DashboardErrorCode = 'no_backend' | 'no_token' | 'load_failed' | 'conn_failed' | 'session_expired';
 
 /**
- * Full-width empty-state card for the dashboard's server-side fetch
- * failures — mirrors EmptyState's icon/title/description/action shape
- * (not reusing EmptyState directly since this needs a sign-in form action,
- * not a plain link) so it reads as a normal part of the page instead of a
- * raw alert banner sitting under the header. The server component only
- * knows an error *code* (locale is a client-only concern, stored in
- * localStorage) — this component maps that code to the current locale's
- * copy. `session_expired` gets a re-login CTA since it's the one case the
- * user can actually resolve themselves; everything else gets a retry
- * button since a reload is the only self-service option.
+ * Full-page state for the dashboard's server-side fetch failures — big
+ * status-icon badge (same visual language as ResultView's StatusIcon),
+ * heading, description, single action, no card border/background. The
+ * page renders this INSTEAD of DashboardHeader/DashboardView (see
+ * app/dashboard/page.tsx) — none of the dashboard chrome (title, "Register
+ * Document" CTA) makes sense to show alongside an error the user can't
+ * act on through the dashboard itself. The server component only knows an
+ * error *code* (locale is a client-only concern, stored in localStorage) —
+ * this component maps that code to the current locale's copy.
+ * `session_expired` gets a re-login CTA since it's the one case the user
+ * can actually resolve themselves; everything else gets a retry button
+ * since a reload is the only self-service option.
  */
 export default function DashboardErrorAlert({ code }: { code: DashboardErrorCode }) {
   const { t } = useLocale();
@@ -32,20 +34,22 @@ export default function DashboardErrorAlert({ code }: { code: DashboardErrorCode
   }[code];
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-error/20 bg-error/5 px-6 py-20 text-center shadow-card">
-      {isSessionExpired ? (
-        <LockClockOutlinedIcon className="text-error" style={{ fontSize: '2.5rem' }} />
-      ) : (
-        <ErrorOutlineOutlinedIcon className="text-error" style={{ fontSize: '2.5rem' }} />
-      )}
-      <h3 className="text-base font-semibold text-base-content">
+    <div className="flex min-h-[65vh] w-full flex-col items-center justify-center gap-4 text-center">
+      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-error/10 text-error">
+        {isSessionExpired ? (
+          <LockClockOutlinedIcon style={{ fontSize: '2.5rem' }} />
+        ) : (
+          <ErrorOutlineOutlinedIcon style={{ fontSize: '2.5rem' }} />
+        )}
+      </div>
+      <h1 className="text-xl font-bold text-base-content">
         {isSessionExpired ? t.dashboard.errorSessionExpiredTitle : t.dashboard.errorLoadTitle}
-      </h3>
-      <p className="max-w-sm text-sm text-base-content/70">{description}</p>
+      </h1>
+      <p className="max-w-sm text-sm text-ink-secondary">{description}</p>
       {isSessionExpired ? (
-        <SignIn className="btn btn-primary btn-sm mt-2">{t.header.signIn}</SignIn>
+        <SignIn className="btn btn-primary mt-2">{t.header.signIn}</SignIn>
       ) : (
-        <button type="button" onClick={() => window.location.reload()} className="btn btn-sm mt-2">
+        <button type="button" onClick={() => window.location.reload()} className="btn mt-2">
           {t.dashboard.retry}
         </button>
       )}
