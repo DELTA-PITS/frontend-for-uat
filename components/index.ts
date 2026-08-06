@@ -19,6 +19,7 @@ export { UploadError, registerFile, verifyFile } from './api';
 
 // Common / Reusable Components
 export { default as DocumentPreview } from './common/DocumentPreview';
+export { default as EmptyState } from './common/EmptyState';
 export { default as Dropzone } from './common/Dropzone';
 export type { DropzoneProps } from './common/Dropzone';
 export { FilledIcon } from './common/FilledIcon';

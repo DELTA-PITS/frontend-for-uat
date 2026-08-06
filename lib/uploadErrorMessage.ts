@@ -1,58 +1,55 @@
 import type { UploadMode } from '@/types';
 import type { ApiResponse } from '@/types/api.types';
+import type { Dictionary } from '@lib/i18n/translations';
 
 type FailureMessageArgs = {
   source: UploadMode;
   response?: ApiResponse;
   error?: string;
+  t: Dictionary;
 };
 
 function asData(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
 }
 
-function getOperationLabel(source: UploadMode) {
-  return source === 'register' ? 'registration' : 'verification';
+function getOperationLabel(source: UploadMode, t: Dictionary) {
+  return source === 'register' ? t.uploadErrors.operationRegister : t.uploadErrors.operationVerify;
 }
 
-function getDefaultFailureMessage(source: UploadMode) {
-  return `The ${getOperationLabel(source)} process failed.`;
-}
-
-function getCommonHttpFailureMessage(statusCode: number, source: UploadMode) {
-  const operation = getOperationLabel(source);
+function getCommonHttpFailureMessage(statusCode: number, source: UploadMode, t: Dictionary) {
+  const operation = getOperationLabel(source, t);
+  const e = t.uploadErrors;
 
   switch (statusCode) {
     case 400:
-      return `The ${operation} request was invalid. Please check the file and try again.`;
+      return e.invalidRequest(operation);
     case 401:
-      return 'Only registered publishers can register documents. Please sign in with a registered publisher account and retry.';
+      return e.unauthorized;
     case 403:
-      return 'You do not have permission to perform this action.';
+      return e.forbidden;
     case 404:
-      return 'The requested service was not found. Please try again later.';
+      return e.notFound;
     case 408:
-      return `The ${operation} request timed out. Please retry.`;
+      return e.timeout(operation);
     case 409:
-      return source === 'register'
-        ? 'Registration failed because the file is already registered in PITS.'
-        : `The ${operation} request conflicts with the current server state.`;
+      return source === 'register' ? e.alreadyRegistered : e.conflict(operation);
     case 413:
-      return 'The uploaded file is too large. Please select a smaller file.';
+      return e.tooLarge;
     case 415:
-      return 'This file type is not supported.';
+      return e.unsupportedType;
     case 422:
-      return `The ${operation} request could not be processed. Please verify the file and retry.`;
+      return e.unprocessable(operation);
     case 429:
-      return 'Too many requests were sent. Please wait a moment and try again.';
+      return e.tooManyRequests;
     case 500:
-      return 'The server encountered an internal error. Please try again later.';
+      return e.serverError;
     case 502:
-      return 'The upstream service returned an invalid response. Please try again.';
+      return e.badGateway;
     case 503:
-      return 'The service is temporarily unavailable. Please try again later.';
+      return e.unavailable;
     case 504:
-      return 'The service took too long to respond. Please try again later.';
+      return e.gatewayTimeout;
     default:
       return null;
   }
@@ -69,23 +66,23 @@ function isAlreadyRegistered(response?: ApiResponse) {
   return data.already_existed === true || backend.already_existed === true;
 }
 
-export function getUploadFailureMessage({ source, response, error }: FailureMessageArgs) {
+export function getUploadFailureMessage({ source, response, error, t }: FailureMessageArgs) {
   if (source === 'register' && isAlreadyRegistered(response)) {
-    return 'Registration failed because the file is already registered in PITS.';
+    return t.uploadErrors.alreadyRegistered;
   }
 
   if (response?.statusCode) {
-    const commonMessage = getCommonHttpFailureMessage(response.statusCode, source);
+    const commonMessage = getCommonHttpFailureMessage(response.statusCode, source, t);
     if (commonMessage) return commonMessage;
   }
 
   if (response?.backendStatusText?.toLowerCase() === 'unauthorized') {
-    return 'Only registered publishers can register documents. Please sign in with a registered publisher account and retry.';
+    return t.uploadErrors.unauthorized;
   }
 
   if (hasText(error)) return error.trim();
   if (hasText(response?.error)) return response.error.trim();
   if (hasText(response?.message)) return response.message.trim();
 
-  return getDefaultFailureMessage(source);
+  return t.uploadErrors.genericFailure(getOperationLabel(source, t));
 }

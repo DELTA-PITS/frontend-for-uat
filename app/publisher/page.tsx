@@ -1,19 +1,24 @@
-'use client';
+import { redirect } from 'next/navigation';
+import { auth } from '@/auth';
+import PublisherPortalClient from '@components/register/PublisherPortalClient';
 
-import FileUpload from '@components/FileUpload';
+// Defense-in-depth: `proxy.ts` already blocks unauthenticated requests to
+// this route at the edge, but this check makes sure the page itself never
+// renders the publisher form without a valid session even if the proxy
+// matcher is ever misconfigured — see _docs/security/session-auth-audit-2026-08-02.md.
+// `force-dynamic` also stops this page from being cached, so a logged-out
+// visitor can't have it served from cache/back-forward-cache after logout.
+export const dynamic = 'force-dynamic';
 
-/**
- * Publisher Portal landing page component that provides an interface for users to upload files for registration in the Public Trust Information System (PITS).
- * Uses the FileUpload component to manage the file upload workflow for document registration.
- * @returns A React component that serves as the landing page for the publisher portal, allowing users to upload files for registration in PITS.
- */
-export default function PublisherPortal() {
-  return (
-    <FileUpload
-      mode="register"
-      title="Register New Document"
-      description="Upload and register a new document to the system"
-      buttonLabel="Submit Document"
-    />
-  );
+export default async function PublisherPortalPage() {
+  const session = await auth();
+  // `session.error` (e.g. refresh token failed) is treated the same as no
+  // session at all — a session that can't refresh its access token is not
+  // usable, so there's no point rendering the form only to have every
+  // submit fail with 401.
+  if (!session || session.error) {
+    redirect('/');
+  }
+
+  return <PublisherPortalClient />;
 }

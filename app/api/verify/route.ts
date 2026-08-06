@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     const upload = await parseUpload(request);
-    if (!upload) return NextResponse.json({ message: 'Invalid upload payload' }, { status: 400 });
+    if (!upload.ok) return NextResponse.json({ message: upload.message }, { status: upload.status });
 
     const formData = new FormData();
     formData.append('file', upload.file);

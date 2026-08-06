@@ -1,10 +1,29 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import FileUpload from '@components/FileUpload';
+import FileUpload, { type FileUploadProps } from '@components/FileUpload';
 
-const meta: Meta<typeof FileUpload> = {
+/** Storybook demo wrapper — owns the file/isUploading state that real pages now lift up themselves. */
+function InteractiveFileUpload(props: Omit<FileUploadProps, 'file' | 'isUploading' | 'onFileChange' | 'onSubmit'>) {
+  const [file, setFile] = React.useState<File | null>(null);
+  const [isUploading, setIsUploading] = React.useState(false);
+
+  return (
+    <FileUpload
+      {...props}
+      file={file}
+      isUploading={isUploading}
+      onFileChange={setFile}
+      onSubmit={() => {
+        setIsUploading(true);
+        setTimeout(() => setIsUploading(false), 1500);
+      }}
+    />
+  );
+}
+
+const meta: Meta<typeof InteractiveFileUpload> = {
   title: 'Components/FileUpload',
-  component: FileUpload,
+  component: InteractiveFileUpload,
   tags: ['autodocs'],
   argTypes: {
     mode: {
@@ -68,7 +87,7 @@ const meta: Meta<typeof FileUpload> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof FileUpload>;
+type Story = StoryObj<typeof InteractiveFileUpload>;
 
 export const Register: Story = {
   parameters: {

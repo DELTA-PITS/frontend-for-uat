@@ -30,7 +30,7 @@ export default function OperationButton({ onClick, label, icon, disabled, classN
       className={`btn w-full h-fit flex items-center justify-center rounded-md shadow-md transition-all ${className ?? ''}`.trim()}
     >
       {icon}
-      <span className="leading-none translate-y-px mb-0.5 font-bold text-lg p-3">
+      <span className="leading-none translate-y-px mb-0.5 font-bold text-base p-3">
         {label}
       </span>
     </button>

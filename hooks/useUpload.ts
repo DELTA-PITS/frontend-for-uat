@@ -7,6 +7,7 @@ import { getUploadFailureMessage } from '@lib/uploadErrorMessage';
 import { registerFile, verifyFile } from '@components/api';
 import type { UploadMode, UseFileUploadReturn, ResultStatus } from '../types/files.types';
 import { UploadError } from '@components/api';
+import { useLocale } from '@lib/i18n/LocaleContext';
 
 /**
  * Determine the result status based on the upload mode and API response data.
@@ -36,6 +37,7 @@ function wait(ms: number) {
  */
 export function useFileUpload(mode: UploadMode): UseFileUploadReturn {
   const router = useRouter();
+  const { t } = useLocale();
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -80,6 +82,7 @@ export function useFileUpload(mode: UploadMode): UseFileUploadReturn {
         source: mode,
         response,
         error: error instanceof Error ? error.message : 'Upload failed',
+        t,
       });
 
       const elapsed = Date.now() - startedAt;

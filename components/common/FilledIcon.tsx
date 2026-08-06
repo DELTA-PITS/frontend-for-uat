@@ -1,10 +1,22 @@
+import { cloneElement, isValidElement } from 'react';
+
 /**
  * Renders a colored background circle around an icon, used as a visual accent.
+ * Icon itself is kept small (default 1.125rem) and the background subtle
+ * (10% tint by default) so the icon reads as a quiet accent rather than the
+ * focal point of the row/card it sits in.
  * @param icon - The icon element to display inside the circle.
  * @param className - Additional CSS class names for custom styling.
  * @returns The filled icon component.
  */
 export function FilledIcon({ icon, className }: { icon: React.ReactNode; className?: string }) {
+    const sizedIcon =
+        isValidElement(icon) && !(icon.props as { style?: React.CSSProperties }).style?.fontSize
+            ? cloneElement(icon as React.ReactElement<{ style?: React.CSSProperties }>, {
+                style: { fontSize: '1.125rem' },
+            })
+            : icon;
+
     const classList = className ? className.trim().split(/\s+/) : [];
     
     const getBaseClass = (c: string) => c.split(':').pop() || '';
@@ -38,16 +50,19 @@ export function FilledIcon({ icon, className }: { icon: React.ReactNode; classNa
         return !nonColorSuffixes.includes(suffix);
     });
 
-    const bgClass = hasBgColor ? '' : 'bg-primary/20';
-    const textClass = hasTextColor ? '' : 'text-primary';
+    // Default to the neutral secondary (navy) tint, not primary red — most
+    // FilledIcon usages are informational (stats, step numbers), and primary
+    // should stay reserved for genuine CTA/active-state emphasis.
+    const bgClass = hasBgColor ? '' : 'bg-secondary/10';
+    const textClass = hasTextColor ? '' : 'text-secondary';
 
-    const mergedClasses = `inline-flex items-center justify-center rounded-full aspect-square p-2 ${bgClass} ${textClass} ${className ?? ''}`
+    const mergedClasses = `inline-flex items-center justify-center rounded-full aspect-square p-1.5 ${bgClass} ${textClass} ${className ?? ''}`
         .trim()
         .replace(/\s+/g, ' ');
 
     return (
         <span className={mergedClasses}>
-            {icon}
+            {sizedIcon}
         </span>
     );
 }
