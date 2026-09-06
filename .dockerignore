@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.storybook
+stories
+tests
+coverage
+_docs
+*.md
+.DS_Store
