@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import { Header } from '@components/layout/Header';
+import { Footer } from '@components/layout/Footer';
 import BfcacheRefresh from '@components/layout/BfcacheRefresh';
 import { LocaleProvider } from '@lib/i18n/LocaleContext';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
@@ -42,7 +43,7 @@ export default async function RootLayout({ children }: { readonly children: Reac
           <main className="flex-1 flex flex-col">
             {children}
           </main>
-          <footer />
+          <Footer />
         </LocaleProvider>
       </body>
     </html>

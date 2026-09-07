@@ -9,6 +9,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import ApartmentOutlinedIcon from '@mui/icons-material/ApartmentOutlined';
 import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { formatDisplayDateTime } from '@lib/dateFormat';
 import { getFileIconConfig } from '@lib/fileIcon';
 import type { RecordItem } from '@/types/files.types';
@@ -101,13 +102,17 @@ export default function RecordDetailDrawer({ record, onClose }: RecordDetailDraw
 
         <div className="mt-6 flex flex-col gap-3">
           <SectionLabel>{t.drawer.blockchainProof}</SectionLabel>
-          <SummaryRow icon={<LinkOutlinedIcon />} label={t.drawer.network} value="Ethereum" />
+          <SummaryRow icon={<LinkOutlinedIcon />} label={t.drawer.network} value={t.drawer.networkValue} />
           <div className="flex items-center gap-2 text-xs text-base-content/70">
             <BadgeOutlinedIcon style={{ fontSize: '1.1rem' }} />
             {t.drawer.recordId}: <span className="font-mono text-xs">{record.record_id}</span>
           </div>
           <HashRow label={t.drawer.contentHash} value={record.content_hash} />
           <HashRow label={t.drawer.txHash} value={record.transaction_hash} />
+          <div className="flex items-start gap-2 rounded-lg bg-base-200 p-3 text-xs text-base-content/70">
+            <InfoOutlinedIcon style={{ fontSize: '1rem' }} className="mt-0.5 shrink-0" />
+            <span>{t.drawer.networkDisclaimer}</span>
+          </div>
         </div>
 
         <button type="button" onClick={onClose} className="btn btn-block mt-8">

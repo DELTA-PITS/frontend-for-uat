@@ -17,6 +17,9 @@ export const translations = {
       language: 'Bahasa',
       loggedOutMessage: 'Kamu berhasil keluar.',
     },
+    footer: {
+      appName: 'PITS',
+    },
     verifyHero: {
       badge: 'Akses Publik',
       title: 'Verifikasi Dokumen Resmi',
@@ -185,6 +188,9 @@ export const translations = {
       issuer: 'Publisher (Issuer ID)',
       blockchainProof: 'Bukti Blockchain',
       network: 'Jaringan',
+      networkValue: 'Ethereum (Testnet Lokal)',
+      networkDisclaimer:
+        'Dijalankan di jaringan uji coba lokal untuk keperluan UAT. Belum terhubung ke jaringan Ethereum publik — hash tidak dapat diverifikasi lewat Etherscan.',
       recordId: 'Record ID',
       contentHash: 'Content hash (SHA-256)',
       txHash: 'Transaction hash',
@@ -257,6 +263,9 @@ export const translations = {
       closeMenu: 'Close menu',
       language: 'Language',
       loggedOutMessage: 'You have been signed out.',
+    },
+    footer: {
+      appName: 'PITS',
     },
     verifyHero: {
       badge: 'Public Access',
@@ -420,6 +429,9 @@ export const translations = {
       issuer: 'Publisher (Issuer ID)',
       blockchainProof: 'Blockchain Proof',
       network: 'Network',
+      networkValue: 'Ethereum (Local Testnet)',
+      networkDisclaimer:
+        'Running on a local test network for UAT purposes. Not connected to the public Ethereum network — hashes cannot be verified via Etherscan.',
       recordId: 'Record ID',
       contentHash: 'Content hash (SHA-256)',
       txHash: 'Transaction hash',
