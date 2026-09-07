@@ -48,3 +48,18 @@ Setiap Technical Design wajib dicek tidak melanggar bagian ini sebelum coding.
 ## Status Update (WAJIB)
 
 Sebelum mengakhiri sesi kerja, **tambah entry baru di paling atas** `_docs/status/log.md` (jangan timpa/hapus entry lama). Isi: progress %, yang diselesaikan sesi ini, blocker/keputusan yang dibutuhkan, next steps. Commit bareng perubahan kode.
+
+---
+
+## 📋 Update Standar Dokumentasi (_docs) — v5, 2026-09-01
+
+`docs_tier: standard` ← default project ini. Baseline Lapis 1 naik dari 12 → **18 file** (12 lama + 6 baru: `_docs/quality/test-strategy.md`, `_docs/quality/release-checklist.md`, `_docs/security/security-baseline.md`, `_docs/operations/deployment.md`, `_docs/operations/rollback.md`, `_docs/operations/runbook.md`), wajib untuk SEMUA project berkode — KECUALI project ini memenuhi SEMUA syarat eligibility Lapis 4 (lihat `_meta/_PROJECT-DOCS-STANDARD.md` § Lapis 4), yang kalau iya baris di atas diganti jadi `docs_tier: lightweight`.
+
+**6 file baru BELUM dibuat di `_docs/` project ini** (menyusul — belum diprioritaskan saat update standar ini, `_docs/` detail ditunda dulu). Begitu project ini disentuh lagi, tawarkan proaktif untuk dilengkapi — terutama `operations/rollback.md` (idealnya ada SEBELUM deploy berikutnya) dan `security/security-baseline.md`.
+
+Aturan kerja global baru yang berlaku otomatis (detail lengkap: `~/.codex/AGENTS.md` #14-16):
+- **"Done means verified, not implemented"** — jangan lapor selesai cuma karena kode sudah ditulis; verifikasi sesuai risiko dulu.
+- **Bug non-trivial**: urutan wajib reproduce/evidence → root cause → regression test → fix → verify — jangan fix langsung dari gejala yang dilaporkan.
+- **Rollback path**: identifikasi cara rollback SEBELUM deploy yang berdampak production; kalau tidak aman/tidak mungkin, wajib peringatkan user secara eksplisit dulu.
+
+Detail lengkap standar v5 (termasuk kriteria eligibility Lapis 4 & isi tiap file baru): `_meta/_PROJECT-DOCS-STANDARD.md`.
