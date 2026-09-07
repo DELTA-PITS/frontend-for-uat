@@ -16,6 +16,11 @@ export const translations = {
       closeMenu: 'Tutup menu',
       language: 'Bahasa',
       loggedOutMessage: 'Kamu berhasil keluar.',
+      loggedInAs: (method: string) => `Masuk via ${method}`,
+      loginMethodGoogle: 'Google',
+      loginMethodPassword: 'Password',
+      accountMenu: 'Info akun',
+      accountEmailUnknown: 'Email tidak diketahui',
     },
     footer: {
       appName: 'PITS',
@@ -263,6 +268,11 @@ export const translations = {
       closeMenu: 'Close menu',
       language: 'Language',
       loggedOutMessage: 'You have been signed out.',
+      loggedInAs: (method: string) => `Signed in via ${method}`,
+      loginMethodGoogle: 'Google',
+      loginMethodPassword: 'Password',
+      accountMenu: 'Account info',
+      accountEmailUnknown: 'Email unknown',
     },
     footer: {
       appName: 'PITS',

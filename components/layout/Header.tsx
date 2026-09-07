@@ -16,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SignIn from '@components/auth/SignIn';
 import SignOut from '@components/auth/SignOut';
 import LanguageSwitcher from '@components/layout/LanguageSwitcher';
+import { AccountModal } from '@components/layout/AccountModal';
 import { useLocale } from '@lib/i18n/LocaleContext';
 
 export interface HeaderProps {
@@ -43,6 +44,9 @@ export function Header({ session }: HeaderProps) {
   // logged-out, otherwise the navbar shows "Dashboard"/"Keluar" while the
   // page content says "sesi berakhir, masuk kembali" — a confusing mismatch.
   const isLoggedIn = Boolean(session?.user) && !session?.error;
+
+  const loginMethodLabel =
+    session?.identityProvider === 'google' ? t.header.loginMethodGoogle : t.header.loginMethodPassword;
 
   // Border only appears once the page has scrolled — a flat top edge reads
   // as less "boxed in" than an always-on border under the navbar.
@@ -133,6 +137,10 @@ export function Header({ session }: HeaderProps) {
           ) : null}
 
           <LanguageSwitcher />
+
+          {isLoggedIn ? (
+            <AccountModal email={session?.user?.email} loginMethodLabel={loginMethodLabel} />
+          ) : null}
 
           {isLoggedIn ? (
             <SignOut className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-base-content hover:bg-base-200 transition-colors">
@@ -248,6 +256,13 @@ export function Header({ session }: HeaderProps) {
               <span className="text-sm text-ink-secondary">{t.header.language}</span>
               <LanguageSwitcher />
             </div>
+
+            {isLoggedIn ? (
+              <div className="flex items-center gap-2 px-3 py-1.5">
+                <AccountModal email={session?.user?.email} loginMethodLabel={loginMethodLabel} />
+                <span className="text-sm text-ink-secondary">{t.header.accountMenu}</span>
+              </div>
+            ) : null}
 
             {isLoggedIn ? (
               <SignOut className="flex items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm text-base-content hover:bg-base-200">

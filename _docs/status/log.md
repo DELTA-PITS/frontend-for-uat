@@ -4,6 +4,19 @@ File ini diupdate Claude Code **setiap sesi kerja selesai**. Entry terbaru selal
 
 ---
 
+## [2026-09-07 20:00] — Claude Code
+
+- **Progress**: Google login diaktifkan (diminta user) + fitur UI baru (avatar akun + modal info login). Ditemukan & difix 1 bug baru (user Google baru tidak dapat role `publisher`) dan 1 keputusan keamanan (auto-approve semua domain, dikonfirmasi user untuk fase UAT).
+- **Selesai sesi ini**:
+  - **Google Identity Provider terpasang** di realm `nextjs-kc` via admin API — OAuth Client baru "PITS Keycloak" dibuat terpisah dari client `n8n Kreen AI` yang sudah ada (project Google Cloud sama: `kreen-ai`, tapi Client ID/Secret beda, sengaja dipisah per keperluan). Tombol "Sign in with Google" langsung muncul di halaman login Keycloak, redirect ke Google terverifikasi jalan sampai halaman consent asli.
+  - **Bug ditemukan & difix**: user baru yang login via Google (`laksa.dev.kreen@gmail.com`, auto-provisioned oleh Keycloak lewat "First Broker Login") cuma dapat role `default-roles-nextjs-kc`, TIDAK dapat role `publisher` → dashboard gagal muat ("403 Forbidden" dari backend, sama gejala dengan bug 401 sebelumnya tapi beda root cause). Role di-assign manual untuk user ini.
+  - **Keputusan desain diambil (dikonfirmasi user)**: karena native self-registration sudah dimatikan (`registrationAllowed: false`), satu-satunya jalur user baru adalah lewat Google — jadi role `publisher` dijadikan **default role realm** (`default-roles-nextjs-kc` composite ditambah `publisher`), supaya semua login Google berikutnya otomatis dapat akses tanpa perlu di-assign manual. User diberi tahu risikonya (siapa pun dengan akun Google bisa jadi publisher) dan tetap memilih opsi ini untuk fase UAT.
+  - **Fitur baru**: avatar akun di header (`components/layout/AccountModal.tsx`) — klik membuka modal kecil menampilkan email yang dipakai login + badge metode login (Google/Password). Metode login dideteksi dari klaim `identity_provider` di ID token Keycloak (butuh protocol mapper baru `oidc-usersessionmodel-note-mapper` di client `nextjs-web`, dipasang via admin API) — didekode manual di `auth.ts` `jwt()` callback karena next-auth's built-in Keycloak provider cuma mapping subset klaim standar. Menggantikan desain awal (badge inline di navbar) atas revisi user.
+  - `npx tsc --noEmit`, `oxlint`, `npm test` (30/30) tetap hijau.
+  - **Git cleanup**: ditemukan (atas pertanyaan user) trailer `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>` di 3 commit baru sesi saya + 1 commit lama (`test: add Playwright E2E suite...`, sudah lama ter-push & ter-merge ke `main`) — project ini sudah punya aturan eksplisit sejak lama (lihat log `[2026-08-02 09:00]`) untuk TIDAK menyertakan atribusi AI di commit manapun. Dibersihkan pakai `git filter-branch --msg-filter` (bukan `rebase -i`, tidak didukung), lalu `git push --force-with-lease` ke `feature/uat-readiness`. Commit yang sama di `main` (via merge PR #2) **belum dibersihkan** — perlu keputusan eksplisit user dulu karena berdampak ke branch bersama/production.
+- **Blocker/keputusan dibutuhkan**: konfirmasi user soal bersihkan `main` juga atau dibiarkan. User belum konfirmasi hasil test login Google end-to-end dengan kode terbaru (avatar+modal) — perlu logout+login ulang karena token lama tidak punya klaim `identity_provider`.
+- **Next steps**: tunggu user test ulang login Google dengan UI baru; tindak lanjuti keputusan `main` branch.
+
 ## [2026-09-07 19:10] — Claude Code
 
 - **Progress**: Lanjutan sesi akses (di atas) — user minta kerjakan backlog item #1-4 (nginx cleanup, fix drift port binding, rebuild Dockerfile, bump Node), plus 2 fitur baru (footer versi, disclaimer blockchain). Semua selesai & dideploy production.

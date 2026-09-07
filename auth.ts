@@ -77,6 +77,24 @@ export const { handlers, auth, signIn, signOut } = nextAuth({
         token.expiresAt = account.expires_at;
       }
 
+      // Keycloak stamps which upstream identity provider (e.g. "google")
+      // was used to authenticate as an `identity_provider` claim in the ID
+      // token — absent for a native Keycloak username/password login. Read
+      // it straight from the token rather than trusting `profile`, since
+      // next-auth's Keycloak provider only maps a fixed subset of claims.
+      if (account?.id_token) {
+        try {
+          const payload = JSON.parse(
+            Buffer.from(account.id_token.split('.')[1], 'base64url').toString('utf-8'),
+          );
+          if (typeof payload.identity_provider === 'string') {
+            token.identityProvider = payload.identity_provider;
+          }
+        } catch {
+          // Malformed/unexpected ID token shape — leave identityProvider unset.
+        }
+      }
+
 
 
       if (!token.expiresAt) {
@@ -94,6 +112,7 @@ export const { handlers, auth, signIn, signOut } = nextAuth({
     async session({ session, token }) {
       session.accessToken = token.accessToken;
       session.error = token.error;
+      session.identityProvider = token.identityProvider;
 
       return session;
     },
