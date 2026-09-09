@@ -4,6 +4,23 @@ File ini diupdate Claude Code **setiap sesi kerja selesai**. Entry terbaru selal
 
 ---
 
+## [2026-09-07 21:30] — Claude Code
+
+- **Progress**: Polish visual halaman login Keycloak (custom theme `pits`) atas spec detail user + review ChatGPT terhadap audit sebelumnya. Semua item P0/P1 (Google button, unified control system, spacing) selesai, plus 2 bug baru ditemukan & difix saat verifikasi (radius border pseudo-element, input tidak center, area ketik tidak full width).
+- **Selesai sesi ini**:
+  - **Root cause Google button border merah (yang sebenarnya)**: bukan `border-color` elemen — PatternFly menggambar border tombol lewat pseudo-element `::after`, warnanya dikontrol `--pf-v5-c-button--m-secondary--after--BorderColor` (default = `--pf-v5-global--primary-color--100`, yang di-override merah untuk Sign In). Fix Round 1 sebelumnya (`border-color: #dadce0`) **tidak pernah benar-benar berpengaruh** ke border yang dirender. Fix benar: override CSS variable-nya langsung, untuk default+hover+focus+active.
+  - **Radius border Google juga beda sumber**: `::after` punya `border-radius` sendiri (`--pf-v5-c-button--after--BorderRadius`, default ~3px), independen dari radius elemen (9.6px) — disamakan jadi `0.6rem`.
+  - **Unified control system**: input/Sign In/Google sekarang eksplisit height 44px, radius 0.6rem, font 14px (0.875rem), padding horizontal 14-16px — sebelumnya tersebar di beberapa tempat berbeda nilai.
+  - **Input tidak center vertikal**: wrapper `<span class="pf-v5-c-form-control">` tinggi 44px tapi `<input>` di dalamnya cuma ~33px, `display:block` default, nempel ke atas. **Percobaan fix pertama pakai `display:flex` pada span JUSTRU BIKIN REGRESI** — span (dan parent `.pf-v5-c-form__group`) collapse ke lebar sangat kecil, area ketik jadi cuma sebagian dari kotak visual. Fix final: **line-height** pada `<input>` (`line-height: 44px`, hapus padding vertikal), tidak menyentuh `display` sama sekali — lebih aman untuk komponen PatternFly yang punya banyak dependency layout tersembunyi.
+  - Padding horizontal input diseragamkan 14px kiri-kanan (sebelumnya `6px 8px 6px 14px` — kanan lebih sempit dari kiri, bikin teks panjang terlihat "mentok").
+  - Border input diubah dari gaya "underline focus" PatternFly (cuma border-bawah berubah warna) jadi full box border 4 sisi + native browser focus outline dimatikan (sebelumnya dobel: oranye browser + merah custom).
+  - Label form dari uppercase+letter-spacing jadi sentence-case biasa, shadow card diperhalus, disclaimer dipersingkat, divider "Or sign in with" tetap dihapus (tidak dikembalikan).
+  - Diverifikasi di 4 viewport (1280×900, 1440×900, 390×844, 360×800) — semua fit tanpa scroll horizontal. Regression check: sempat muncul "Server error" saat test login — dikonfirmasi cookie basi di browser testing (bukan dari perubahan CSS), setelah dibersihkan login→dashboard normal.
+  - Dokumen audit (`_docs/design/keycloak-login-theme-audit.md`) diupdate dengan root cause yang benar + CSS final, dikirim ulang ke user.
+  - **Baru**: `_docs/operations/handoff-signup-feature.md` — dokumentasi (bukan implementasi) untuk fitur "Sign Up" yang ditanyakan user. Realm sengaja `registrationAllowed: false`; mengaktifkannya butuh keputusan keamanan dulu (siapa saja bisa jadi `publisher` otomatis karena itu sekarang default role realm) — didokumentasikan opsinya, tidak dikerjakan.
+- **Blocker/keputusan dibutuhkan**: keputusan soal sign-up (lihat handoff-signup-feature.md) ditunda ke sesi berikutnya.
+- **Next steps**: user minta sudahi sesi ini. Kode CSS theme sudah live production, terverifikasi. File `_docs/` (audit login theme + handoff signup) belum di-commit ke git (infra Keycloak theme sendiri tidak di git sama sekali, cuma live di server).
+
 ## [2026-09-07 20:00] — Claude Code
 
 - **Progress**: Google login diaktifkan (diminta user) + fitur UI baru (avatar akun + modal info login). Ditemukan & difix 1 bug baru (user Google baru tidak dapat role `publisher`) dan 1 keputusan keamanan (auto-approve semua domain, dikonfirmasi user untuk fase UAT).

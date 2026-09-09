@@ -43,6 +43,12 @@ Fix `.env.local` di atas ternyata **tidak pernah benar-benar aktif** karena cont
 
 Realm Keycloak `nextjs-kc` **tidak punya self-registration/self-reset-password** (`registrationAllowed: false`, `resetPasswordAllowed: false`) — akun baru harus dibuat manual oleh admin. Akun `uat-tester` dibuat untuk verifikasi (role `publisher`), kredensial di file kredensial lokal.
 
+## Update 2026-09-07 (malam, lanjutan) — Google login + polish halaman login Keycloak
+
+- **Google login diaktifkan** (Identity Provider `google` terpasang di realm `nextjs-kc`). Role `publisher` dijadikan **default role realm** (karena `registrationAllowed: false`, satu-satunya jalur user baru adalah Google, jadi auto-approve dianggap aman untuk fase UAT — **keputusan ini perlu direview ulang kalau nanti sign-up diaktifkan**, lihat `_docs/operations/handoff-signup-feature.md`).
+- **Halaman login Keycloak di-redesain total** jadi custom theme `pits` (CSS-only, live di server, path `docker/themes/pits/`) — konsisten dengan design system app (merah BRIN, Plus Jakarta Sans+Inter, radius 0.6rem). Detail lengkap + 10 pitfall teknis PatternFly/Keycloak yang ditemukan: `_docs/design/keycloak-login-theme-audit.md` (WAJIB dibaca sebelum ubah CSS theme ini lagi — banyak override yang terlihat aneh tapi sengaja, ada alasan teknis di baliknya).
+- **Sign Up ditanyakan user, sengaja belum diaktifkan** — realm tetap `registrationAllowed: false`. Dokumentasi opsi & pertimbangan keamanan: `_docs/operations/handoff-signup-feature.md`.
+
 ## Update 2026-09-07 malam — item #1-4 backlog selesai
 
 Semua sudah dideploy & diverifikasi hidup di production:
