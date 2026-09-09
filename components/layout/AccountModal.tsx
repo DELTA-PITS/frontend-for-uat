@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { useLocale } from '@lib/i18n/LocaleContext';
@@ -18,15 +17,17 @@ export function AccountModal({ email, loginMethodLabel }: AccountModalProps) {
   const { t } = useLocale();
   const [open, setOpen] = useState(false);
 
+  const initial = email?.trim().charAt(0).toUpperCase() || '?';
+
   return (
     <>
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t.header.accountMenu}
-        className="flex items-center justify-center rounded-full text-base-content/70 transition-colors hover:bg-base-200 hover:text-base-content"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-secondary-content transition-opacity hover:opacity-80"
       >
-        <AccountCircleOutlinedIcon style={{ fontSize: '1.9rem' }} />
+        {initial}
       </button>
 
       {open ? (
@@ -47,7 +48,9 @@ export function AccountModal({ email, loginMethodLabel }: AccountModalProps) {
               <CloseIcon style={{ fontSize: '1.2rem' }} />
             </button>
 
-            <AccountCircleOutlinedIcon style={{ fontSize: '3.5rem' }} className="text-base-content/30" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-2xl font-semibold text-secondary-content">
+              {initial}
+            </div>
 
             <p className="break-all text-sm font-medium text-base-content">
               {email ?? t.header.accountEmailUnknown}
