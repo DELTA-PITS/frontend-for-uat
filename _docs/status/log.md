@@ -4,6 +4,22 @@ File ini diupdate Claude Code **setiap sesi kerja selesai**. Entry terbaru selal
 
 ---
 
+## [2026-09-14 01:15] — Claude Code
+
+- **Progress**: Lanjutan independent QA (PASS 5 — Integration & Reproducibility) untuk paper akademik, diikuti deploy paket evidence QA (5 halaman HTML dari ChatGPT) ke production. Semua detail teknis di `backend-for-uat/_docs/qa/pass-5-integration-reproducibility.md` dan handoff (lihat entry di bawah).
+- **Selesai sesi ini**:
+  - **Stack lokal disposable** (Postgres+Keycloak+Anvil+backend nyata, via `docker-compose.yml` repo `backend-for-uat`) dibangun, dipakai, lalu dibongkar total (`docker compose down -v`) — production tidak pernah disentuh untuk bagian ini.
+  - **Root cause bug "issuer_id kosong" ditemukan**: bukan drift config production, tapi `clientScopes: []` di `realm-export.json` (dipakai semua environment) — tidak ada protocol mapper yang mengeluarkan klaim `sub`. Dibuktikan via eksperimen tambah/hapus mapper.
+  - **IDOR dikonfirmasi dengan 2 akun asli** (sebelumnya cuma proxy 1 akun). Full provenance journey (upload→hash→DB→blockchain→verify publik) sukses end-to-end.
+  - 53 test integrasi baru ditulis & dijalankan (45 pass, 7 fail-terdokumentasi, 1 skip); Locust diperbaiki (3 bug test-code: auth header hilang, `is not str` selalu True, issuer_id hardcode kosong) dan dijalankan ulang 3×60 detik lokal.
+  - Ditemukan 1 bug baru: filename >255 karakter → 500 unhandled.
+  - Semua di-commit ke `backend-for-uat` (`main`, commit `1b98749`).
+  - **Paket evidence QA (5 HTML dari ChatGPT)** disimpan ke `_docs/qa/results/pass5-evidence-package/` di repo ini, lalu **dideploy ke server production** `209.58.160.63` di path baru `/var/www/pits-static/qa-evidence-pass5/` + 1 location block baru (additive) di `pits-ui.conf` (backup dibuat dulu, `nginx -t` lolos sebelum reload). Live di `https://pits-ui.pangkalandata.id/qa-evidence-pass5/`, diverifikasi 200 OK.
+- **Blocker/keputusan dibutuhkan**: tidak ada untuk hasil teknis. Satu hal untuk diperhatikan: path `/qa-evidence-pass5/` di production tidak pakai auth apa pun (halaman statis publik walau URL tidak diiklankan) — sebaiknya dihapus dari server begitu co-author paper (Amal) sudah tidak butuh akses lagi (lihat catatan di `handoff.md`).
+- **Next steps**: reconciliation angka historis Locust (8880/8245/8165) dan angka "16/17→17/17" unit test masih belum diselesaikan (butuh raw artifact asli yang tidak ditemukan di repo — lihat gap list di laporan Pass 5). Cabut akses `/qa-evidence-pass5/` dari server setelah tidak dibutuhkan lagi.
+
+---
+
 ## [2026-09-07 21:30] — Claude Code
 
 - **Progress**: Polish visual halaman login Keycloak (custom theme `pits`) atas spec detail user + review ChatGPT terhadap audit sebelumnya. Semua item P0/P1 (Google button, unified control system, spacing) selesai, plus 2 bug baru ditemukan & difix saat verifikasi (radius border pseudo-element, input tidak center, area ketik tidak full width).

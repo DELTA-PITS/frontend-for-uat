@@ -129,6 +129,28 @@ tidak ditutup-tutupi).
 5. Ketiga file (`pits-qa-master-export-2026-09-13.md` + 2 raw audit) **belum di-commit ke git**,
    menunggu review user.
 
+## Update 2026-09-14 — PASS 5 (Integration & Reproducibility) + QA evidence package dideploy ke production
+
+**Konteks**: lanjutan independent QA untuk paper "From Hoax to Hash" (lihat entry 2026-09-13 di atas). User minta ditutup gap "PASS 5 — Integration & Reproducibility": Postgres/Keycloak/Anvil nyata (bukan mock), isolasi multi-publisher, full provenance journey, dan reproduksi Locust — semua di environment lokal disposable, TIDAK menyentuh production.
+
+**Yang dikerjakan** (repo `backend-for-uat`, lihat `_docs/qa/pass-5-integration-reproducibility.md` untuk laporan lengkap):
+- Stack lokal disposable dibangun via `docker/docker-compose.yml` repo sendiri (Postgres 16, Keycloak 26.6.2, Anvil 1.8.1, backend FastAPI) — dibongkar lagi (`docker compose down -v`) setelah selesai.
+- **Root cause bug "issuer_id kosong" akhirnya ditemukan**: BUKAN drift konfigurasi production semata — `realm-export.json` (dipakai di semua environment termasuk production) punya `clientScopes: []`, jadi tidak ada protocol mapper manapun yang mengeluarkan klaim `sub`. Dibuktikan dengan eksperimen terkontrol (tambah mapper `oidc-usermodel-property-mapper` → `sub` muncul; hapus lagi → hilang lagi, environment lokal dikembalikan ke baseline sebelum test formal jalan).
+- **IDOR (Finding 1) dikonfirmasi dengan bukti runtime 2 akun asli** (Publisher A & B, dibuat khusus untuk pass ini) — sebelumnya cuma bisa dibuktikan via 1 akun (proxy) di sesi 2026-09-09.
+- **Full provenance journey (PROV-01) sukses end-to-end**: upload → SHA-256 → Postgres → transaksi Anvil (mined) → baca ulang on-chain → verifikasi publik tanpa login (by upload & by hash) — semua cocok.
+- **53 test integrasi baru** ditulis (`backend-for-uat/tests/integration_pass5/`): 45 PASS, 7 FAIL (semua temuan nyata terdokumentasi, bukan bug test), 1 SKIP.
+- **Temuan baru**: filename >255 karakter → `500` unhandled (kolom `original_filename` cuma `VARCHAR(255)`, tidak ada validasi panjang sebelum insert).
+- **Locust diperbaiki & dijalankan ulang** (3× 60 detik lokal): ditemukan bug test-code lama (`register.py` tidak pernah kirim Authorization header sama sekali; `verify.py` punya `is not str` yang selalu True, dan hardcode "issuer_id harus kosong" yang justru menormalisasi bug sebagai "benar"). Semua diperbaiki, hasil baru: 8.213 request gabungan, 10.2% gagal (semuanya karena Finding 2, nol error server tak terduga). **Angka baru ini sengaja TIDAK dibandingkan langsung** dengan angka historis 8.880/8.245/8.165 di paper — environment/konfigurasi `TEST_MODE` historis tidak bisa dipastikan sama.
+- Semua ini sudah di-commit ke `backend-for-uat` (`main`, commit `1b98749`).
+
+**Deploy paket evidence QA ke production** (5 halaman HTML dari ChatGPT, hasil olahan dari `pits-qa-master-export-2026-09-13.md` + laporan Pass 5 di atas):
+- File disimpan di repo `frontend-for-uat`: `_docs/qa/results/pass5-evidence-package/` (index + 4 halaman: methodology, test catalog, results, findings/paper evidence).
+- **Dideploy ke server production** (`209.58.160.63`, path baru, TIDAK menyentuh aplikasi PITS yang jalan): file di-upload ke `/var/www/pits-static/qa-evidence-pass5/`, ditambah 1 `location` block baru (murni additive) di `/etc/nginx/conf.d/pits-ui.conf` — backup dibuat dulu (`pits-ui.conf.bak-20260914-qa-evidence`), `nginx -t` lolos sebelum `nginx -s reload`.
+- **Live di**: `https://pits-ui.pangkalandata.id/qa-evidence-pass5/` — diverifikasi semua 5 halaman 200 OK.
+- Pola ini mengikuti preseden yang sudah ada di server (`/qa-report-v1.html` dari sesi 2026-09-09, di config nginx yang sama) — bukan pola baru yang diciptakan sesi ini.
+
+**Untuk sesi berikutnya**: kalau paket evidence ini sudah tidak dibutuhkan publik lagi, hapus `location /qa-evidence-pass5/` dari `pits-ui.conf` (atau restore dari `pits-ui.conf.bak-20260914-qa-evidence`) dan hapus folder `/var/www/pits-static/qa-evidence-pass5/` di server — sengaja tidak ada auth di path ini (halaman statis, tapi isinya evidence teknis termasuk detail bug keamanan seperti IDOR, jadi sebaiknya tidak dibiarkan terbuka selamanya kalau URL-nya sudah tidak dipakai aktif oleh co-author paper).
+
 ## Backlog tersisa
 
 | # | Item | Detail |

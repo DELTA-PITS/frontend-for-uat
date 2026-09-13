@@ -1,0 +1,2394 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Complete Test Catalog — PITS Independent QA</title><style>
+:root{--red:#E62F2A;--red-dark:#A8211D;--navy:#17384C;--ink:#17212b;--muted:#667085;--line:#e5e7eb;--soft:#f7f8fa;--green:#137333;--amber:#9a6700;--danger:#b42318;--blue:#175cd3;--purple:#6941c6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#fff;line-height:1.58}a{color:var(--red-dark);text-decoration:none}a:hover{text-decoration:underline}.wrap{max-width:1220px;margin:auto;padding:0 28px}.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}.topin{display:flex;align-items:center;gap:18px;min-height:64px}.brand{font-weight:800;color:var(--navy);white-space:nowrap}.brand b{color:var(--red)}.nav{display:flex;gap:8px;overflow:auto;margin-left:auto}.nav a{padding:8px 11px;border-radius:8px;color:#475467;font-size:13px;white-space:nowrap}.nav a.active{background:#fff1f0;color:var(--red-dark);font-weight:700}.hero{padding:64px 0 34px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff 0,#fcfcfd 100%)}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}h1{font-size:44px;line-height:1.08;letter-spacing:-.035em;margin:8px 0 14px;color:var(--navy);max-width:980px}h2{font-size:28px;line-height:1.2;color:var(--navy);margin:52px 0 16px;letter-spacing:-.02em}h3{font-size:20px;color:var(--navy);margin:30px 0 10px}h4{color:var(--navy)}.lede{font-size:18px;color:#475467;max-width:930px}.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.pill,.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}.pill{background:#f2f4f7;color:#475467}.badge.a{background:#eaf7ee;color:#137333}.badge.b{background:#eef4ff;color:#175cd3}.badge.c{background:#f4f3ff;color:#6941c6}.badge.d{background:#f2f4f7;color:#475467}.badge.e{background:#fff7e8;color:#9a6700}.badge.f{background:#fff1f0;color:#b42318}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}.card{border:1px solid var(--line);border-radius:16px;padding:20px;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.03)}.card h3{margin-top:0}.kpi{grid-column:span 3}.kpi .n{font-size:34px;font-weight:800;color:var(--navy);line-height:1}.kpi .l{font-size:13px;color:var(--muted);margin-top:8px}.callout{border-left:4px solid var(--red);background:#fff8f7;padding:16px 18px;border-radius:0 12px 12px 0;margin:18px 0}.good{border-left-color:#2e7d32;background:#f4fbf5}.warn{border-left-color:#d97706;background:#fff9ed}.info{border-left-color:#2563eb;background:#f5f8ff}.danger{border-left-color:#b42318;background:#fff5f4}.section{padding-bottom:10px}.toc{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:24px 0}.toc a{border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:#344054;background:#fff}.toc a:hover{background:#fafafa;text-decoration:none}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px;margin:14px 0 24px}table{border-collapse:collapse;width:100%;font-size:13px;background:white}th{background:#f8fafc;text-align:left;color:#344054;font-weight:750;position:sticky;top:0}th,td{padding:10px 12px;border-bottom:1px solid #eef0f2;vertical-align:top}tr:last-child td{border-bottom:0}code{background:#f2f4f7;padding:2px 5px;border-radius:5px;font-size:.92em}pre{background:#101828;color:#f2f4f7;padding:16px;border-radius:12px;overflow:auto;font-size:12px}details{border:1px solid var(--line);border-radius:12px;padding:0 14px;margin:12px 0;background:#fff}summary{cursor:pointer;padding:14px 0;font-weight:700;color:var(--navy)}.small{font-size:13px;color:var(--muted)}.status-pass{color:var(--green);font-weight:800}.status-fail{color:var(--danger);font-weight:800}.status-skip{color:var(--amber);font-weight:800}.foot{margin-top:64px;border-top:1px solid var(--line);padding:24px 0 50px;color:#667085;font-size:12px}.two{grid-column:span 6}.three{grid-column:span 4}.full{grid-column:1/-1}.timeline{border-left:2px solid #e4e7ec;margin-left:8px;padding-left:22px}.timeline .item{margin:0 0 24px}.timeline .date{font-size:12px;font-weight:800;color:var(--red)}.quote{font-size:18px;color:#344054;border-left:3px solid var(--navy);padding-left:16px;margin:18px 0}.verdict{font-weight:800}.supported{color:var(--green)}.partial{color:var(--amber)}.notsupported{color:var(--danger)}.reconcile{color:var(--purple)}.note{font-size:12px;color:#667085}.raw h2{font-size:24px;margin-top:34px}.raw h3{font-size:18px}.raw table{font-size:12px}.raw ul{padding-left:22px}.raw blockquote{border-left:3px solid #d0d5dd;padding-left:14px;color:#475467}@media(max-width:800px){h1{font-size:34px}.kpi,.two,.three{grid-column:1/-1}.toc{grid-template-columns:1fr}.wrap{padding:0 18px}.nav{display:none}}@media print{.top{display:none}.hero{padding-top:24px}.wrap{max-width:none;padding:0 12mm}.card{box-shadow:none}details{break-inside:avoid}details>summary{display:none}details>*{display:block!important}.foot{padding-bottom:0}a{color:inherit;text-decoration:none}}
+</style></head><body>
+<div class="top"><div class="wrap topin"><div class="brand"><b>PITS</b> Independent QA</div><nav class="nav"><a class="" href="01-testing-methodology.html">Methodology</a><a class="active" href="02-test-catalog.html">Test Catalog</a><a class="" href="03-testing-results.html">Results</a><a class="" href="04-findings-paper-evidence.html">Paper Evidence</a></nav></div></div>
+<header class="hero"><div class="wrap"><div class="eyebrow">Technical Evidence Package · 14 September 2026</div><h1>Complete Test Catalog</h1><div class="lede">The complete frozen test inventory, including backend, frontend, historical live E2E, and the final real-local integration pass.</div><div class="meta"><span class="pill">Prepared for paper author review</span><span class="pill">Evidence frozen after Integration & Reproducibility Pass</span><span class="pill">No production traffic in final integration pass</span></div></div></header>
+<main class="wrap">
+<section><h2>How to Read This Catalog</h2><p>This is the master catalog of automated test evidence frozen on 14 September 2026. The corpus comprises <strong>222 test cases</strong>: 94 backend unit, 27 backend API E2E, 30 frontend unit, 18 frontend E2E, and 53 Pass-5 full-stack integration tests. Locust requests are performance samples and are <em>not</em> counted as test cases.</p>
+<div class="grid"><div class="card kpi"><div class="n">94</div><div class="l">Backend unit</div></div><div class="card kpi"><div class="n">27</div><div class="l">Backend API E2E</div></div><div class="card kpi"><div class="n">48</div><div class="l">Frontend (30 unit + 18 E2E)</div></div><div class="card kpi"><div class="n">53</div><div class="l">Full-stack integration</div></div></div>
+<div class="callout warn"><b>Counting rule.</b> Parametrized generated cases are counted as actual executed cases where the source audit did so. Historical Playwright results retain their original ambiguity; this catalog does not invent a clean result when the prior artifact is internally inconsistent.</div></section>
+<section><h2>Coverage Overview</h2><div class="tablewrap"><table><thead><tr><th>Area</th><th>Final coverage status</th><th>Strongest evidence</th></tr></thead><tbody>
+<tr><td>Authentication</td><td>Covered, including missing/malformed/expired token</td><td>Real-local Keycloak + historical live API</td></tr><tr><td>Authorization / roles</td><td>Covered; no-role user rejected</td><td>Real-local Keycloak</td></tr><tr><td>Publisher identity</td><td>Tested and currently failing</td><td>Real-local root-cause experiment</td></tr><tr><td>Publisher isolation</td><td>Tested and currently failing (IDOR)</td><td>Two-publisher real-local runtime</td></tr><tr><td>Registration / duplicates</td><td>Covered</td><td>API E2E + Postgres integration</td></tr><tr><td>File validation</td><td>Partially correct; content validation gaps confirmed</td><td>Integration + browser/API historical</td></tr><tr><td>Hash / tamper detection</td><td>Covered</td><td>Full provenance integration</td></tr><tr><td>Blockchain write/read</td><td>Covered for Anvil dev chain</td><td>Real Anvil integration</td></tr><tr><td>Public verification</td><td>Covered</td><td>Full provenance integration + browser E2E</td></tr><tr><td>Resilience</td><td>Partially covered</td><td>Local service stop/restart tests</td></tr><tr><td>Performance</td><td>Reproducible modest-load benchmark now available</td><td>3 raw Locust runs</td></tr><tr><td>Accessibility / real devices / DR</td><td>Not fully covered</td><td>Documented limitation</td></tr>
+</tbody></table></div></section>
+<details open><summary>Backend test inventory — 94 unit + 27 API E2E + performance test sources</summary><div class="raw"><h2>B. Backend Test Inventory (94 tests total, this-audit-run collection)</h2>
+<p>All 94 tests below were collected via <code>uv run pytest tests/trustmark -v --collect-only</code> with dummy env vars set (see C.2). No test in <code>tests/trustmark</code> is parametrized beyond the 4 explicit <code>TestFetchJwks::test_jwks_uri_invalid_shape_returns_500[...]</code> cases (4 params) and 3 <code>test_jwks_response_wrong_shape_returns_500[...]</code> cases (3 params) — both already counted individually below. <code>tests/api/test_register_verify_e2e.py</code> (27 tests per the prior results doc) was <strong>NOT</strong> re-executed this audit (see instructions constraint; also see section F) and is listed separately at the bottom for completeness/traceability, marked NOT RUN.</p>
+<p>Layer legend: Unit = pure function / fully mocked, no I/O. Integration = none present in <code>tests/trustmark</code> (would need a real DB/HTTP/chain). API E2E = <code>tests/api/*</code> only (live server). Performance = <code>tests/locust/*</code> (not pytest, not executed as part of <code>tests/trustmark</code>).</p>
+<h3>B.1 <code>tests/trustmark/infra/test_hash_engine.py</code> (7 tests)</h3>
+<table>
+<thead>
+<tr>
+  <th>Test ID</th>
+  <th>Category</th>
+  <th>Layer</th>
+  <th>Purpose</th>
+  <th>Mocked</th>
+  <th>Real</th>
+  <th>Expected</th>
+  <th>Actual (this run)</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>test_hash_engine.py::TestHashEngine::test_generate_hash_canonicalization</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>CRLF vs LF produce identical hash</td>
+  <td>none</td>
+  <td><code>generate_hash</code></td>
+  <td>equal hashes</td>
+  <td>equal hashes</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_hash_with_file_content</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Hash of &quot;Hello World&quot; matches known SHA-256</td>
+  <td>tmp_path file</td>
+  <td><code>generate_hash</code></td>
+  <td><code>a591a6d4...</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_generate_hash_from_bytes</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Raw byte hash of <code>b&quot;test data&quot;</code></td>
+  <td>none</td>
+  <td><code>generate_hash_from_bytes</code></td>
+  <td><code>916f0027...</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_generate_hash_empty_string</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Empty string hashes to SHA-256(&quot;&quot;)</td>
+  <td>none</td>
+  <td><code>generate_hash</code></td>
+  <td><code>e3b0c442...</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_generate_hash_from_bytes_empty</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Empty bytes hashes to SHA-256(b&quot;&quot;)</td>
+  <td>none</td>
+  <td><code>generate_hash_from_bytes</code></td>
+  <td><code>e3b0c442...</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_generate_hash_invalid_input_raises</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>generate_hash(None)</code> raises <code>AttributeError</code></td>
+  <td>none</td>
+  <td><code>generate_hash</code></td>
+  <td><code>AttributeError</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_generate_hash_from_bytes_invalid_input_raises</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>generate_hash_from_bytes(&quot;not bytes&quot;)</code> raises <code>TypeError</code></td>
+  <td>none</td>
+  <td><code>generate_hash_from_bytes</code></td>
+  <td><code>TypeError</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h3>B.2 <code>tests/trustmark/infra/test_blockchain_connector.py</code> (14 tests) — <strong>file has uncommitted local modification, see D.7</strong></h3>
+<table>
+<thead>
+<tr>
+  <th>Test ID</th>
+  <th>Category</th>
+  <th>Layer</th>
+  <th>Purpose</th>
+  <th>Mocked</th>
+  <th>Real</th>
+  <th>Expected</th>
+  <th>Actual (this run)</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>TestBlockchainConnector::test_connect_success</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>_connect()</code> sets <code>w3</code> when node reports connected</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>connector.w3 == mock</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_connect_failure</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>_connect()</code> raises 500 when node reports disconnected</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_get_account_invalid_key</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>_get_account()</code> wraps bad key in <code>HTTPException(500)</code></td>
+  <td><code>Account</code></td>
+  <td>connector logic</td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_create_transaction_success</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Happy-path tx construction/sign/send returns tx hash</td>
+  <td><code>Web3</code>, <code>Account</code></td>
+  <td>connector logic</td>
+  <td><code>tx_hash == &quot;1234&quot;</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_create_transaction_connection_failure</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>create_transaction</code> propagates connection failure as 500</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_read_transaction_value_success</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Mined tx w/ resolvable block timestamp returns <code>{value, timestamp}</code> dict</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>result[&quot;value&quot;]==&quot;test value&quot;</code>, <code>timestamp.year==2025</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td>Docstring documents this fixture was previously stale/broken — see D.7</td>
+</tr>
+<tr>
+  <td><code>...::test_read_transaction_value_pending_no_block_number_returns_400</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>blockNumber=None</code> → 400 &quot;pending&quot;</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>HTTPException(400)</code>, &quot;pending&quot; in detail</td>
+  <td>raised, matched</td>
+  <td>PASS</td>
+  <td>Added 2026-09-09 per docstring</td>
+</tr>
+<tr>
+  <td><code>...::test_read_transaction_value_block_missing_timestamp_returns_400</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Mined block but <code>timestamp=None</code> → 400 &quot;pending&quot; (reused message)</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>HTTPException(400)</code>, &quot;pending&quot; in detail</td>
+  <td>raised, matched</td>
+  <td>PASS</td>
+  <td>Added 2026-09-09 per docstring; see D.6 for message-reuse note</td>
+</tr>
+<tr>
+  <td><code>...::test_read_transaction_value_invalid_format</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>input</code> not prefixed with <code>VALUE_PREFIX</code> → 500</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_read_transaction_value_no_input</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Missing <code>input</code> key entirely → 500</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_get_web3_connection_failure</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>_get_web3()</code> raises 500 when disconnected</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_wait_for_receipt_success</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Happy-path receipt wait returns block number</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>receipt == 99955</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_wait_for_receipt_connection_failure</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>wait_for_receipt</code> on disconnected node → 500</td>
+  <td><code>Web3</code></td>
+  <td>connector logic</td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td>Added 2026-09-09 per docstring</td>
+</tr>
+</tbody>
+</table>
+<h3>B.3 <code>tests/trustmark/infra/test_commons.py</code> (4 tests)</h3>
+<table>
+<thead>
+<tr>
+  <th>Test ID</th>
+  <th>Category</th>
+  <th>Layer</th>
+  <th>Purpose</th>
+  <th>Mocked</th>
+  <th>Real</th>
+  <th>Expected</th>
+  <th>Actual</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>TestGetEnvInt::test_valid_int_string_is_parsed</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>get_env_int</code> parses a valid int env var</td>
+  <td>monkeypatch env</td>
+  <td><code>get_env_int</code></td>
+  <td><code>8080</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_missing_var_returns_default</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Missing var → default</td>
+  <td>monkeypatch env</td>
+  <td><code>get_env_int</code></td>
+  <td><code>1234</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_non_numeric_value_falls_back_to_default_with_warning</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Non-numeric string → default + warning log</td>
+  <td>monkeypatch env</td>
+  <td><code>get_env_int</code></td>
+  <td><code>1234</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_empty_string_falls_back_to_default</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Empty string → default</td>
+  <td>monkeypatch env</td>
+  <td><code>get_env_int</code></td>
+  <td><code>1234</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h3>B.4 <code>tests/trustmark/test_main_test_mode.py</code> (4 tests)</h3>
+<table>
+<thead>
+<tr>
+  <th>Test ID</th>
+  <th>Category</th>
+  <th>Layer</th>
+  <th>Purpose</th>
+  <th>Mocked</th>
+  <th>Real</th>
+  <th>Expected</th>
+  <th>Actual</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>TestTestModeAuthBypass::test_test_mode_true_installs_a_hardcoded_auth_bypass</code></td>
+  <td>Unit/Security</td>
+  <td>Unit (runs <code>main.py</code> as <code>__main__</code> via <code>runpy</code>)</td>
+  <td>Confirms <code>TEST_MODE=true</code> installs <code>dependency_overrides[get_current_principal]</code></td>
+  <td><code>uvicorn.run</code></td>
+  <td>actual <code>trustmark.main</code> module exec</td>
+  <td>override installed</td>
+  <td>installed</td>
+  <td>PASS</td>
+  <td>Confirms TEST_MODE bypass still wired exactly as documented</td>
+</tr>
+<tr>
+  <td><code>...::test_override_principal_is_hardcoded_publisher_with_no_real_identity</code></td>
+  <td>Unit/Security</td>
+  <td>Unit</td>
+  <td>Confirms override principal is <code>sub=&quot;test-user&quot;</code>, has <code>publisher</code> role, no token needed</td>
+  <td><code>uvicorn.run</code></td>
+  <td>real override coroutine</td>
+  <td><code>sub==&quot;test-user&quot;</code>, <code>&quot;publisher&quot; in roles</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_test_mode_false_leaves_real_auth_in_place</code></td>
+  <td>Unit/Security</td>
+  <td>Unit</td>
+  <td><code>TEST_MODE=false</code> → no override installed</td>
+  <td><code>uvicorn.run</code></td>
+  <td>real module exec</td>
+  <td>no override</td>
+  <td>no override</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_test_mode_unset_defaults_to_false_leaving_real_auth_in_place</code></td>
+  <td>Unit/Security</td>
+  <td>Unit</td>
+  <td><code>TEST_MODE</code> unset → same as false</td>
+  <td><code>uvicorn.run</code></td>
+  <td>real module exec</td>
+  <td>no override</td>
+  <td>no override</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h3>B.5 <code>tests/trustmark/api/test_documents.py</code> (27 tests)</h3>
+<table>
+<thead>
+<tr>
+  <th>Test ID</th>
+  <th>Category</th>
+  <th>Layer</th>
+  <th>Purpose</th>
+  <th>Mocked</th>
+  <th>Real</th>
+  <th>Expected</th>
+  <th>Actual</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>TestConfigAndUploadHelpers::test_max_upload_bytes_reads_configured_value</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>_max_upload_bytes()</code> reads env-configured value</td>
+  <td>monkeypatch env</td>
+  <td>fn logic</td>
+  <td><code>1234</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_max_upload_bytes_default_is_unreachable_if_env_var_unset</code></td>
+  <td>Unit/Finding</td>
+  <td>Unit</td>
+  <td>Unsetting <code>MAX_UPLOAD_BYTES</code> entirely raises, doesn't silently default to 20MB</td>
+  <td>monkeypatch env</td>
+  <td>fn logic, Dynaconf</td>
+  <td>exception w/ &quot;MAX_UPLOAD_BYTES&quot; in message</td>
+  <td>raised as expected</td>
+  <td>PASS</td>
+  <td>Confirms candidate-6th-bug docstring claim (D.8)</td>
+</tr>
+<tr>
+  <td><code>...::test_get_blockchain_service_missing_rpc_url_returns_500</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Empty <code>BLOCKCHAIN_RPC_URL</code> → 500</td>
+  <td>monkeypatch env</td>
+  <td>fn logic</td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_get_blockchain_service_missing_private_key_returns_500</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Empty <code>BLOCKCHAIN_PRIVATE_KEY</code> → 500</td>
+  <td>monkeypatch env</td>
+  <td>fn logic</td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_get_blockchain_service_constructs_connector_when_configured</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Both configured → <code>BlockchainConnector</code> constructed w/ right kwargs</td>
+  <td><code>BlockchainConnector</code> ctor patched</td>
+  <td>fn logic</td>
+  <td>ctor called once w/ rpc_url/private_key</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_read_upload_non_empty_within_limit_returns_bytes</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Normal upload returns bytes</td>
+  <td><code>_max_upload_bytes</code> patched</td>
+  <td><code>_read_upload</code></td>
+  <td>bytes returned unchanged</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_read_upload_empty_file_returns_400</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Empty upload → 400 &quot;empty&quot;</td>
+  <td>patched limit</td>
+  <td><code>_read_upload</code></td>
+  <td><code>HTTPException(400)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_read_upload_exactly_at_limit_is_allowed</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Boundary <code>&gt;</code> not <code>&gt;=</code>: file == limit passes</td>
+  <td>patched limit</td>
+  <td><code>_read_upload</code></td>
+  <td>100 bytes accepted</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_read_upload_one_byte_over_limit_returns_413</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>1 byte over limit → 413</td>
+  <td>patched limit</td>
+  <td><code>_read_upload</code></td>
+  <td><code>HTTPException(413)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>TestRegister::test_new_unique_content_creates_record_and_one_blockchain_tx</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>New content → stored, one tx, DB add+commit</td>
+  <td>DB session, blockchain service</td>
+  <td><code>register()</code> handler</td>
+  <td><code>stored=True, already_existed=False</code>, correct hash</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_duplicate_content_returns_existing_record_no_new_tx</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Existing hash → no new tx, no DB add</td>
+  <td>DB session, blockchain service</td>
+  <td><code>register()</code> handler</td>
+  <td><code>already_existed=True</code>, no chain/db calls</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_principal_sub_empty_writes_empty_issuer_id</code></td>
+  <td>Unit/Finding</td>
+  <td>Unit</td>
+  <td><code>Principal.sub=&quot;&quot;</code> written straight into <code>issuer_id</code> with no validation</td>
+  <td>DB session, blockchain service</td>
+  <td><code>register()</code> handler</td>
+  <td><code>created_records[0].issuer_id == &quot;&quot;</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td>Reproduces Finding-2-shaped issue at write site (D.2)</td>
+</tr>
+<tr>
+  <td><code>...::test_blockchain_failure_mid_transaction_propagates</code></td>
+  <td>Unit/Finding</td>
+  <td>Unit</td>
+  <td>No try/except around blockchain call — failure propagates raw</td>
+  <td>DB session, blockchain service (raises)</td>
+  <td><code>register()</code> handler</td>
+  <td><code>HTTPException(500)</code> propagates, <code>db.add</code> never called</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_db_commit_failure_propagates_unhandled</code></td>
+  <td>Unit/Finding</td>
+  <td>Unit</td>
+  <td>No try/except around <code>db.commit()</code> — <code>RuntimeError</code> (stand-in for <code>IntegrityError</code>) propagates raw</td>
+  <td>DB session (commit raises), blockchain service</td>
+  <td><code>register()</code> handler</td>
+  <td><code>RuntimeError</code> propagates</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>TestListRecords::test_records_from_two_issuers_visible_to_one_principal</code></td>
+  <td>Unit/Finding</td>
+  <td>Unit</td>
+  <td><strong>Reproduces the <code>/records</code> IDOR</strong> deterministically: one principal sees records from 2 different issuers</td>
+  <td>DB session (mocked <code>.all()</code>)</td>
+  <td><code>list_records()</code> handler</td>
+  <td>both issuer-A and issuer-B visible to issuer-A's principal</td>
+  <td>both visible</td>
+  <td>PASS</td>
+  <td>Confirms Finding 1 (IDOR) still present in current code — see D.2 verdict below</td>
+</tr>
+<tr>
+  <td><code>...::test_empty_table_returns_empty_list</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Empty table → empty list</td>
+  <td>DB session</td>
+  <td><code>list_records()</code></td>
+  <td><code>{&quot;records&quot;: []}</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_ordered_by_created_at_descending</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Query calls <code>order_by</code> once (can't verify actual SQL order w/ mock)</td>
+  <td>DB session</td>
+  <td><code>list_records()</code></td>
+  <td><code>order_by</code> called once</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td>Self-documented limitation: doesn't prove real DB sort correctness</td>
+</tr>
+<tr>
+  <td><code>TestVerify::test_registered_and_onchain_match_returns_valid_true</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Matching DB+chain → <code>valid=true</code> w/ timestamp</td>
+  <td>DB session, blockchain service</td>
+  <td><code>verify_full()</code></td>
+  <td><code>valid=True</code>, <code>record_id</code> present, <code>blockchain_timestamp</code> present</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_never_registered_returns_valid_false_no_record_id</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>No DB record → <code>valid=false</code>, no <code>record_id</code> key</td>
+  <td>DB session (empty)</td>
+  <td><code>verify_full()</code></td>
+  <td><code>valid=False</code>, no <code>record_id</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_onchain_mismatch_returns_valid_false_with_record_id</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>DB record exists but on-chain value differs → <code>valid=false</code> WITH <code>record_id</code></td>
+  <td>DB session, blockchain service (mismatched value)</td>
+  <td><code>verify_full()</code></td>
+  <td><code>valid=False</code>, <code>record_id</code> present</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td>Distinguishes &quot;never registered&quot; vs &quot;registered but inconsistent&quot;</td>
+</tr>
+<tr>
+  <td><code>...::test_blockchain_node_down_propagates_unhandled</code></td>
+  <td>Unit/Finding</td>
+  <td>Unit</td>
+  <td>No try/except around <code>read_transaction_value</code> — node-down failure propagates raw</td>
+  <td>DB session, blockchain service (raises 500)</td>
+  <td><code>verify_full()</code></td>
+  <td><code>HTTPException(500)</code> propagates</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_verify_by_hash_registered_matches_verify_full_behaviour</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>GET-by-hash mirrors POST /verify behavior when registered</td>
+  <td>DB session, blockchain service</td>
+  <td><code>verify_by_hash()</code></td>
+  <td><code>valid=True</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_verify_by_hash_not_registered_returns_valid_false</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>GET-by-hash, unregistered hash → <code>valid=false</code></td>
+  <td>DB session (empty)</td>
+  <td><code>verify_by_hash()</code></td>
+  <td><code>valid=False</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_verify_by_hash_wrong_length_returns_400</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Too-short hash → 400</td>
+  <td>DB session</td>
+  <td><code>verify_by_hash()</code></td>
+  <td><code>HTTPException(400)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_verify_by_hash_non_hex_characters_returns_400</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Non-hex chars → 400</td>
+  <td>DB session</td>
+  <td><code>verify_by_hash()</code></td>
+  <td><code>HTTPException(400)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_verify_by_hash_injection_payload_returns_400_before_db_hit</code></td>
+  <td>Unit/Security</td>
+  <td>Unit</td>
+  <td>SQLi-shaped payload rejected by format check BEFORE reaching <code>db.query</code></td>
+  <td>DB session (asserted not called)</td>
+  <td><code>verify_by_hash()</code></td>
+  <td><code>HTTPException(400)</code>, <code>db.query</code> never called</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td>Confirms format validation runs before ORM layer</td>
+</tr>
+<tr>
+  <td><code>...::test_verify_by_hash_mixed_case_and_whitespace_normalised</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Uppercase + whitespace hash normalized to lowercase/stripped before lookup</td>
+  <td>DB session</td>
+  <td><code>verify_by_hash()</code></td>
+  <td><code>filter_by(content_hash=&lt;lowercased&gt;)</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h3>B.6 <code>tests/trustmark/infra/auth/test_keycloak.py</code> (39 tests)</h3>
+<table>
+<thead>
+<tr>
+  <th>Test ID</th>
+  <th>Category</th>
+  <th>Layer</th>
+  <th>Purpose</th>
+  <th>Mocked</th>
+  <th>Real</th>
+  <th>Expected</th>
+  <th>Actual</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>TestFetchJwks::test_oidc_discovery_unreachable_returns_503</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>OIDC discovery network failure → 503</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(503)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_oidc_response_invalid_json_returns_500</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Bad JSON from OIDC discovery → 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_oidc_config_missing_jwks_uri_key_is_unhandled</code></td>
+  <td>Unit/Finding</td>
+  <td>Unit</td>
+  <td>Missing <code>jwks_uri</code> key → unhandled <code>KeyError</code>, not a clean 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>KeyError</code> (documents current buggy behavior)</td>
+  <td><code>KeyError</code> raised</td>
+  <td>PASS</td>
+  <td>&quot;Candidate 5th bug&quot; per test docstring — confirms D.4</td>
+</tr>
+<tr>
+  <td><code>...::test_jwks_uri_invalid_shape_returns_500[None]</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>jwks_uri=None</code> → 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_jwks_uri_invalid_shape_returns_500[]</code> (empty string)</td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>jwks_uri=&quot;&quot;</code> → 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_jwks_uri_invalid_shape_returns_500[123]</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>jwks_uri=123</code> (int) → 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_jwks_uri_invalid_shape_returns_500[bad_jwks_uri3]</code> (<code>[]</code> list)</td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>jwks_uri=[]</code> → 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_jwks_endpoint_unreachable_returns_503</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>JWKS endpoint network failure (after OIDC succeeds) → 503</td>
+  <td><code>requests.get</code> (2-call side_effect)</td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(503)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_jwks_response_invalid_json_returns_500</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Bad JSON from JWKS endpoint → 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_jwks_response_wrong_shape_returns_500[bad_jwks_body0]</code> (<code>{&quot;keys&quot;:&quot;not-a-list&quot;}</code>)</td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Malformed JWKS body shape → 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_jwks_response_wrong_shape_returns_500[bad_jwks_body1]</code> (<code>{&quot;no_keys_field&quot;:True}</code>)</td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Malformed JWKS body shape → 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_jwks_response_wrong_shape_returns_500[bad_jwks_body2]</code> (list not dict)</td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Malformed JWKS body shape → 500</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>HTTPException(500)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_well_formed_jwks_returned_unchanged</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Valid JWKS returned as-is</td>
+  <td><code>requests.get</code></td>
+  <td><code>_fetch_jwks</code></td>
+  <td>equals <code>VALID_JWKS</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>TestJwksCaching::test_second_call_within_ttl_does_not_refetch</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Cache hit within TTL doesn't refetch</td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>jwks()</code> caching logic</td>
+  <td><code>_fetch_jwks</code> called once</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_call_after_ttl_expired_refetches</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Cache miss after TTL forces refetch</td>
+  <td><code>_fetch_jwks</code></td>
+  <td><code>jwks()</code> caching logic</td>
+  <td><code>_fetch_jwks</code> called twice</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>TestVerify::test_well_formed_token_returns_claims</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Happy path returns decoded claims</td>
+  <td><code>jwks()</code>, <code>jwt.decode</code></td>
+  <td><code>verify()</code></td>
+  <td>claims returned unchanged</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_token_missing_kid_header_returns_401</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>No <code>kid</code> header → 401 &quot;kid&quot;</td>
+  <td>none (real JWT via <code>jose</code>)</td>
+  <td><code>verify()</code></td>
+  <td><code>HTTPException(401)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_unknown_kid_found_after_one_refresh_succeeds</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Key rotation: unknown kid triggers one refresh, then succeeds</td>
+  <td><code>jwks()</code>, <code>jwt.decode</code></td>
+  <td><code>verify()</code></td>
+  <td>claims returned</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_unknown_kid_still_missing_after_refresh_returns_401</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Kid still missing after refresh → 401 &quot;unknown signing key&quot;</td>
+  <td><code>jwks()</code></td>
+  <td><code>verify()</code></td>
+  <td><code>HTTPException(401)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_expired_signature_returns_401</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>ExpiredSignatureError</code> → 401 &quot;expired&quot;</td>
+  <td><code>jwks()</code>, <code>jwt.decode</code> (raises)</td>
+  <td><code>verify()</code></td>
+  <td><code>HTTPException(401)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_bad_signature_returns_401</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>JWTError</code> (bad sig) → 401</td>
+  <td><code>jwks()</code>, <code>jwt.decode</code> (raises)</td>
+  <td><code>verify()</code></td>
+  <td><code>HTTPException(401)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_issuer_or_audience_mismatch_returns_401</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>iss/aud mismatch (surfaces as <code>JWTError</code> in this jose version) → 401</td>
+  <td><code>jwks()</code>, <code>jwt.decode</code> (raises)</td>
+  <td><code>verify()</code></td>
+  <td><code>HTTPException(401)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td>Confirms commented-out <code>JWTClaimsError</code> branch (keycloak.py:148-151) is irrelevant — generic <code>JWTError</code> path already returns 401</td>
+</tr>
+<tr>
+  <td><code>...::test_unexpected_exception_mid_decode_still_returns_401_not_500</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Arbitrary <code>RuntimeError</code> mid-decode still caught by broad <code>except Exception</code> → 401 not 500</td>
+  <td><code>jwks()</code>, <code>jwt.decode</code> (raises <code>RuntimeError</code>)</td>
+  <td><code>verify()</code></td>
+  <td><code>HTTPException(401)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_verify_malformed_token_is_unhandled</code></td>
+  <td>Unit/Finding</td>
+  <td>Unit</td>
+  <td>Non-JWT-shaped string → <code>jwt.get_unverified_header</code> raises <code>JWTError</code> <strong>uncaught</strong>, <code>verify()</code> doesn't return an <code>HTTPException</code> at all</td>
+  <td>none (real non-JWT string)</td>
+  <td><code>verify()</code></td>
+  <td><code>JWTError</code> propagates uncaught (documents CURRENT buggy behavior — test's own docstring says it should be updated to expect 401 once fixed)</td>
+  <td><code>JWTError</code> raised, uncaught</td>
+  <td>PASS</td>
+  <td>Confirms Finding 3 / AUTH-2 root cause still present in code — see D.3</td>
+</tr>
+<tr>
+  <td><code>TestExtractRoles::test_realm_roles_included</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Realm roles extracted into set</td>
+  <td>none</td>
+  <td><code>_extract_roles</code></td>
+  <td><code>{&quot;publisher&quot;,&quot;offline_access&quot;}</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_missing_realm_access_no_crash</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>No <code>realm_access</code> key → empty set, no crash</td>
+  <td>none</td>
+  <td><code>_extract_roles</code></td>
+  <td><code>set()</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_realm_access_present_but_null</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>realm_access: None</code> → empty set, no crash</td>
+  <td>none</td>
+  <td><code>_extract_roles</code></td>
+  <td><code>set()</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_client_roles_included_when_client_id_given</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Client roles extracted when <code>client_id</code> given</td>
+  <td>none</td>
+  <td><code>_extract_roles</code></td>
+  <td><code>{&quot;viewer&quot;}</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_resource_access_missing_the_given_client_id_no_crash</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>client_id</code> not present in <code>resource_access</code> → empty set, no crash</td>
+  <td>none</td>
+  <td><code>_extract_roles</code></td>
+  <td><code>set()</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_client_id_none_skips_client_roles_entirely</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td><code>client_id=None</code> → client roles branch fully skipped even if data present</td>
+  <td>none</td>
+  <td><code>_extract_roles</code></td>
+  <td><code>set()</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td>Confirms A.4's &quot;client roles branch is dead unless <code>KEYCLOAK_ROLES_CLIENT_ID</code> set&quot; finding</td>
+</tr>
+<tr>
+  <td><code>...::test_realm_and_client_roles_unioned_without_duplicates</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Realm + client roles unioned, deduped</td>
+  <td>none</td>
+  <td><code>_extract_roles</code></td>
+  <td><code>{&quot;publisher&quot;,&quot;viewer&quot;}</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>TestGetCurrentPrincipal::test_no_credentials_returns_401</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>No creds → 401 &quot;missing bearer token&quot;</td>
+  <td>none</td>
+  <td><code>get_current_principal</code></td>
+  <td><code>HTTPException(401)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_wrong_scheme_returns_401</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Non-Bearer scheme (<code>Basic</code>) → 401</td>
+  <td>none</td>
+  <td><code>get_current_principal</code></td>
+  <td><code>HTTPException(401)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_valid_token_populates_principal</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Full claims → <code>Principal</code> populated correctly</td>
+  <td><code>_verifier.verify</code></td>
+  <td><code>get_current_principal</code></td>
+  <td>sub/username/email/roles all correct</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_missing_sub_claim_reproduces_finding_2</code></td>
+  <td>Unit/Finding</td>
+  <td>Unit</td>
+  <td>No <code>sub</code> claim in token → <code>Principal.sub == &quot;&quot;</code> silently</td>
+  <td><code>_verifier.verify</code> (returns claims w/o <code>sub</code>)</td>
+  <td><code>get_current_principal</code></td>
+  <td><code>principal.sub == &quot;&quot;</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td>Reproduces Finding 2 (empty <code>sub</code>/<code>issuer_id</code>) at the exact claims-extraction site — see D.2</td>
+</tr>
+<tr>
+  <td><code>...::test_missing_email_and_username_fall_back_to_none</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>No email/username claims → both <code>None</code></td>
+  <td><code>_verifier.verify</code></td>
+  <td><code>get_current_principal</code></td>
+  <td><code>email is None</code>, <code>username is None</code></td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>TestRequireRoles::test_principal_has_required_role_passes_through</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Principal with required role passes</td>
+  <td>none</td>
+  <td><code>require_roles</code></td>
+  <td>same principal returned</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_principal_missing_required_role_returns_403</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Principal without required role → 403</td>
+  <td>none</td>
+  <td><code>require_roles</code></td>
+  <td><code>HTTPException(403)</code></td>
+  <td>raised</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>...::test_principal_has_extra_roles_beyond_required_still_passes</code></td>
+  <td>Unit</td>
+  <td>Unit</td>
+  <td>Extra roles beyond required don't block</td>
+  <td>none</td>
+  <td><code>require_roles</code></td>
+  <td>same principal returned</td>
+  <td>matched</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h3>B.7 <code>tests/api/test_register_verify_e2e.py</code> (27 tests, per prior results doc — <strong>NOT RE-EXECUTED THIS AUDIT</strong>)</h3>
+<p>Per the task's explicit safety instruction (no internet/production-credential access assumed for this audit run), this file was read in full but not executed. All 27 rows below are carried forward from <code>_docs/qa/results/api-test-results-2026-09-09.md</code> for traceability, marked <code>NOT RUN</code> this audit — treat these specific PASS/FAIL values as <strong>unverified this session</strong>, last known from 2026-09-09:</p>
+<table>
+<thead>
+<tr>
+  <th>Test ID (scenario)</th>
+  <th>File</th>
+  <th>Category</th>
+  <th>Layer</th>
+  <th>Purpose</th>
+  <th>Result (2026-09-09, not reverified)</th>
+  <th>Status this audit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>REG-1 register new document</td>
+  <td>test_register_verify_e2e.py</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>New doc registers, <code>issuer_id</code> should equal token <code>sub</code></td>
+  <td>FAIL (issuer_id empty)</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>REG-2 empty file</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>0-byte file → 400</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>REG-3 file exceeds limit</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Oversized file → 413</td>
+  <td>PASS* (via nginx, not app)</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>REG-4 file exactly at limit</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Exactly-20MB file → 200</td>
+  <td>XFAIL (unreachable behind nginx ~1MiB limit)</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>REG-4b file at effective nginx limit</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>~1MiB file → 200</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>REG-5 missing file field</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>No <code>file</code> field → 422</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>REG-6 non-PDF content accepted</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>No content-type/magic-byte validation, non-PDF accepted</td>
+  <td>PASS (documents known gap)</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>DUP-1 duplicate same publisher</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Re-register same content → <code>already_existed=true</code>, same ids</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>DUP-2 duplicate different publisher</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Needs 2nd account</td>
+  <td>XFAIL (no 2nd account)</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>DUP-3 same filename different content</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Distinct records for distinct content</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>DUP-4 concurrent register race</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>2 parallel identical registers — race check</td>
+  <td>PASS (no exploitable race observed)</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>AUTH-1 register without token</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>No token → 401</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>AUTH-2 malformed token</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Non-JWT string → should be 401</td>
+  <td><strong>FAIL (500 observed)</strong></td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>AUTH-3 expired token</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Real-TTL-expired token → 401</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>AUTH-4 valid token missing publisher role</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Needs non-publisher account</td>
+  <td>XFAIL (no such account)</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>AUTH-5 issuer/audience mismatch (proxied via unknown kid)</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>→ 401</td>
+  <td>PASS* (proxy test, not true iss/aud mismatch)</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>AUTH-6 /records without token</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>→ 401</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>AUTH-7 /records IDOR check</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Publisher A sees other issuers' records</td>
+  <td><strong>FAIL — CONFIRMED IDOR</strong></td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>AUTH-8 /verify without token</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Public by design → 200</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>VER-1 verify registered document</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td><code>valid=true</code></td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>VER-2 verify unregistered document</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td><code>valid=false</code>, no <code>record_id</code></td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>VER-3 verify tampered document</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>1-byte change → <code>valid=false</code></td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>VER-4 verify-by-hash not registered</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td><code>valid=false</code></td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>VER-5 verify-by-hash bad format</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>→ 400</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>VER-6 verify-by-hash injection payload</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>→ 400/404, never reaches DB unsafely</td>
+  <td>PASS</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>VER-7 on-chain mismatch</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Needs server/Anvil access</td>
+  <td>SKIPPED (out of scope)</td>
+  <td>NOT RUN</td>
+</tr>
+<tr>
+  <td>VER-8 blockchain node down</td>
+  <td>&quot;</td>
+  <td>API</td>
+  <td>API E2E</td>
+  <td>Needs server access</td>
+  <td>SKIPPED (out of scope)</td>
+  <td>NOT RUN</td>
+</tr>
+</tbody>
+</table>
+<h3>B.8 <code>tests/locust/locustfiles/{health,register,verify}.py</code> — Performance, NOT pytest tests, NOT executed this audit</h3>
+<p>Not run this audit (no live server target was stood up — <code>locust.conf:2</code> points at <code>http://127.0.0.1:41012</code>, no such server was running during this audit session). Static analysis only, see A/D sections.</p>
+<hr />
+</div></details>
+<details open><summary>Frontend test inventory — 30 unit + 18 Playwright E2E</summary><div class="raw"><h2>B. Frontend Test Inventory</h2>
+<h3>B1. Unit tests (Vitest) — ALL PASS this audit run (30/30, see Section C)</h3>
+<table>
+<thead>
+<tr>
+  <th>Test file</th>
+  <th>Test name (describe &gt; it)</th>
+  <th>Purpose (from assertions)</th>
+  <th>Status this run</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>hooks/useUpload.test.ts</code></td>
+  <td><code>useFileUpload &gt; on successful register, stores the payload and navigates to /result/success</code></td>
+  <td>Register success → <code>sessionStorage</code> payload set + router push <code>/result/success</code></td>
+  <td>PASS</td>
+  <td>Mocks <code>@components/api</code>, <code>next/navigation</code></td>
+</tr>
+<tr>
+  <td><code>hooks/useUpload.test.ts</code></td>
+  <td><code>useFileUpload &gt; when the backend reports already_existed, treats a register as a failure result</code></td>
+  <td><code>already_existed:true</code> in 200 response is treated as app-level failure, routes to <code>/result/failure</code></td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>hooks/useUpload.test.ts</code></td>
+  <td><code>useFileUpload &gt; does nothing when submitted with no file selected</code></td>
+  <td>Guards <code>handleSubmit()</code> against empty file state (no API call, no navigation)</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/fileExtension.test.ts</code></td>
+  <td><code>getFileExtension &gt; returns unknown for null</code></td>
+  <td>Null-safety</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/fileExtension.test.ts</code></td>
+  <td><code>getFileExtension &gt; returns unknown when there is no extension</code></td>
+  <td>No-extension case</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/fileExtension.test.ts</code></td>
+  <td><code>getFileExtension &gt; returns the lowercased extension</code></td>
+  <td>Case normalization (<code>Document.PDF</code> → <code>pdf</code>)</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/fileExtension.test.ts</code></td>
+  <td><code>getFileExtension &gt; uses the last extension for multi-dot filenames</code></td>
+  <td><code>archive.tar.gz</code> → <code>gz</code></td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/uploadErrorMessage.test.ts</code></td>
+  <td><code>getUploadFailureMessage &gt; prioritizes the already-registered case for register, over the generic 409 message</code></td>
+  <td>409 + <code>already_existed:true</code> for <code>register</code> maps to <code>alreadyRegistered</code> string, not generic conflict</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/uploadErrorMessage.test.ts</code></td>
+  <td><code>getUploadFailureMessage &gt; maps known HTTP status codes to their dedicated message</code></td>
+  <td>413 → <code>tooLarge</code> message</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/uploadErrorMessage.test.ts</code></td>
+  <td><code>getUploadFailureMessage &gt; maps 409 for verify to the generic conflict message (not already-registered)</code></td>
+  <td>Source-dependent 409 handling (<code>verify</code> ≠ <code>register</code> semantics)</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/uploadErrorMessage.test.ts</code></td>
+  <td><code>getUploadFailureMessage &gt; falls back to the raw error string when there is no matching status code</code></td>
+  <td>Network-error fallback path</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/uploadErrorMessage.test.ts</code></td>
+  <td><code>getUploadFailureMessage &gt; falls back to the generic failure message when nothing else applies</code></td>
+  <td>Default fallback</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/uploadErrorMessage.test.ts</code></td>
+  <td><code>getUploadFailureMessage &gt; treats an unrecognized status code as no match and falls through to response.message</code></td>
+  <td>Unknown status code (999) fallback to <code>response.message</code></td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/dateFormat.test.ts</code></td>
+  <td><code>formatDisplayDateTime &gt; returns null for a null value</code></td>
+  <td>Null-safety</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/dateFormat.test.ts</code></td>
+  <td><code>formatDisplayDateTime &gt; returns the original string when it cannot be parsed as a date</code></td>
+  <td>Unparseable-date fallback</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/dateFormat.test.ts</code></td>
+  <td><code>formatDisplayDateTime &gt; formats in en-US order: Month Day, Year, HH.MM</code></td>
+  <td>Locale-specific date format (<code>en</code>)</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/dateFormat.test.ts</code></td>
+  <td><code>formatDisplayDateTime &gt; formats in id-ID order: Day Month Year, HH.MM</code></td>
+  <td>Locale-specific date format (<code>id</code>)</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/dateFormat.test.ts</code></td>
+  <td><code>formatDisplayDateTime &gt; pads single-digit hours and minutes</code></td>
+  <td>Zero-padding</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/resultPayload.test.ts</code></td>
+  <td><code>buildResultHref &gt; returns a bare /result/&lt;status&gt; href with no payload data in it</code></td>
+  <td>Confirms no PII/result data leaks into the href string</td>
+  <td>PASS</td>
+  <td>Directly verifies CLAUDE.md constitution rule</td>
+</tr>
+<tr>
+  <td><code>lib/resultPayload.test.ts</code></td>
+  <td><code>buildResultHref &gt; stores the payload in sessionStorage so it can be read back</code></td>
+  <td>Round-trip storage</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/resultPayload.test.ts</code></td>
+  <td><code>readResultPayload &gt; returns null when nothing was stored</code></td>
+  <td>Empty-state handling</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/resultPayload.test.ts</code></td>
+  <td><code>readResultPayload &gt; returns null for malformed JSON</code></td>
+  <td>Corrupt-storage handling</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/resultPayload.test.ts</code></td>
+  <td><code>readResultPayload &gt; returns null when source is not register/verify</code></td>
+  <td>Schema validation on read</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/resultPayload.test.ts</code></td>
+  <td><code>readResultPayload &gt; returns null when status is not success/failure</code></td>
+  <td>Schema validation on read</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/fileSizeCalc.test.ts</code></td>
+  <td><code>getFileSize &gt; returns &quot;0 Bytes&quot; for null</code></td>
+  <td>Null-safety</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/fileSizeCalc.test.ts</code></td>
+  <td><code>getFileSize &gt; formats sizes under 1 KB in Bytes</code></td>
+  <td>Byte formatting</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/fileSizeCalc.test.ts</code></td>
+  <td><code>getFileSize &gt; formats sizes in KB</code></td>
+  <td>KB formatting</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/fileSizeCalc.test.ts</code></td>
+  <td><code>getFileSize &gt; formats sizes in MB</code></td>
+  <td>MB formatting</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/i18n/translations.test.ts</code></td>
+  <td><code>translations dictionary &gt; has the exact same set of keys in id and en</code></td>
+  <td>i18n key-parity guard</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>lib/i18n/translations.test.ts</code></td>
+  <td><code>translations dictionary &gt; has non-empty string values for every leaf (no placeholder gaps)</code></td>
+  <td>No empty i18n strings (except allow-listed)</td>
+  <td>PASS</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<p>Total: <strong>7 test files, 30 <code>it(...)</code> blocks, 30 passed, 0 failed</strong> this run (see Section C for verbatim output).</p>
+<h3>B2. E2E tests (Playwright)</h3>
+<p>Not executable in this audit environment (see Section C for exact error). Table below is built from <strong>static reading</strong> of the spec files (exact <code>test(...)</code> strings and <code>expect(...)</code> assertions) cross-referenced against <code>_docs/qa/results/frontend-test-results-2026-09-09.md</code> for last-known outcomes.</p>
+<table>
+<thead>
+<tr>
+  <th>Test ID</th>
+  <th>File</th>
+  <th>Test name (exact)</th>
+  <th>Journey/persona</th>
+  <th>What it actually asserts</th>
+  <th>Last known result (2026-09-09 doc)</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>TC-1</td>
+  <td><code>tests/e2e/auth-guard.spec.ts:7</code></td>
+  <td><code>TC-1: /publisher redirects to / when logged out</code></td>
+  <td>Negative</td>
+  <td><code>await expect(page).toHaveURL(/^http:\/\/[^/]+\/(\?.*)?$/)</code> after <code>page.goto('/publisher')</code></td>
+  <td>✅ per <code>uat-test-plan.md</code> §3 (not in the 2026-09-09 run, which only covered TC-10..19)</td>
+  <td>Attempted this audit; failed on missing Chromium binary, not app logic (Section C)</td>
+</tr>
+<tr>
+  <td>TC-2</td>
+  <td><code>tests/e2e/auth-guard.spec.ts:12</code></td>
+  <td><code>TC-2: /dashboard redirects to / when logged out</code></td>
+  <td>Negative</td>
+  <td>Same URL-regex assertion for <code>/dashboard</code></td>
+  <td>✅ per plan §3</td>
+  <td>Same execution blocker</td>
+</tr>
+<tr>
+  <td>TC-3</td>
+  <td><code>tests/e2e/verifier-journey.spec.ts:8</code></td>
+  <td><code>TC-3: verifying an unregistered document lands on /result/failure</code></td>
+  <td>Verifier</td>
+  <td>Heading visible; uploads sample PDF; clicks &quot;Verifikasi Dokumen&quot;; <code>page.url()</code> contains <code>/result/failure</code></td>
+  <td>✅ per plan §3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>TC-4..7</td>
+  <td><code>tests/e2e/publisher-journey.spec.ts:40</code></td>
+  <td><code>TC-4..7: publisher logs in, registers a document, sees it on the dashboard, and it verifies as authentic</code></td>
+  <td>Publisher + Verifier round-trip</td>
+  <td>Login via Keycloak; <code>/publisher</code> upload+submit → URL contains <code>/result/success</code>; <code>/dashboard</code> shows filename; clears cookies, verifies same file publicly → URL contains <code>/result/success</code> again</td>
+  <td>✅ per plan §3</td>
+  <td>Single test covers 4 TC IDs</td>
+</tr>
+<tr>
+  <td>TC-10</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:47</code></td>
+  <td><code>publisher Dropzone rejects a file over the 20 MB limit client-side</code></td>
+  <td>Publisher</td>
+  <td>Text &quot;Ukuran file melebihi 20 MB.&quot; visible; asserts the <code>/api/register</code> network request was <code>rejected</code> (never fired) via <code>Promise.allSettled</code></td>
+  <td><strong>PASSED</strong> (results doc &quot;Hasil aman&quot;)</td>
+  <td>Client-side only, not a 413 round-trip (comment <code>edge-cases.spec.ts:44-45</code>)</td>
+</tr>
+<tr>
+  <td>TC-11a</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:77</code></td>
+  <td><code>Dropzone rejects a .txt file by extension</code></td>
+  <td>Publisher</td>
+  <td>Text &quot;Hanya file PDF yang didukung.&quot; visible</td>
+  <td><strong>PASSED</strong></td>
+  <td></td>
+</tr>
+<tr>
+  <td>TC-11b</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:88</code></td>
+  <td><code>a file with .pdf extension but non-PDF content passes the client filter — server must be the real gate</code></td>
+  <td>Publisher</td>
+  <td>If client doesn't reject, submits and asserts <code>response.status()</code> === <code>415</code></td>
+  <td><strong>FAILED</strong> — expected 415, got 200 (results doc &quot;🔴 Temuan nyata&quot;: server accepted non-PDF bytes disguised as <code>.pdf</code>)</td>
+  <td>Confirmed independently against current source: <code>parseUpload.ts:27</code> only checks <code>file.type === '' \|\| file.type === 'application/pdf'</code> and filename suffix — no byte-level check, consistent with this failure. See Finding D1</td>
+</tr>
+<tr>
+  <td>—</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:131-140</code></td>
+  <td><code>test.skip(true, ...)</code> — TC-12: access token expiry</td>
+  <td>Publisher</td>
+  <td>N/A — explicitly skipped, documented as needing manual testing (Keycloak access-token TTL too long for CI)</td>
+  <td>Skipped (manual only), not part of the 14 executed</td>
+  <td></td>
+</tr>
+<tr>
+  <td>TC-13</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:145</code></td>
+  <td><code>logout ends both the NextAuth session and the Keycloak SSO cookie</code></td>
+  <td>Publisher</td>
+  <td>After clicking &quot;Keluar&quot; (logout) and handling Keycloak's manual logout-confirmation screen, asserts revisiting <code>/dashboard</code> redirects to <code>/</code> and &quot;Masuk&quot; button is visible</td>
+  <td><strong>FAILED</strong> — timed out at the <strong>login</strong> step (not logout/session-end assertion itself); results doc labels this &quot;inconclusive&quot;, possibly Keycloak rate-limiting from repeated logins in one run (8th login in ~4.4 min session)</td>
+  <td>Comment at <code>edge-cases.spec.ts:156-161</code> documents a real app finding independent of the failure: <code>SignOut.tsx</code>'s <code>generateKeycloakLogoutUrl()</code> never passes <code>id_token_hint</code>, so Keycloak shows a manual confirmation screen instead of silent logout</td>
+</tr>
+<tr>
+  <td>TC-14 (part 1)</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:181</code></td>
+  <td><code>ID &lt;-&gt; EN toggle changes visible text on /, /result/success, /result/failure</code></td>
+  <td>UI</td>
+  <td>Heading &quot;Verifikasi Dokumen Resmi&quot; visible; click &quot;EN&quot;; heading &quot;Verify an Official Document&quot; visible + button &quot;Verify Document&quot;; click &quot;ID&quot;; heading reverts</td>
+  <td><strong>FAILED in earlier run, then reclassified</strong>: prior test asserted &quot;Verify Official Documents&quot; (wrong text) vs actual <code>translations.ts:263</code> &quot;Verify an Official Document&quot; — results doc says this was a <strong>test bug</strong>, already fixed in the version now in the repo (current source at line 181-191 already expects &quot;Verify an Official Document&quot;, matching translations.ts)</td>
+  <td>Not an app bug per 2026-09-09 doc's root-cause note</td>
+</tr>
+<tr>
+  <td>TC-14 (part 2)</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:197</code></td>
+  <td><code>toggle persists into an authenticated page (/dashboard)</code></td>
+  <td>UI</td>
+  <td>&quot;Dokumen Terdaftar&quot; visible; click EN; &quot;Registered Documents&quot; visible</td>
+  <td><strong>PASSED</strong></td>
+  <td></td>
+</tr>
+<tr>
+  <td>TC-15a</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:213</code></td>
+  <td><code>/result/success with no sessionStorage payload does not crash</code></td>
+  <td>Negative</td>
+  <td>Direct nav with empty storage; &quot;Beranda&quot;/&quot;Home&quot; button visible; zero <code>pageerror</code> events</td>
+  <td><strong>PASSED</strong></td>
+  <td></td>
+</tr>
+<tr>
+  <td>TC-15b</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:226</code></td>
+  <td><code>/result/failure with no sessionStorage payload does not crash</code></td>
+  <td>Negative</td>
+  <td>Same, for <code>/result/failure</code></td>
+  <td><strong>PASSED</strong></td>
+  <td></td>
+</tr>
+<tr>
+  <td>TC-16</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:240</code></td>
+  <td><code>F5 after a successful verify keeps showing the same result (sessionStorage survives refresh)</code></td>
+  <td>Publisher</td>
+  <td>Registers a doc, confirms &quot;Registrasi Berhasil&quot;, reloads, confirms same text still present</td>
+  <td><strong>FAILED</strong> in one run (login timeout, same suspected rate-limit cause as TC-13); <strong>PASSED</strong> in the final documented run — results doc notes this specific inconsistency explicitly (&quot;TC-16 ... di run final ini PASSED&quot;)</td>
+  <td>Flaky/inconclusive per prior doc, not confirmed as consistent app bug</td>
+</tr>
+<tr>
+  <td>TC-17a</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:280</code></td>
+  <td><code>a valid session cannot push an oversized file past server-side validation</code></td>
+  <td>Publisher (adversarial, direct API)</td>
+  <td>POSTs 21MB multipart directly to <code>/api/register</code> with valid session cookie (bypassing Dropzone UI); asserts response status <code>413</code></td>
+  <td><strong>PASSED</strong></td>
+  <td>Confirmed against current source: <code>parseUpload.ts:22-24</code> returns 413 for <code>file.size &gt; MAX_UPLOAD_BYTES</code></td>
+</tr>
+<tr>
+  <td>TC-17b</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:300</code></td>
+  <td><code>a valid session cannot push a non-PDF file past server-side validation</code></td>
+  <td>Publisher (adversarial)</td>
+  <td>POSTs a <code>.jpg</code> mimetype file directly to <code>/api/register</code>; asserts <code>415</code></td>
+  <td><strong>PASSED</strong></td>
+  <td>Confirmed: <code>parseUpload.ts:28-29</code></td>
+</tr>
+<tr>
+  <td>TC-17c</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:319</code></td>
+  <td><code>no session cookie is rejected outright (requireAuth.ts)</code></td>
+  <td>Negative (adversarial)</td>
+  <td>POSTs to <code>/api/register</code> with no cookies; asserts <code>401</code></td>
+  <td><strong>PASSED</strong></td>
+  <td>Confirmed: <code>requireAuth.ts:16-21</code></td>
+</tr>
+<tr>
+  <td>TC-18</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:333</code></td>
+  <td><code>rapid double-click on &quot;Verifikasi Dokumen&quot; does not fire two in-flight requests</code></td>
+  <td>Verifier</td>
+  <td>Dispatches two native <code>click()</code> events synchronously inside one <code>page.evaluate()</code>; counts <code>/api/verify</code> requests over a 3s window; asserts <code>&lt;= 1</code></td>
+  <td><strong>FAILED</strong> — timeout, &quot;detached from DOM, retrying&quot;; results doc assesses this as likely a <strong>test-design</strong> issue (button correctly unmounts on submit, which is itself the expected/safe behavior) rather than a confirmed app bug</td>
+  <td>Not re-verified against live app this audit (E2E not executable)</td>
+</tr>
+<tr>
+  <td>TC-19</td>
+  <td><code>tests/e2e/edge-cases.spec.ts:390</code></td>
+  <td><code>verifier page renders without horizontal overflow in dark mode on a narrow viewport</code></td>
+  <td>UI</td>
+  <td>375×800 viewport, dark color-scheme emulated; heading visible; <code>document.documentElement.scrollWidth &gt; window.innerWidth + 1</code> must be <code>false</code>; screenshot saved</td>
+  <td><strong>PASSED</strong></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cross-check against prior claim &quot;10 passed, 4 failed&quot;:</strong> Mapping the 14 executed (non-skip) test blocks in <code>edge-cases.spec.ts</code> against the 2026-09-09 results doc's own categorization:</p>
+<ul>
+<li>Failed (4): TC-11b, TC-13, TC-16 (failed in an earlier of the 3 runs, though the doc's own &quot;final run&quot; table separately states TC-16 passed on the final run — the headline &quot;10 passed, 4 failed&quot; figure and the per-test prose are <strong>not fully self-consistent</strong> in the source doc itself; this is flagged as-is, not resolved, per instructions not to invent numbers), TC-18.</li>
+<li>Passed (10, per doc's &quot;Hasil aman&quot; list + TC-14 part 2): TC-10, TC-11a, TC-14(part 2), TC-15a, TC-15b, TC-17a, TC-17b, TC-17c, TC-19 = 9 explicitly listed as passed in &quot;Hasil aman&quot; grouping, <strong>plus</strong> TC-14 part 2 stated as PASSED in the &quot;✅ Tidak ada masalah&quot; section = matches 10 only if TC-16's final-run PASS is the 10th. INFORMATION NEEDED: the source doc's headline count and its per-test breakdown do not resolve to an unambiguous single list of exactly which 10 are &quot;passed&quot; vs the note that TC-16 both failed (an earlier run) and passed (the final run) — this is a genuine ambiguity in the prior QA artifact itself, not introduced by this audit.</li>
+</ul>
+<hr />
+</div></details>
+<details open><summary>Pass 5 full-stack integration inventory — 53 tests</summary><div class="raw"><h2>4. Test Matrix</h2>
+<p>Evidence level for every test in this section: <strong>INTEGRATION-REAL-LOCAL</strong> unless noted. Status legend: PASS / FAIL / SKIP / BLOCKED / N/A.</p>
+<h3>4.1 PostgreSQL integration (<code>tests/integration_pass5/test_db_integration.py</code>)</h3>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Objective</th>
+  <th>Status</th>
+  <th>Finding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>DB-INT-01</td>
+  <td>New record persists in real Postgres</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>DB-INT-02</td>
+  <td>Record retrievable from a fresh connection after the request ends</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>DB-INT-03</td>
+  <td><code>content_hash</code> UNIQUE constraint genuinely rejects a duplicate</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>DB-INT-04</td>
+  <td><code>transaction_hash</code> UNIQUE constraint genuinely rejects a duplicate</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>DB-INT-05</td>
+  <td>5 concurrent identical registrations → exactly one authoritative row</td>
+  <td>PASS</td>
+  <td>Real Postgres UNIQUE constraint + the app's own duplicate-check-then-insert path resolved the race to exactly 1 DB row across 5 concurrent requests in this run. (Note: DUP-4 in the 2026-09-09 live pass raised the theoretical possibility of two blockchain transactions for one hash if two requests both pass the pre-check before either commits; this run's timing did not trigger that window — see §14 remaining gaps.)</td>
+</tr>
+<tr>
+  <td>DB-INT-06</td>
+  <td>Failed transaction does not leave a partial row</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>DB-INT-07</td>
+  <td><code>issuer_id</code> persists exactly as the authenticated principal's JWT <code>sub</code></td>
+  <td><strong>FAIL</strong></td>
+  <td>Reconfirms Finding 2 live: stored <code>issuer_id=''</code>, token <code>sub=None</code> (see §3). Not a new bug — direct DB-level confirmation of the already-diagnosed root cause.</td>
+</tr>
+<tr>
+  <td>DB-INT-08</td>
+  <td><code>created_at</code> generated and returned</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>DB-INT-09</td>
+  <td>DB session cleanup after 20 rapid request/response cycles (no leak)</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>DB-INT-10</td>
+  <td>Postgres unavailable during <code>/register</code></td>
+  <td>PASS (documented)</td>
+  <td><code>register()</code> returns <code>500 Internal Server Error</code> (no clean 503) when Postgres is stopped. Recorded as expected-current-behaviour, not asserted as a hard failure — see §10 (resilience). Postgres restarted and confirmed healthy before subsequent tests ran.</td>
+</tr>
+</tbody>
+</table>
+<h3>4.2 Keycloak integration (<code>tests/integration_pass5/test_keycloak_integration.py</code>)</h3>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Objective</th>
+  <th>Status</th>
+  <th>Finding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KC-INT-01</td>
+  <td>Publisher A login produces a valid, well-formed token</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>KC-INT-02</td>
+  <td>Token has a non-empty <code>sub</code></td>
+  <td><strong>FAIL</strong></td>
+  <td>Root cause in §3.</td>
+</tr>
+<tr>
+  <td>KC-INT-03</td>
+  <td><code>Principal.sub</code> (via persisted <code>issuer_id</code>) equals the JWT <code>sub</code></td>
+  <td><strong>FAIL</strong></td>
+  <td>Same root cause; <code>issuer_id=''</code>, <code>sub=None</code>.</td>
+</tr>
+<tr>
+  <td>KC-INT-04</td>
+  <td>Registration stores <code>issuer_id</code> equal to <code>sub</code> (Publisher B)</td>
+  <td><strong>FAIL</strong></td>
+  <td>Same root cause, confirmed for a second account.</td>
+</tr>
+<tr>
+  <td>KC-INT-05</td>
+  <td><code>publisher</code> role accepted</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>KC-INT-06</td>
+  <td>No-role user (<code>user-c</code>) rejected from <code>/register</code></td>
+  <td>PASS (403)</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>KC-INT-07</td>
+  <td>No-role user rejected from <code>/records</code></td>
+  <td>PASS (403)</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>KC-INT-08</td>
+  <td>Malformed bearer → controlled 401, not 500</td>
+  <td><strong>FAIL</strong></td>
+  <td>Reconfirms Finding 3 with a real HTTP round trip against a real Keycloak-backed backend (previously unit-mocked only). <code>jwt.get_unverified_header()</code> in <code>keycloak.py::KeycloakVerifier.verify()</code> runs before any try/except in scope; a non-JWT-shaped bearer string raises unhandled, producing a raw <code>500 Internal Server Error</code>.</td>
+</tr>
+<tr>
+  <td>KC-INT-09</td>
+  <td>Expired token rejected (waited out the real 300s Keycloak default lifespan, no forged signature)</td>
+  <td>PASS (401, &quot;Token expired&quot;)</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>KC-INT-10</td>
+  <td>Wrong/unverifiable issuer path → 401 (kid-tamper proxy — see limitation below)</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>KC-INT-11</td>
+  <td>Wrong/unverifiable audience path → 401 (kid-tamper proxy)</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>KC-INT-12</td>
+  <td>Missing token rejected</td>
+  <td>PASS (401)</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>KC-INT-13</td>
+  <td>Full JWKS/OIDC-discovery flow works against real Keycloak</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Limitation on KC-INT-10/11</strong>: as in the 2026-09-09 pass, a <em>validly signed</em> token from a genuinely different issuer/audience needs a second Keycloak realm and its private key. Both tests use the same kid-tampering proxy as the historical <code>AUTH-5</code> test (forces the same &quot;unverifiable token → 401&quot; path before <code>iss</code>/<code>aud</code> are even evaluated). This is documented, not silently substituted.</p>
+<h3>4.3 Multi-publisher isolation (<code>tests/integration_pass5/test_isolation.py</code>)</h3>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Objective</th>
+  <th>Status</th>
+  <th>Finding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>ISO-01</td>
+  <td>Publisher A's <code>GET /records</code> shows only A's records</td>
+  <td><strong>FAIL</strong></td>
+  <td><strong>IDOR CONFIRMED with live two-account evidence.</strong> A's response included B's record (<code>publisher-b-secret.pdf</code>).</td>
+</tr>
+<tr>
+  <td>ISO-02</td>
+  <td>Publisher B's <code>GET /records</code> shows only B's records</td>
+  <td><strong>FAIL</strong></td>
+  <td>Same — B's response included A's record.</td>
+</tr>
+<tr>
+  <td>ISO-03</td>
+  <td>Exact fields of the leaked cross-publisher record</td>
+  <td>PASS (documents the leak)</td>
+  <td>All 6 fields exposed: <code>record_id, content_hash, filename, transaction_hash, created_at, issuer_id</code>. Full leaked record captured in test output.</td>
+</tr>
+<tr>
+  <td>ISO-04</td>
+  <td>Isolation failure persists across multiple records per publisher</td>
+  <td><strong>FAIL</strong></td>
+  <td>A's listing spanned 3 distinct <code>issuer_id</code> values after both publishers registered multiple documents (confirms it's a whole-table leak, not a one-off).</td>
+</tr>
+<tr>
+  <td>ISO-05</td>
+  <td>No separate single-record endpoint exists to probe a second IDOR vector</td>
+  <td>PASS (N/A confirmed)</td>
+  <td><code>GET /records/{id}</code> → 404; not a route in this API.</td>
+</tr>
+</tbody>
+</table>
+<p>This is the single most important confirmation in this pass: the 2026-09-09 finding was necessarily a <strong>single-account proxy</strong> (only one production credential was available). This pass had two independently authenticated, real Keycloak accounts and reproduced the exact same leak directly.</p>
+<h3>4.4 Anvil / blockchain integration (<code>tests/integration_pass5/test_blockchain_integration.py</code>)</h3>
+<p><strong>Scope note</strong>: Anvil-only, local Ethereum-compatible dev chain. Nothing below is evidence about any public Ethereum network.</p>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Objective</th>
+  <th>Status</th>
+  <th>Finding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>BC-INT-01</td>
+  <td>Connect to real Anvil</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>BC-INT-02/03</td>
+  <td>Register content → real tx created and mined</td>
+  <td>PASS</td>
+  <td>Mined in block 1, <code>status=1</code>.</td>
+</tr>
+<tr>
+  <td>BC-INT-04/05</td>
+  <td>On-chain value == uploaded SHA-256</td>
+  <td>PASS</td>
+  <td>Exact match confirmed.</td>
+</tr>
+<tr>
+  <td>BC-INT-06</td>
+  <td>DB <code>transaction_hash</code> resolves to a real Anvil transaction</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>BC-INT-07</td>
+  <td>Unknown transaction hash / unregistered content_hash</td>
+  <td>PASS</td>
+  <td><code>verify_by_hash</code> → <code>valid:false</code> (DB-level, never reaches Anvil); direct <code>web3.eth.get_transaction</code> on a never-broadcast hash → <code>TransactionNotFound</code>, as expected.</td>
+</tr>
+<tr>
+  <td>BC-INT-08</td>
+  <td>Pending-transaction handling</td>
+  <td><strong>SKIP</strong></td>
+  <td>Anvil in this compose config auto-mines every transaction instantly (no <code>--block-time</code>); a genuinely pending tx is not reproducible without changing Anvil's mining mode, out of scope for this pass.</td>
+</tr>
+<tr>
+  <td>BC-INT-09</td>
+  <td>Anvil unavailable during <code>/register</code></td>
+  <td>PASS (documented)</td>
+  <td><code>500 &quot;Blockchain connection failed&quot;</code> — the connector's own <code>HTTPException(500)</code> from <code>_connect()</code>, propagated with no wrapping. Anvil restarted and confirmed healthy afterward.</td>
+</tr>
+<tr>
+  <td>BC-INT-10</td>
+  <td>Anvil container restart — data survival</td>
+  <td>PASS (documents a real limitation)</td>
+  <td>Transaction registered before the restart was <strong>lost</strong> (<code>TransactionNotFound</code>) after <code>docker compose restart anvil</code>. Anvil's default in-memory chain has no state-persistence flag configured. Documented explicitly as an environment/prototype limitation, not a claim about any real chain's durability.</td>
+</tr>
+</tbody>
+</table>
+<h3>4.5 Full provenance golden journey (<code>tests/integration_pass5/test_provenance_journey.py</code>)</h3>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Objective</th>
+  <th>Status</th>
+  <th>Finding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>PROV-01</td>
+  <td>Full journey: real Keycloak login → upload → SHA-256 → real Postgres row → real Anvil tx (mined) → on-chain value read back → public unauthenticated verify (by upload AND by hash), all matching</td>
+  <td><strong>PASS</strong> (with one documented sub-step exception)</td>
+  <td>Confirmed: <code>uploaded_sha256 == content_hash == onchain_value</code>; tx mined (<code>status=1</code>); public <code>POST /verify</code> → <code>valid:true</code>; public <code>GET /verify/{hash}</code> → <code>valid:true</code>. The one sub-step that does <strong>not</strong> hold is &quot;issuer_id equals Publisher A's sub&quot; — because of Finding 2 (§3); this is printed and documented in the test, not silently passed.</td>
+</tr>
+<tr>
+  <td>PROV-02</td>
+  <td>Tamper test: flip 1 byte post-registration → public verify must return <code>valid:false</code></td>
+  <td>PASS</td>
+  <td>Confirmed; original/modified SHA-256 differ, verify correctly reports invalid.</td>
+</tr>
+<tr>
+  <td>PROV-03</td>
+  <td>Verify a document that was never registered</td>
+  <td>PASS</td>
+  <td><code>valid:false</code>, no <code>record_id</code> in the response.</td>
+</tr>
+</tbody>
+</table>
+<p>This is the highest-value evidence in this pass for the paper: the entire chain of custody (upload → hash → DB → blockchain → public re-verification) is empirically confirmed to work correctly end-to-end on real infrastructure, with the one already-known caveat (publisher identity attribution) called out explicitly rather than hidden.</p>
+<h3>4.6 File validation (<code>tests/integration_pass5/test_file_validation.py</code>)</h3>
+<p><strong>Scope</strong>: backend HTTP layer only. This local stack runs the FastAPI backend directly on <code>:41012</code> with no frontend dev server and no nginx in front of it. Frontend (Next.js client-side Dropzone checks) and nginx (<code>client_max_body_size</code>) layers are <strong>not</strong> re-verified in this pass — see the 2026-09-09/13 passes and the frontend repo's own QA docs for those.</p>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Objective</th>
+  <th>Status</th>
+  <th>Finding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>FILE-01</td>
+  <td>Valid PDF</td>
+  <td>PASS</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>FILE-02</td>
+  <td><code>.txt</code> content renamed <code>.pdf</code></td>
+  <td>PASS (documents known gap)</td>
+  <td>Accepted (200) — reconfirms no magic-byte/content validation, source-level finding already known, now confirmed live.</td>
+</tr>
+<tr>
+  <td>FILE-03</td>
+  <td>Real PDF bytes, spoofed <code>image/png</code> MIME</td>
+  <td>PASS (documents known gap)</td>
+  <td>Accepted (200) — content-type header is trusted, not verified.</td>
+</tr>
+<tr>
+  <td>FILE-04</td>
+  <td>Corrupt/non-conformant <code>%PDF</code> header</td>
+  <td>PASS (documents known gap)</td>
+  <td>Accepted (200) — no structural PDF validation exists at all.</td>
+</tr>
+<tr>
+  <td>FILE-05</td>
+  <td>Empty file</td>
+  <td>PASS</td>
+  <td>Correctly rejected, 400.</td>
+</tr>
+<tr>
+  <td>FILE-06</td>
+  <td>Exactly at 20 MB limit</td>
+  <td>PASS</td>
+  <td>Accepted, 200.</td>
+</tr>
+<tr>
+  <td>FILE-07</td>
+  <td>1 byte over 20 MB limit</td>
+  <td>PASS</td>
+  <td>Correctly rejected, 413.</td>
+</tr>
+<tr>
+  <td>FILE-08</td>
+  <td>Unicode filename</td>
+  <td>PASS</td>
+  <td>Accepted, filename preserved.</td>
+</tr>
+<tr>
+  <td>FILE-09</td>
+  <td>Very long filename (504 chars)</td>
+  <td><strong>FAIL — NEW FINDING</strong></td>
+  <td><code>500 Internal Server Error</code>. <code>registry_records.original_filename</code> is <code>VARCHAR(255)</code>; nothing in <code>documents.py::register()</code> validates filename length before the DB write, so Postgres itself raises (<code>StringDataRightTruncation</code> or equivalent), which propagates unhandled.</td>
+</tr>
+<tr>
+  <td>FILE-10</td>
+  <td>Path-traversal-style filename (<code>../../etc/passwd.pdf</code>)</td>
+  <td>PASS</td>
+  <td>Accepted, 200, stored as a literal string. No filesystem effect — confirms the separately-known finding that uploaded files are never written to disk at all (hashed in memory only), so path-traversal via filename has no filesystem consequence here, only a display/DB-content concern.</td>
+</tr>
+<tr>
+  <td>FILE-11</td>
+  <td>Same bytes, different filename</td>
+  <td>PASS</td>
+  <td>Second request correctly resolves to <code>already_existed:true</code>, same <code>record_id</code>; filename from the <em>first</em> registration is what's returned (content identity, not filename, drives dedup — as designed).</td>
+</tr>
+<tr>
+  <td>FILE-12</td>
+  <td>One-byte-different PDF</td>
+  <td>PASS</td>
+  <td>Distinct hashes, distinct records, as expected.</td>
+</tr>
+</tbody>
+</table>
+<h3>4.7 Resilience (<code>tests/integration_pass5/test_resilience.py</code>, plus DB-INT-10/BC-INT-09 above)</h3>
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Objective</th>
+  <th>Status</th>
+  <th>Finding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>RES-01</td>
+  <td>Postgres unavailable</td>
+  <td>see DB-INT-10</td>
+  <td>500, no partial state observed after restore.</td>
+</tr>
+<tr>
+  <td>RES-02</td>
+  <td>Keycloak unavailable</td>
+  <td>PASS (documents behaviour)</td>
+  <td>New login attempts correctly fail (connection refused) while Keycloak is down. An <strong>already-issued</strong> token continued to be accepted by the backend while Keycloak was stopped — <code>KeycloakVerifier</code> caches JWKS for up to 3600s (<code>jwks_ttl_seconds</code>), so a backend that has already fetched a signing key can keep validating tokens signed with it even with Keycloak fully offline. This is expected caching behaviour, not a bug, but worth noting for the paper: Keycloak availability and backend auth availability are not perfectly coupled.</td>
+</tr>
+<tr>
+  <td>RES-03</td>
+  <td>Anvil unavailable during <code>/register</code></td>
+  <td>see BC-INT-09</td>
+  <td>500.</td>
+</tr>
+<tr>
+  <td>RES-04</td>
+  <td>Anvil unavailable during <code>/verify</code> (for an already-registered doc)</td>
+  <td>PASS (documents behaviour)</td>
+  <td><code>verify_full()</code> propagates the connector's <code>500</code> unhandled, same shape as register-side.</td>
+</tr>
+<tr>
+  <td>RES-05</td>
+  <td>Transaction timeout/pending</td>
+  <td>not reproducible</td>
+  <td>See BC-INT-08 — Anvil auto-mines instantly in this config.</td>
+</tr>
+<tr>
+  <td>RES-06</td>
+  <td>Backend container restart preserves already-committed data</td>
+  <td>PASS</td>
+  <td>Record registered before <code>docker compose restart trustmark-app</code> was still present and correct after the container came back healthy.</td>
+</tr>
+<tr>
+  <td>RES-07</td>
+  <td>Frontend/backend network failure</td>
+  <td>NOT RUN</td>
+  <td>No frontend dev server was started as part of this pass (backend-only local stack, see §4.6 scope note) — out of scope for this pass, not fabricated.</td>
+</tr>
+</tbody>
+</table>
+<h3>4.8 Locust reproducibility — see §9 below.</h3>
+<hr />
+</div></details>
+<section><h2>Catalog Interpretation Notes</h2><ul><li>Backend 94/94 PASS is not equivalent to 94 correct product behaviors; several tests intentionally reproduce defects.</li><li>Backend API E2E results are historical live results from 9 Sep 2026 and were not rerun in the final local integration pass.</li><li>Pass-5 failures are preserved as failures because expected behavior was defined independently of current defects.</li><li>Locust raw requests are summarized in the Results HTML, not counted in the 222 test-case corpus.</li></ul></section>
+</main><footer class="foot"><div class="wrap"><b>PITS — Public Information Trust System</b><br>Independent QA evidence package compiled from repository audits, actual test executions, historical live E2E results, and a disposable full-stack integration pass. Unknowns and limitations are retained rather than inferred.</div></footer></body></html>
