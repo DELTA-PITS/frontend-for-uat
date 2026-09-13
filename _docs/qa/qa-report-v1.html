@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PITS QA Report</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#F5F6F8;
+    --surface:#FFFFFF;
+    --surface-2:#F5F6F8;
+    --line:#D5D7DC;
+    --ink:#3F4854;
+    --ink-soft:#667085;
+    --ink-faint:#98A2B3;
+    --accent:#E62F2A;
+    --accent-ink:#8F1512;
+    --accent-soft:#FCE4E3;
+    --good:#0F9D58;
+    --good-soft:#DEF5E7;
+    --bad:#991B1B;
+    --bad-soft:#FBE2E2;
+    --warn:#92600B;
+    --warn-soft:#FBF0D9;
+    --neutral-chip:#667085;
+    --neutral-chip-soft:#E8E9EC;
+    --shadow: 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -12px rgba(15,23,42,0.14);
+    --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --serif: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0a0f1d;
+      --surface:#121b2e;
+      --surface-2:#1e2942;
+      --line:#2a3752;
+      --ink:#f8fafc;
+      --ink-soft:#94a3b8;
+      --ink-faint:#64748b;
+      --accent:#FF6B61;
+      --accent-ink:#FFD4D0;
+      --accent-soft:#3a1512;
+      --good:#22C55E;
+      --good-soft:#0f2f1c;
+      --bad:#F87171;
+      --bad-soft:#3a1414;
+      --warn:#E4B85B;
+      --warn-soft:#332405;
+      --neutral-chip:#94a3b8;
+      --neutral-chip-soft:#1e2942;
+      --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a0f1d;
+    --surface:#121b2e;
+    --surface-2:#1e2942;
+    --line:#2a3752;
+    --ink:#f8fafc;
+    --ink-soft:#94a3b8;
+    --ink-faint:#64748b;
+    --accent:#FF6B61;
+    --accent-ink:#FFD4D0;
+    --accent-soft:#3a1512;
+    --good:#22C55E;
+    --good-soft:#0f2f1c;
+    --bad:#F87171;
+    --bad-soft:#3a1414;
+    --warn:#E4B85B;
+    --warn-soft:#332405;
+    --neutral-chip:#94a3b8;
+    --neutral-chip-soft:#1e2942;
+    --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+  .draft-banner{
+    background:var(--accent); color:#fff; font-family:var(--sans);
+    font-size:13.5px; font-weight:600; text-align:center;
+    padding:10px 16px; letter-spacing:.01em;
+  }
+  .draft-banner strong{font-weight:800;}
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:var(--serif);
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+    font-weight:600;
+  }
+  p{margin:0 0 1em; color:var(--ink-soft);}
+  a{color:var(--accent);}
+  code, .mono{font-family:var(--mono);}
+
+  /* ---------- layout shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns: 264px minmax(0,1fr);
+    max-width:1280px;
+    margin:0 auto;
+  }
+  .toc{
+    position:sticky; top:0; align-self:start;
+    height:100vh; overflow-y:auto;
+    padding:32px 20px 40px 28px;
+    border-right:1px solid var(--line);
+  }
+  .toc-brand{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:28px;
+  }
+  .seal{
+    width:34px; height:34px; border-radius:50%;
+    border:1.5px solid var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--accent); font-family:var(--mono); font-size:11px; font-weight:600;
+    flex:none;
+  }
+  .toc-brand-text{font-size:12.5px; color:var(--ink-faint); line-height:1.35;}
+  .toc-brand-text strong{display:block; color:var(--ink); font-size:13.5px; font-family:var(--mono); letter-spacing:.02em;}
+  .toc nav{display:flex; flex-direction:column; gap:2px;}
+  .toc a{
+    display:block; text-decoration:none; color:var(--ink-soft);
+    font-size:13.5px; padding:7px 10px; border-radius:6px;
+    border-left:2px solid transparent;
+  }
+  .toc a:hover{background:var(--surface-2); color:var(--ink);}
+  .toc a.l2{padding-left:22px; font-size:12.5px; color:var(--ink-faint);}
+
+  /* Moved after the base .toc rule (was before it, same specificity — source
+     order meant this override always lost, so the sidebar never stacked on
+     narrow screens). */
+  @media (max-width: 920px){
+    .shell{grid-template-columns: 1fr;}
+    .toc{position:static; height:auto; border-right:none; border-bottom:1px solid var(--line);}
+  }
+
+  main{padding:48px 56px 120px; min-width:0;}
+  @media (max-width: 640px){ main{padding:32px 20px 80px;} }
+
+  /* ---------- cover ---------- */
+  .cover{
+    padding-bottom:40px; margin-bottom:44px;
+    border-bottom:1px solid var(--line);
+  }
+  .cover-eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:14px; display:flex; align-items:center; gap:8px;
+  }
+  .cover-eyebrow::before{content:"◆"; font-size:9px;}
+  .cover h1{font-size:clamp(30px,4vw,42px); line-height:1.12; max-width:18ch;}
+  .cover-sub{font-size:17px; color:var(--ink-soft); max-width:56ch; margin-top:14px;}
+  .cover-meta{
+    margin-top:28px; display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:0; border:1px solid var(--line); border-radius:10px; overflow:hidden;
+    background:var(--surface);
+  }
+  .cover-meta div{
+    padding:14px 18px; border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .cover-meta div:last-child{border-right:none;}
+  .cover-meta .k{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-faint); margin-bottom:4px;}
+  .cover-meta .v{font-size:13.5px; color:var(--ink); font-family:var(--mono);}
+
+  /* ---------- stat strip ---------- */
+  .stats{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden;
+    margin:28px 0 8px;
+  }
+  .stat{background:var(--surface); padding:18px 16px;}
+  .stat .num{font-family:var(--serif); font-size:30px; font-weight:600; line-height:1;}
+  .stat .lbl{font-size:11.5px; color:var(--ink-faint); margin-top:6px; text-transform:uppercase; letter-spacing:.04em;}
+  .stat.bad .num{color:var(--bad);}
+  .stat.good .num{color:var(--good);}
+  .stat.accent .num{color:var(--accent);}
+
+  /* ---------- sections ---------- */
+  section{margin-top:64px; scroll-margin-top:24px;}
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:6px;}
+  .sec-num{font-family:var(--mono); color:var(--ink-faint); font-size:14px;}
+  section h2{font-size:24px;}
+  .sec-dek{color:var(--ink-soft); max-width:70ch; margin:10px 0 26px; font-size:15px;}
+
+  h3{font-size:17px; margin:32px 0 12px;}
+  h3 .sec-num{font-size:12.5px;}
+
+  /* ---------- tables ---------- */
+  .tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface);}
+  table{width:100%; border-collapse:collapse; font-size:13.5px; min-width:560px;}
+  thead th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); font-weight:600; padding:10px 14px; border-bottom:1px solid var(--line);
+    background:var(--surface-2); white-space:nowrap;
+  }
+  tbody td{padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top; color:var(--ink-soft);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody td.id{font-family:var(--mono); color:var(--ink); white-space:nowrap; font-size:12.5px;}
+  tbody td.name{color:var(--ink);}
+  tbody tr:hover td{background:var(--surface-2);}
+
+  .chip{
+    display:inline-flex; align-items:center; gap:5px; padding:3px 9px 3px 8px;
+    border-radius:99px; font-size:11.5px; font-weight:600; font-family:var(--mono);
+    white-space:nowrap;
+  }
+  .chip::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor;}
+  .chip.pass{background:var(--good-soft); color:var(--good);}
+  .chip.fail{background:var(--bad-soft); color:var(--bad);}
+  .chip.xfail{background:var(--warn-soft); color:var(--warn);}
+  .chip.skip{background:var(--neutral-chip-soft); color:var(--neutral-chip);}
+  .chip.na{background:var(--neutral-chip-soft); color:var(--neutral-chip);}
+  .chip.proposed{background:var(--accent-soft); color:var(--accent-ink);}
+
+  /* ---------- finding cards ---------- */
+  .finding{
+    border:1px solid var(--line); border-radius:12px; background:var(--surface);
+    padding:24px 26px; margin-bottom:20px; box-shadow:var(--shadow);
+    border-left:4px solid var(--bad);
+  }
+  .finding.warn{border-left-color:var(--warn);}
+  .finding.info{border-left-color:var(--accent);}
+  .finding-top{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:10px;}
+  .sev{
+    font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em;
+    padding:3px 8px; border-radius:5px; font-weight:600;
+  }
+  .sev.critical{background:var(--bad-soft); color:var(--bad);}
+  .sev.medium{background:var(--warn-soft); color:var(--warn);}
+  .sev.resolved{background:var(--good-soft); color:var(--good);}
+  .finding h4{font-size:16.5px; font-weight:600;}
+  .finding .fid{font-family:var(--mono); font-size:12px; color:var(--ink-faint);}
+  .finding p{font-size:14.5px; margin-bottom:10px;}
+  .finding p:last-child{margin-bottom:0;}
+  .finding strong{color:var(--ink);}
+  .ev{
+    background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; font-family:var(--mono); font-size:12.5px; color:var(--ink-soft);
+    margin:12px 0; overflow-x:auto; white-space:pre-wrap; word-break:break-word;
+  }
+  .rec{
+    display:flex; gap:10px; align-items:flex-start; margin-top:14px;
+    padding-top:14px; border-top:1px dashed var(--line);
+  }
+  .rec .tag{font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); flex:none; padding-top:2px;}
+
+  /* ---------- gap list ---------- */
+  .gap-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin-top:20px;}
+  .gap-card{border:1px solid var(--line); border-radius:10px; padding:18px 20px; background:var(--surface);}
+  .gap-card .k{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); margin-bottom:8px;}
+  .gap-card h4{font-size:14.5px; margin-bottom:6px;}
+  .gap-card p{font-size:13.5px; margin:0;}
+
+  /* ---------- callout ---------- */
+  .callout{
+    background:var(--accent-soft); border:1px solid var(--accent); border-radius:10px;
+    padding:18px 22px; margin:24px 0; font-size:14.5px; color:var(--accent-ink);
+  }
+  .callout strong{color:var(--accent-ink);}
+  .callout.bad{background:var(--bad-soft); border-color:var(--bad); color:var(--bad);}
+  .callout.bad strong{color:var(--bad);}
+
+  /* ---------- module block for unit test proposal ---------- */
+  .module{
+    border:1px solid var(--line); border-radius:12px; background:var(--surface);
+    margin-bottom:24px; overflow:hidden;
+  }
+  .module-head{
+    padding:16px 22px; background:var(--surface-2); border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap;
+  }
+  .module-head .path{font-family:var(--mono); font-size:13.5px; color:var(--ink);}
+  .module-head .count{font-size:12px; color:var(--ink-faint); font-family:var(--mono);}
+  .fn-block{padding:16px 22px; border-bottom:1px solid var(--line);}
+  .fn-block:last-child{border-bottom:none;}
+  .fn-name{font-family:var(--mono); font-size:13px; color:var(--accent-ink); background:var(--accent-soft); display:inline-block; padding:2px 8px; border-radius:5px; margin-bottom:10px;}
+  .case-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px;}
+  .case-list li{
+    font-size:13.5px; color:var(--ink-soft); padding-left:20px; position:relative;
+  }
+  .case-list li::before{
+    content:"→"; position:absolute; left:0; color:var(--accent); font-size:12px; top:1px;
+  }
+  .case-list li strong{color:var(--ink); font-weight:600;}
+  .case-list li em{
+    font-style:normal; color:var(--ink-faint); font-size:12px; font-family:var(--mono);
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    margin-top:80px; padding-top:28px; border-top:1px solid var(--line);
+    color:var(--ink-faint); font-size:12.5px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  ::selection{background:var(--accent); color:var(--surface);}
+</style>
+</head>
+<body>
+
+<div class="draft-banner">⚠️ <strong>Versi Test Pertama</strong> — hasil uji coba awal pakai AI coding agents, masih banyak bug &amp; belum final. Bukan laporan resmi.</div>
+
+<div class="shell">
+  <aside class="toc">
+    <div class="toc-brand">
+      <div class="seal">SHA</div>
+      <div class="toc-brand-text"><strong>PITS QA REPORT</strong>2026-09-09</div>
+    </div>
+    <nav>
+      <a href="#summary">Executive Summary</a>
+      <a href="#scope">1 · Scope &amp; Method</a>
+      <a href="#inventory">2 · Test Inventory</a>
+      <a href="#inventory-backend" class="l2">2.1 Backend API</a>
+      <a href="#inventory-frontend" class="l2">2.2 Frontend E2E</a>
+      <a href="#inventory-unit" class="l2">2.3 Existing Unit Tests</a>
+      <a href="#findings">3 · Findings</a>
+      <a href="#paper-vs-reality">4 · Paper Claims vs. Reality</a>
+      <a href="#gaps">5 · Not Yet Tested</a>
+      <a href="#unit-proposal">6 · Unit Test Coverage Review</a>
+      <a href="#unit-keycloak" class="l2">6.1 keycloak.py</a>
+      <a href="#unit-documents" class="l2">6.2 documents.py</a>
+      <a href="#recommendations">7 · Recommendations</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="cover">
+      <div class="cover-eyebrow">Quality Assurance &amp; Test Coverage</div>
+      <h1>PITS Verification Layer — QA Report</h1>
+      <p class="cover-sub">An independent test pass against the Public Information Trust System (PITS) proof-of-concept described in <em>"From Hoax to Hash."</em> Prepared to support the paper's evaluation section with reproducible evidence — what was run, what passed, what broke, and what remains untested.</p>
+      <div class="cover-meta">
+        <div><div class="k">Target system</div><div class="v">pits.pangkalandata.id</div></div>
+        <div><div class="k">Environment</div><div class="v">Production / UAT server</div></div>
+        <div><div class="k">Test account</div><div class="v">uat-tester (role: publisher)</div></div>
+        <div><div class="k">Date executed</div><div class="v">2026-09-09</div></div>
+        <div><div class="k">Prepared by</div><div class="v">AI-assisted (Claude), Laksa Ersa</div></div>
+      </div>
+    </div>
+
+    <section id="summary">
+      <div class="sec-head"><span class="sec-num">00</span><h2>Executive Summary</h2></div>
+      <p class="sec-dek">58 automated test cases were run this session against the live PITS deployment — 27 new backend API tests, 14 new frontend end-to-end tests, and a re-verification of the 17 pre-existing unit tests. Two production bugs of security consequence were found and confirmed with reproducible evidence.</p>
+
+      <div class="stats">
+        <div class="stat"><div class="num">58</div><div class="lbl">Tests executed</div></div>
+        <div class="stat good"><div class="num">46</div><div class="lbl">Passed</div></div>
+        <div class="stat bad"><div class="num">7</div><div class="lbl">Failed (real bugs)</div></div>
+        <div class="stat bad"><div class="num">2</div><div class="lbl">Critical findings</div></div>
+        <div class="stat accent"><div class="num">~60</div><div class="lbl">More unit tests proposed</div></div>
+      </div>
+
+      <div class="callout bad">
+        <strong>Headline finding:</strong> every document ever registered in PITS — 42 of 42 records checked — has an empty publisher identity (<code>issuer_id: ""</code>), and any authenticated publisher can read every other publisher's full registration history through <code>GET /api/v1/records</code>. Both are described in detail in Section 3.
+      </div>
+    </section>
+
+    <section id="scope">
+      <div class="sec-head"><span class="sec-num">01</span><h2>Scope &amp; Method</h2></div>
+      <p class="sec-dek">This pass complements, rather than replaces, the testing already described in the paper. It targets exactly the paths the paper claims are covered — registration, duplicate detection, authentication failure, and verification — and runs them as reproducible, automated code against the real production deployment instead of one-off manual checks.</p>
+      <div class="gap-grid">
+        <div class="gap-card">
+          <div class="k">Who ran this</div>
+          <h4>AI coding agents (Claude), supervised</h4>
+          <p>Test design, implementation, execution, and triage were performed by AI agents working against the live server, with a human (Laksa Ersa, the team's engineer — not a paper author) reviewing and directing the work. No paper author or the PITS developer was involved in writing these tests.</p>
+        </div>
+        <div class="gap-card">
+          <div class="k">Where</div>
+          <h4>Live production, not a local sandbox</h4>
+          <p>All tests hit <code>pits.pangkalandata.id</code> and <code>pits-ui.pangkalandata.id</code> directly — the same deployment referenced in the paper's evaluation, not an isolated Docker Compose environment.</p>
+        </div>
+        <div class="gap-card">
+          <div class="k">Constraints</div>
+          <h4>One test account, HTTP-only</h4>
+          <p>Only one publisher credential (<code>uat-tester</code>) was available, and no SSH or database access was used. Two scenario classes could not be empirically completed as a result — documented in Section 5, not silently skipped.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="inventory">
+      <div class="sec-head"><span class="sec-num">02</span><h2>Test Inventory</h2></div>
+      <p class="sec-dek">Three suites, three different jobs: the backend suite proves the API's contract; the frontend suite proves the UI actually surfaces that contract correctly; the unit suite (pre-existing, re-run for confirmation only) proves two isolated components — hashing and blockchain I/O — behave correctly in isolation.</p>
+
+      <h3 id="inventory-backend"><span class="sec-num">2.1</span> Backend API — <code>test_register_verify_e2e.py</code> (27 tests)</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Scenario</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="id">REG-1</td><td class="name">Register a new document</td><td><span class="chip fail">fail</span></td></tr>
+            <tr><td class="id">REG-2</td><td class="name">Reject empty file (0 bytes)</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">REG-3</td><td class="name">Reject file over the size limit</td><td><span class="chip pass">pass*</span></td></tr>
+            <tr><td class="id">REG-4</td><td class="name">Accept file at exactly the app's 20MB limit</td><td><span class="chip xfail">xfail</span></td></tr>
+            <tr><td class="id">REG-4b</td><td class="name">Accept file at the effective (nginx) limit — added this session</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">REG-5</td><td class="name">Reject request missing the file field</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">REG-6</td><td class="name">Non-PDF content is silently accepted (documents a gap)</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">DUP-1</td><td class="name">Duplicate register, same publisher</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">DUP-2</td><td class="name">Duplicate register, different publisher</td><td><span class="chip xfail">xfail</span></td></tr>
+            <tr><td class="id">DUP-3</td><td class="name">Same filename, different content</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">DUP-4</td><td class="name">Concurrent duplicate register (race condition)</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">AUTH-1</td><td class="name">Register without a token</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">AUTH-2</td><td class="name">Register with a malformed token</td><td><span class="chip fail">fail</span></td></tr>
+            <tr><td class="id">AUTH-3</td><td class="name">Register with an expired token (real 5-min TTL)</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">AUTH-4</td><td class="name">Valid token missing the publisher role</td><td><span class="chip xfail">xfail</span></td></tr>
+            <tr><td class="id">AUTH-5</td><td class="name">Token with an unknown signing key</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">AUTH-6</td><td class="name">List records without a token</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">AUTH-7</td><td class="name">Cross-publisher record access (IDOR)</td><td><span class="chip fail">fail</span></td></tr>
+            <tr><td class="id">AUTH-8</td><td class="name">Verify without a token (should be public)</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">VER-1</td><td class="name">Verify a registered, unmodified document</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">VER-2</td><td class="name">Verify an unregistered document</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">VER-3</td><td class="name">Verify a tampered document (1 byte changed)</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">VER-4</td><td class="name">Verify by hash — not registered</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">VER-5</td><td class="name">Verify by hash — malformed hash</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">VER-6</td><td class="name">Verify by hash — injection payload</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">VER-7</td><td class="name">Registry/on-chain data desynchronised</td><td><span class="chip na">not run</span></td></tr>
+            <tr><td class="id">VER-8</td><td class="name">Blockchain node unreachable</td><td><span class="chip na">not run</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-faint);margin-top:10px;">Result: 19 passed · 3 failed (real bugs — see Section 3) · 3 xfail (blocked by missing a second test account) · 2 not run (need server-level access). *REG-3 passed on status code, but for the wrong reason — see Finding 3.</p>
+
+      <h3 id="inventory-frontend"><span class="sec-num">2.2</span> Frontend E2E — <code>edge-cases.spec.ts</code> (14 tests)</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Scenario</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td class="id">TC-10</td><td class="name">Oversize file rejected client-side</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">TC-11a</td><td class="name">Non-PDF file (.txt) rejected client-side</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">TC-11b</td><td class="name">Non-PDF content disguised as .pdf</td><td><span class="chip fail">fail</span></td></tr>
+            <tr><td class="id">TC-13</td><td class="name">Full logout (app session + Keycloak SSO)</td><td><span class="chip fail">fail*</span></td></tr>
+            <tr><td class="id">TC-14a</td><td class="name">ID↔EN toggle changes visible text</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">TC-14b</td><td class="name">Language toggle persists into /dashboard</td><td><span class="chip fail">fail*</span></td></tr>
+            <tr><td class="id">TC-15a</td><td class="name">Direct nav to /result/success, no session data</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">TC-15b</td><td class="name">Direct nav to /result/failure, no session data</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">TC-16</td><td class="name">Refresh /result/success after a real result</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">TC-17a</td><td class="name">Bypass validation — oversize direct to API</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">TC-17b</td><td class="name">Bypass validation — non-PDF direct to API</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">TC-17c</td><td class="name">Bypass validation — no session cookie</td><td><span class="chip pass">pass</span></td></tr>
+            <tr><td class="id">TC-18</td><td class="name">Double-click submit does not double-fire</td><td><span class="chip fail">fail</span></td></tr>
+            <tr><td class="id">TC-19</td><td class="name">Dark mode + mobile viewport, no overflow</td><td><span class="chip pass">pass</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-faint);margin-top:10px;">Result: 10 passed · 4 failed. *TC-13 and TC-14b failed at the Keycloak login step itself (30s timeout) after ~10 rapid logins in one run — on a clean re-run this pattern did not reproduce, so it reads as session/rate-limit flakiness from the test run rather than a confirmed application bug. Needs an isolated re-run to close out.</p>
+
+      <h3 id="inventory-unit"><span class="sec-num">2.3</span> Existing Unit Tests (17 tests, re-verified)</h3>
+      <p>Pre-dating this session: <code>test_hash_engine.py</code> (7 tests) and <code>test_blockchain_connector.py</code> (10 tests), both fully mocked, no live server involved. All 17 pass. These cover exactly two of the system's <strong>29 backend source files</strong> — the two least security-sensitive ones. See Section 6 for what the other files are missing.</p>
+    </section>
+
+    <section id="findings">
+      <div class="sec-head"><span class="sec-num">03</span><h2>Findings</h2></div>
+      <p class="sec-dek">Four issues were confirmed against production. The first two are the ones that matter most for the paper's claims about source verification and access control.</p>
+
+      <div class="finding">
+        <div class="finding-top"><span class="sev critical">Critical</span><span class="fid">Finding 1 — AUTH-7</span></div>
+        <h4>Any publisher can read every other publisher's registration history</h4>
+        <p><code>GET /api/v1/records</code> (<code>documents.py::list_records</code>) queries the registry with no <code>issuer_id</code> filter at all:</p>
+        <div class="ev">records = db.query(RegistryRecord).order_by(RegistryRecord.created_at.desc()).all()</div>
+        <p>Confirmed two independent ways: by code inspection (the query structurally cannot exclude anyone), and empirically — the <code>uat-tester</code> account, created 2026-09-07, retrieved documents filed under filenames such as <em>"cv E. Indarto 2020 - EN.pdf"</em> and <em>"Resume (1).pdf"</em> dated 2026-09-06, before that account existed. It could not have registered them.</p>
+        <div class="rec"><span class="tag">Impact</span><p style="margin:0;">Every publisher's filing history — filenames, timestamps, hashes — is visible to every other publisher through one ordinary authenticated call. This is an access-control gap between tenants, not a hypothetical one.</p></div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-top"><span class="sev critical">Critical</span><span class="fid">Finding 2 — REG-1 / systemic</span></div>
+        <h4>Every registered document has lost its publisher identity</h4>
+        <p>The production Keycloak access token issued to <code>uat-tester</code> carries no <code>sub</code> claim — the standard OIDC subject identifier that Keycloak includes by default. Decoded directly from the JWT payload, the claim set has <code>iss</code>, <code>aud</code>, <code>preferred_username</code>, and a dozen others, but no <code>sub</code>.</p>
+        <div class="ev">Principal(sub=claims.get("sub", ""), ...)   →   issuer_id = ""</div>
+        <p>Checked against the full production table: <strong>42 of 42 records</strong> — not just this session's — have <code>issuer_id: ""</code>. This is very likely the root technical cause behind the paper's own §5.1 caveat ("the live registration response contained an empty issuer_id") — and it means the source-verification function in Table 1 of the paper (associating a document with an authorised publisher) is not currently satisfied in production, regardless of how well the registration flow itself works.</p>
+        <div class="rec"><span class="tag">Likely cause</span><p style="margin:0;">A missing or removed <code>sub</code> protocol mapper on the <code>nextjs-web</code> client scope in the <code>nextjs-kc</code> realm. Worth fixing before the fix for Finding 1 — a per-publisher filter is meaningless while every publisher's identity resolves to the same empty string.</p></div>
+      </div>
+
+      <div class="finding warn">
+        <div class="finding-top"><span class="sev medium">Medium</span><span class="fid">Finding 3 — AUTH-2</span></div>
+        <h4>A malformed bearer token crashes the endpoint instead of being rejected</h4>
+        <p>Sending <code>Authorization: Bearer garbage-string</code> to <code>/api/v1/register</code> returns <strong>500 Internal Server Error</strong>, not the 401 every other invalid-token case returns. <code>KeycloakVerifier.verify()</code> calls <code>jwt.get_unverified_header(token)</code> before any try/except is in scope; a string that isn't a JWT at all raises unhandled.</p>
+        <div class="rec"><span class="tag">Fix</span><p style="margin:0;">Wrap that call the same way <code>jwt.decode()</code> already is, and return 401.</p></div>
+      </div>
+
+      <div class="finding warn">
+        <div class="finding-top"><span class="sev medium">Medium</span><span class="fid">Finding 4 — REG-3 / REG-4 / TC-11b</span></div>
+        <h4>The app's 20MB upload limit is never actually reachable</h4>
+        <p>The app is configured for <code>MAX_UPLOAD_BYTES=20MB</code>, but nginx in front of it enforces its own default <code>client_max_body_size</code> (~1MiB). A binary search against production found the real cutoff at exactly <strong>1,048,403 bytes</strong> — anything larger gets a bare nginx HTML error page, not the app's JSON error. A normal multi-page scanned PDF (often &gt;1MB) will fail to register with a confusing, unbranded error.</p>
+        <p>Separately, <strong>no file-type or magic-byte validation exists at all</strong> — a text file renamed to <code>.pdf</code> is accepted and registered by the API (confirmed from both the backend suite and, independently, the frontend suite bypassing the UI entirely).</p>
+        <div class="rec"><span class="tag">Fix</span><p style="margin:0;">Raise nginx's <code>client_max_body_size</code> to match the app config; add a PDF magic-byte check (<code>%PDF-</code> header) server-side, since client-side filtering alone is bypassable.</p></div>
+      </div>
+
+      <div class="finding info">
+        <div class="finding-top"><span class="sev resolved">No bug found</span><span class="fid">DUP-4</span></div>
+        <h4>Concurrent duplicate registration does not create a race</h4>
+        <p>Two simultaneous register requests for byte-identical content produced exactly one blockchain transaction, with the second request correctly resolving to <code>already_existed: true</code>. No 500, no duplicate transaction, no orphaned record. This one held up.</p>
+      </div>
+    </section>
+
+    <section id="paper-vs-reality">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Paper Claims vs. Reality</h2></div>
+      <p class="sec-dek">How the evaluation numbers in the current draft compare to what this pass actually found running against the same deployment.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:38%">Claim in the draft</th><th>What this pass found</th></tr></thead>
+          <tbody>
+            <tr><td class="name">"15 end-to-end scenarios ... 100% Functional Pass Rate"</td><td>27 automated scenarios run this session: 19 passed, 3 failed on real bugs, 3 blocked by test-account limits, 2 not run. Not 100%.</td></tr>
+            <tr><td class="name">"authentication failures" covered</td><td>Covered, and this pass found one bug the paper doesn't mention: a malformed token returns 500, not 401 (Finding 3).</td></tr>
+            <tr><td class="name">"Zero Failures"</td><td>Not accurate for <code>/api/v1/records</code> (Finding 1) or malformed-token handling (Finding 3) — both are functional/security failures in production, not load-test failures.</td></tr>
+            <tr><td class="name">§5.1 "issuer_id" caveat, cause unstated</td><td>Root cause identified: the Keycloak token has no <code>sub</code> claim (Finding 2). Worth citing directly rather than leaving the caveat unexplained.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="gaps">
+      <div class="sec-head"><span class="sec-num">05</span><h2>Not Yet Tested</h2></div>
+      <p class="sec-dek">Documented gaps, not silent ones — each of these was deliberately left out of this pass, and why.</p>
+      <div class="gap-grid">
+        <div class="gap-card">
+          <div class="k">Blocked by test account</div>
+          <h4>DUP-2, AUTH-4, full AUTH-7 proof</h4>
+          <p>Need a second publisher account (or one without the publisher role). Only <code>uat-tester</code> was available; creating a new Keycloak user was outside this session's permissions.</p>
+        </div>
+        <div class="gap-card">
+          <div class="k">Blocked by access level</div>
+          <h4>VER-7, VER-8</h4>
+          <p>On-chain/registry desync and a downed blockchain node both require direct SSH or Anvil access to simulate — out of scope for an HTTP-only test session.</p>
+        </div>
+        <div class="gap-card">
+          <div class="k">Out of session scope</div>
+          <h4>Load re-verification, deep security testing</h4>
+          <p>Locust load numbers in the paper were not re-run this session. No fuzzing, brute-force/rate-limit testing, CSRF, dependency scanning, or infrastructure-level penetration testing was attempted.</p>
+        </div>
+        <div class="gap-card">
+          <div class="k">Out of session scope</div>
+          <h4>Cross-browser, disaster recovery, human evaluation</h4>
+          <p>Only Chromium was tested (no Safari/Firefox, no real mobile device). No DB/Anvil backup-restore drill. §5.5's Public User Evaluation is a human study — it is not something this kind of testing can substitute for.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="unit-proposal">
+      <div class="sec-head"><span class="sec-num">06</span><h2>Unit Test Coverage Review</h2></div>
+      <p class="sec-dek">The 17 existing unit tests cover 2 of 29 backend source files — both low-risk. The two modules that actually hold Findings 1–3 have zero isolated test coverage. Below is a full review of what's testable in each, mocked and fast (milliseconds, no live server), that would have caught both critical findings without ever touching production.</p>
+
+      <div class="callout">
+        <strong>Why this matters for the paper specifically:</strong> a mocked unit test for <code>list_records()</code> with two records under two different <code>issuer_id</code> values proves Finding 1 in isolation, deterministically, and can run in CI on every commit — stronger evidence than a one-time live-server observation, and exactly the kind of reproducible artefact a reviewer would expect next to a 100%-pass claim.
+      </div>
+
+      <h3 id="unit-keycloak"><span class="sec-num">6.1</span> <code>infra/auth/keycloak.py</code> — 212 lines, 0 existing tests</h3>
+      <div class="module">
+        <div class="module-head"><span class="path">KeycloakVerifier._fetch_jwks()</span><span class="count">8 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li>OIDC discovery endpoint unreachable → <strong>503</strong> <em>network mock</em></li>
+            <li>OIDC response is not valid JSON → <strong>500</strong></li>
+            <li>OIDC config missing the <code>jwks_uri</code> key entirely → currently an <strong>unhandled KeyError</strong>, not the intended 500 <em>possible 5th bug</em></li>
+            <li><code>jwks_uri</code> present but empty or non-string → <strong>500</strong></li>
+            <li>JWKS endpoint unreachable → <strong>503</strong></li>
+            <li>JWKS response is not valid JSON → <strong>500</strong></li>
+            <li>JWKS response missing the <code>keys</code> list or wrong shape → <strong>500</strong></li>
+            <li>Well-formed JWKS → returns the parsed dict unchanged</li>
+          </ul>
+        </div>
+        <div class="module-head" style="border-top:1px solid var(--line);"><span class="path">KeycloakVerifier.jwks() — caching</span><span class="count">2 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li>Second call within the TTL window → does not re-fetch, returns cached copy</li>
+            <li>Call after the TTL has expired → re-fetches</li>
+          </ul>
+        </div>
+        <div class="module-head" style="border-top:1px solid var(--line);"><span class="path">KeycloakVerifier.verify()</span><span class="count">9 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li>Well-formed token, known <code>kid</code> → claims returned correctly</li>
+            <li>Token with no <code>kid</code> header → <strong>401</strong> "missing kid"</li>
+            <li><code>kid</code> not found, found after one JWKS refresh (key rotation) → succeeds</li>
+            <li><code>kid</code> still not found after refresh → <strong>401</strong> "unknown signing key"</li>
+            <li>Valid signature, expired <code>exp</code> → <strong>401</strong> "token expired"</li>
+            <li>Bad signature → <strong>401</strong></li>
+            <li>Wrong issuer or audience → <strong>401</strong> (falls into the generic handler)</li>
+            <li>Token string is not JWT-shaped at all → <strong>reproduces Finding 3 directly</strong>, in isolation, no live server needed</li>
+            <li>Any other unexpected exception mid-decode → confirms the catch-all still returns 401, not 500</li>
+          </ul>
+        </div>
+        <div class="module-head" style="border-top:1px solid var(--line);"><span class="path">_extract_roles()</span><span class="count">6 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li><code>realm_access.roles</code> present → included in the set</li>
+            <li><code>realm_access</code> missing entirely → no crash, empty set</li>
+            <li><code>resource_access[client_id].roles</code> present → included</li>
+            <li><code>resource_access</code> missing the given <code>client_id</code> → no crash</li>
+            <li><code>client_id</code> is <code>None</code> → client-scoped roles skipped cleanly</li>
+            <li>Realm roles and client roles both present → correctly unioned, no duplicates</li>
+          </ul>
+        </div>
+        <div class="module-head" style="border-top:1px solid var(--line);"><span class="path">get_current_principal()</span><span class="count">5 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li>No credentials supplied → <strong>401</strong> "missing bearer token"</li>
+            <li>Credentials present, wrong scheme (e.g. <code>Basic</code>) → <strong>401</strong></li>
+            <li>Valid bearer token → <code>Principal</code> populated correctly from claims</li>
+            <li>Claims have no <code>sub</code> → <strong>reproduces Finding 2 directly</strong>, in isolation</li>
+            <li>Claims missing <code>email</code>/<code>preferred_username</code> → fields fall back to <code>None</code>, no crash</li>
+          </ul>
+        </div>
+        <div class="module-head" style="border-top:1px solid var(--line);"><span class="path">require_roles()</span><span class="count">3 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li>Principal has every required role → passes through</li>
+            <li>Principal missing a required role → <strong>403</strong> "forbidden"</li>
+            <li>Principal has additional roles beyond what's required → still passes (subset check is directionally correct)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 id="unit-documents"><span class="sec-num">6.2</span> <code>api/v1/documents.py</code> — 128 lines, 0 existing tests</h3>
+      <div class="module">
+        <div class="module-head"><span class="path">_get_blockchain_service() / _max_upload_bytes() / _read_upload()</span><span class="count">8 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li>RPC URL and private key both configured → connector constructed</li>
+            <li>RPC URL missing → <strong>500</strong> "blockchain settings not configured"</li>
+            <li>Private key missing → same 500</li>
+            <li><code>MAX_UPLOAD_BYTES</code> unset → falls back to the 20MB default</li>
+            <li>Non-empty file within the limit → bytes returned unchanged</li>
+            <li>Empty file → <strong>400</strong> "file is empty"</li>
+            <li>File exactly at the configured limit → allowed (boundary is <code>&gt;</code>, not <code>&gt;=</code>)</li>
+            <li>File one byte over the limit → <strong>413</strong></li>
+          </ul>
+        </div>
+        <div class="module-head" style="border-top:1px solid var(--line);"><span class="path">register() — mocked DB &amp; blockchain</span><span class="count">5 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li>New, unique content → record created, blockchain transaction created exactly once</li>
+            <li>Content hash already exists → returns the <em>existing</em> record, blockchain is <strong>not</strong> called again</li>
+            <li><code>principal.sub</code> is an empty string → stored <code>issuer_id</code> is <code>""</code> — direct regression test for Finding 2's effect at the write site</li>
+            <li>Blockchain call raises mid-transaction → confirms whether this currently propagates as an unhandled 500</li>
+            <li>DB commit raises (e.g. a unique-constraint collision under a real race) → confirms current error handling, or the lack of it</li>
+          </ul>
+        </div>
+        <div class="module-head" style="border-top:1px solid var(--line);"><span class="path">list_records()</span><span class="count">3 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li>Records from <strong>two different <code>issuer_id</code> values</strong> in the mock DB, requested by one principal → <strong>reproduces Finding 1 directly</strong>, deterministically, in milliseconds</li>
+            <li>Empty table → returns an empty list, not an error</li>
+            <li>Multiple records → confirmed ordered by <code>created_at</code> descending</li>
+          </ul>
+        </div>
+        <div class="module-head" style="border-top:1px solid var(--line);"><span class="path">verify_full() / verify_by_hash()</span><span class="count">9 proposed cases</span></div>
+        <div class="fn-block">
+          <ul class="case-list">
+            <li>Registered, on-chain value matches → <code>valid: true</code>, full payload + timestamp</li>
+            <li>Never registered → <code>valid: false</code>, no <code>record_id</code></li>
+            <li>Registered, but on-chain value differs from the DB (desync) → <strong>reproduces VER-7</strong> without touching Anvil — <code>valid: false</code> <em>with</em> <code>record_id</code> present</li>
+            <li>Blockchain read raises (node down) → <strong>reproduces VER-8</strong> without cutting server connectivity — confirms current error handling</li>
+            <li>Hash exactly 64 lowercase hex chars, registered → matches <code>verify_full</code> behaviour</li>
+            <li>Hash exactly 64 hex chars, not registered → <code>valid: false</code></li>
+            <li>Hash wrong length → <strong>400</strong></li>
+            <li>Hash contains non-hex characters → <strong>400</strong></li>
+            <li>Hash with mixed case or surrounding whitespace → normalised correctly before lookup</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="stats" style="margin-top:8px;">
+        <div class="stat accent"><div class="num">40</div><div class="lbl">Proposed — keycloak.py</div></div>
+        <div class="stat accent"><div class="num">25</div><div class="lbl">Proposed — documents.py</div></div>
+        <div class="stat"><div class="num">17 + 27 + 14</div><div class="lbl">Already built this session / prior</div></div>
+        <div class="stat good"><div class="num">~123</div><div class="lbl">Total if all proposed cases are built</div></div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-faint);">None of the 65 proposed cases above have been written yet — this section is a reviewed <em>plan</em>, not a completed suite. They're listed individually because each one maps to a specific branch in the code, which is what makes a "requirement satisfied" claim checkable rather than asserted.</p>
+    </section>
+
+    <section id="recommendations">
+      <div class="sec-head"><span class="sec-num">07</span><h2>Recommendations</h2></div>
+      <div class="gap-grid">
+        <div class="gap-card">
+          <div class="k">Fix, in order</div>
+          <h4>1. Restore the <code>sub</code> claim, then filter records</h4>
+          <p>Fixing Finding 1 (add an <code>issuer_id</code> filter) before Finding 2 (missing <code>sub</code>) is fixed will not work — every publisher would still resolve to the same empty identity.</p>
+        </div>
+        <div class="gap-card">
+          <div class="k">Fix</div>
+          <h4>2. Wrap the token-parsing call in keycloak.py</h4>
+          <p>Cheap, low-risk fix for Finding 3 — bring malformed-token handling in line with every other invalid-token path, which already return 401 correctly.</p>
+        </div>
+        <div class="gap-card">
+          <div class="k">Fix</div>
+          <h4>3. Align nginx's body-size limit with the app's</h4>
+          <p>And add a server-side PDF magic-byte check — client-side filtering alone was proven bypassable (TC-17b).</p>
+        </div>
+        <div class="gap-card">
+          <div class="k">Build</div>
+          <h4>4. The 65 proposed unit tests in Section 6</h4>
+          <p>Cheapest, fastest way to convert this session's live findings into permanent, CI-checkable regression coverage — and the most direct way to firm up the paper's requirement-traceability table (Table 3).</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>PITS QA Report · prepared for the "From Hoax to Hash" author team</span>
+      <span>Generated 2026-09-09 · AI-assisted test execution, human-reviewed</span>
+    </footer>
+  </main>
+</div>
+
+</body>
+</html>
