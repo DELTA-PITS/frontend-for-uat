@@ -90,3 +90,31 @@ Prasyarat sebelum `npm run test:e2e`:
 ## 5. Hasil Eksekusi
 
 Lihat `_docs/status/log.md` untuk hasil run terbaru (jumlah pass/fail, screenshot manual browser).
+
+---
+
+## 6. Skenario Tambahan (2026-09-09) — menutup gap §3 + adversarial
+
+Ditambahkan untuk mendukung klaim testing di paper akademik ("From Hoax to Hash") yang menyebut skenario lebih luas (duplicate detection, auth failure) daripada yang sudah tercakup di §3. Skenario API-level (register/verify/duplicate/auth) ada di repo `backend-for-uat/_docs/qa/api-test-scenarios.md` — bagian ini cuma untuk yang spesifik ke UI/browser.
+
+### 6.1 Gap yang sudah teridentifikasi di §3 (sekarang diformalkan)
+
+| # | Journey | Test Case | Expected |
+|---|---------|-----------|----------|
+| TC-10 | Publisher | Upload file > batas ukuran (cek `MAX_UPLOAD_BYTES` server) via Dropzone | UI harus tampilkan error jelas ("ukuran file terlalu besar") **sebelum** atau **setelah** hit backend `413` — cek apakah Dropzone frontend punya validasi client-side duluan atau baru tahu setelah response gagal dari `/api/register` |
+| TC-11 | Publisher | Upload file non-PDF (mis. `.jpg`, `.docx`) via Dropzone | Cek: apakah Dropzone frontend **menolak** file non-PDF di level UI (accept filter), atau lolos ke backend lalu diterima begitu saja (lihat catatan REG-6 di `api-test-scenarios.md` — backend saat ini **tidak validasi tipe file sama sekali**). Kalau frontend juga tidak filter → dokumentasikan sebagai gap bersama (frontend+backend), bukan cuma UI. |
+| TC-12 | Publisher | Sesi NextAuth expired (access token Keycloak habis) saat publisher sedang di `/publisher` atau `/dashboard` | Cek refresh-token flow: apakah NextAuth auto-refresh, atau user di-redirect paksa ke login ulang saat submit? Uji dengan sesi yang sengaja dibiarkan idle melewati TTL access token (cek `KEYCLOAK` access token lifespan di realm `nextjs-kc`, biasanya 5 menit default). |
+| TC-13 | Publisher | Logout penuh dari aplikasi (klik logout) → redirect ke halaman logout Keycloak → kembali | Pastikan sesi NextAuth **dan** sesi Keycloak (SSO cookie) benar-benar berakhir — cek dengan buka `/dashboard` lagi setelah logout, harus redirect ke `/` bukan auto-login lagi karena SSO cookie Keycloak masih hidup. |
+| TC-14 | UI | Toggle bahasa Indonesia ↔ Inggris (i18n) di semua halaman utama (`/`, `/publisher`, `/dashboard`, `/result/success`, `/result/failure`) | Semua teks berubah sesuai `lib/i18n/translations.ts`, tidak ada string ID/EN yang ke-hardcode kelupaan (cross-check dengan aturan CLAUDE.md "semua teks WAJIB lewat i18n") |
+
+### 6.2 Adversarial / edge case UI
+
+| # | Journey | Test Case | Expected |
+|---|---------|-----------|----------|
+| TC-15 | Negatif | Akses langsung `/result/success` atau `/result/failure` **tanpa** melalui flow register/verify (langsung ketik URL) | `lib/resultPayload.ts` baca dari `sessionStorage` — kalau kosong (belum ada payload), halaman harus handle graceful (redirect ke `/` atau tampilkan state kosong yang jelas), **bukan** crash/blank page |
+| TC-16 | Negatif | Refresh halaman `/result/success` (F5) setelah hasil tampil | Karena payload di `sessionStorage` (bukan query string, sesuai constitution CLAUDE.md), cek apakah refresh tetap menampilkan hasil yang sama (sessionStorage survive refresh) atau hilang — user harus tahu perilakunya, bukan nebak |
+| TC-17 | Negatif | Publisher intercept request `POST /api/register` (server-side Next.js route) dan modifikasi payload / kirim langsung ke endpoint tanpa lewat UI (pakai devtools/curl dengan cookie sesi valid) | Cek apakah `app/api/register/route.ts` (via `requireAuth.ts`) benar-benar validasi ulang di server, tidak percaya begitu saja apa yang dikirim client — terutama untuk cek apakah bisa bypass validasi file dari sisi frontend |
+| TC-18 | Verifier | Verifier upload file yang sama 2x berturut-turut dengan cepat (double-submit / double-click tombol "Verifikasi Dokumen") | Tidak boleh trigger 2 request paralel yang bikin race atau UI freeze — cek ada disable-state pada tombol saat submit in-flight |
+| TC-19 | UI | Dark mode + mobile viewport bersamaan untuk halaman verifier (persona Sari, publik, sering pakai mobile) | Visual check: kontras warna brand merah BRIN (`#E62F2A`) tetap terbaca di dark mode, tidak ada elemen overflow di viewport < 400px |
+
+**Catatan:** TC-15/16/17 relevan langsung dengan constitution CLAUDE.md soal `sessionStorage` untuk result payload — kalau ada yang gagal di sini, itu regresi terhadap keputusan arsitektur 2026-08-02, bukan cuma bug kosmetik.

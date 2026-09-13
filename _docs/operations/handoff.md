@@ -65,6 +65,70 @@ Semua sudah dideploy & diverifikasi hidup di production:
 
 **Pelajaran untuk sesi berikutnya**: sebelum mengubah `docker-compose.yml` di server manapun, cek dulu apakah ada baris `name:` di file itu vs repo git — kalau beda/hilang, `--force-recreate` bisa membuat project Compose baru alih-alih meng-update yang lama.
 
+## Update 2026-09-13 — Cara SSH otomatis/non-interaktif ke server (penting untuk sesi AI berikutnya)
+
+Ditemukan saat mencoba SSH ke server production (`209.58.160.63`) dari command non-interaktif (`ssh user@host "command"`, bukan sesi shell interaktif manual):
+
+- **Gejala**: autentikasi password **berhasil** (`Authenticated ... using password` di log `ssh -vv`), tapi sesi macet total setelah itu — command yang dikirim (`echo`, `hostname`, dll) tidak pernah mengembalikan output, sampai akhirnya timeout via `ServerAliveInterval`. TCP handshake dan port 22 normal, bukan masalah jaringan.
+- **Fix**: tambahkan flag **`-tt`** (paksa alokasi pseudo-terminal) ke command SSH non-interaktif. Contoh: `ssh -tt ersa@209.58.160.63 "command"`. Root cause diduga ada langkah di server (PAM/shell startup/MOTD) yang menunggu TTY dan hang tanpa itu.
+- **Dampak**: tanpa `-tt`, SSH otomatis (mis. dari script/AI agent) ke server ini akan selalu macet/timeout meski kredensial benar — jangan buru-buru simpulkan server down atau kredensial salah, coba `-tt` dulu.
+
+Juga ditemukan: setup lokal `frontend-for-uat` untuk sesi baru butuh `npm install` dulu (`node_modules` tidak ter-commit, seperti biasa) sebelum `npm run dev` jalan.
+
+## Update 2026-09-13 (lanjutan) — Independent QA context export untuk co-author paper akademik
+
+User (Laksa Ersa, co-author/technical contributor — bukan penulis utama paper "From Hoax to Hash")
+minta dikumpulkan **seluruh fakta teknis QA/testing** (bukan tulisan akademik) untuk dikirim ke
+ChatGPT yang akan menyusun 4 dokumen HTML evidence untuk co-author (Amal, penulis utama):
+`01-testing-methodology.html`, `02-test-catalog.html`, `03-testing-results.html`,
+`04-findings-paper-evidence.html`.
+
+**Proses**: 2 sub-agent audit paralel (backend + frontend) — baca SELURUH source code + test file
+relevan secara penuh (bukan cuma grep nama fungsi), lalu benar-benar jalankan test yang bisa
+dijalankan dan catat hasil apa adanya (termasuk kegagalan/ambiguitas dari dokumen QA sebelumnya,
+tidak ditutup-tutupi).
+
+**Output** (semua di `_docs/qa/results/`, kedua repo):
+- `pits-qa-master-export-2026-09-13.md` (frontend repo) — dokumen utama, 20 section sesuai
+  spesifikasi user (system identity, architecture, test environments, complete test inventory,
+  coverage matrix, findings register, paper-claims-vs-evidence mapping, dll). **Ini yang dikirim ke
+  ChatGPT.**
+- `frontend-audit-raw.md` / `backend-audit-raw-2026-09-13.md` — bukti mentah pendukung tiap repo,
+  setiap klaim disertai sitasi file:line.
+
+**Temuan penting dari sesi ini yang WAJIB diketahui sesi berikutnya**:
+
+1. **Backend: 94 unit test (`tests/trustmark/`) yang selama ini tidak pernah berhasil dijalankan
+   (2 file baru, `test_documents.py` + `test_keycloak.py`) ternyata SEMUA PASS (94/94)** begitu 7
+   env var dummy di-set sebelum `pytest` (`KEYCLOAK_ISSUER`, `KEYCLOAK_ISSUER_URL`,
+   `KEYCLOAK_AUDIENCE`, `BLOCKCHAIN_RPC_URL`, `BLOCKCHAIN_PRIVATE_KEY`, `MAX_UPLOAD_BYTES`,
+   `DATABASE_URL`). Root cause sebelumnya: `keycloak.py:176` evaluasi `settings.KEYCLOAK_ISSUER`
+   di *import time* (Dynaconf lazy interpolation), bukan lazy — gagal collect tanpa env var itu.
+   **Action item belum dikerjakan**: commit `tests/trustmark/conftest.py` (atau `.env.test`) berisi
+   dummy value ini biar sesi/CI berikutnya tidak perlu re-discover masalah yang sama.
+2. **PASS-nya 94 test itu TIDAK berarti bebas bug** — banyak test ditulis khusus untuk
+   membuktikan bug MASIH ADA (IDOR `/records`, `issuer_id` kosong, TEST_MODE auth-bypass, dll) —
+   PASS artinya bug-nya terkonfirmasi masih ada, bukan sudah fix. Semua bug dari sesi 2026-09-09
+   (IDOR kritis di `GET /api/v1/records`, `issuer_id` selalu kosong, token malformed → 500,
+   mismatch limit upload nginx) **dikonfirmasi ulang masih ada persis di kode saat ini, TIDAK ADA
+   YANG DIPERBAIKI**.
+3. **Ditemukan file test backend (`tests/trustmark/infra/test_blockchain_connector.py`) dengan
+   perubahan LOKAL BELUM DI-COMMIT** yang docstring-nya menyebut langsung "paper §5.1" dan klaim
+   "16 dari 17 → 17 dari 17" test — tapi angka itu tidak cocok dengan jumlah test yang benar-benar
+   ada di git (8 committed / 14 di working tree, bukan 17). **Perlu direkonsiliasi user/Amal
+   sebelum angka ini dikutip di paper** — kemungkinan ada sesi lain yang menulis fixture ini tapi
+   lupa commit.
+4. ~20 temuan BARU (di luar yang sudah diketahui sejak 2026-09-09) ditemukan lewat pembacaan source
+   penuh — termasuk: hashing live endpoint (`/register`/`/verify`) ternyata pakai raw bytes, BUKAN
+   fungsi canonicalize yang di-unit-test; file upload TIDAK PERNAH disimpan ke disk (cuma di-hash
+   di memori — direktori `files-storage/` di Dockerfile vestigial); bug logika (`is not str`,
+   harusnya `isinstance`) di `tests/locust/locustfiles/verify.py` yang mempertanyakan validitas
+   angka performa manapun di paper yang memakai file itu; `TEST_MODE` auth-bypass mechanism aktif
+   di production container entrypoint (`python -m trustmark.main`). Detail lengkap tiap temuan ada
+   di master export §9.
+5. Ketiga file (`pits-qa-master-export-2026-09-13.md` + 2 raw audit) **belum di-commit ke git**,
+   menunggu review user.
+
 ## Backlog tersisa
 
 | # | Item | Detail |
