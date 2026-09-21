@@ -151,6 +151,16 @@ tidak ditutup-tutupi).
 
 **Untuk sesi berikutnya**: kalau paket evidence ini sudah tidak dibutuhkan publik lagi, hapus `location /qa-evidence-pass5/` dari `pits-ui.conf` (atau restore dari `pits-ui.conf.bak-20260914-qa-evidence`) dan hapus folder `/var/www/pits-static/qa-evidence-pass5/` di server — sengaja tidak ada auth di path ini (halaman statis, tapi isinya evidence teknis termasuk detail bug keamanan seperti IDOR, jadi sebaiknya tidak dibiarkan terbuka selamanya kalau URL-nya sudah tidak dipakai aktif oleh co-author paper).
 
+## Update 2026-09-21 — Fix backend F1/F2/F3 di-deploy ke production
+
+- Fix dari Pass 5 (IDOR `/records`, malformed bearer 500, filename >255 char 500) sudah di git (`backend-for-uat` `main`, commit `c0598d1`) dan **sekarang di-deploy ke production**. Sebelumnya hanya fix Keycloak `sub` (F5, 2026-09-14) yang live.
+- **Cara deploy (penting)**: checkout production (`/home/hamka/pits/backend-for-uat`) masih di commit lama `c6a5638` dan divergen dari git (docker-compose.yml + `docker/themes/` dipatch manual), jadi JANGAN `git pull` mentah. Yang dilakukan: salin hanya 2 file yang berbeda (`src/trustmark/api/v1/documents.py`, `src/trustmark/infra/auth/keycloak.py`; owner `hamka:admin`, mode 644), lalu `cd docker && docker compose build trustmark-app && docker compose up -d --no-deps --force-recreate trustmark-app`. Compose file harus punya baris `name: trustmark` (lihat pelajaran 2026-09-07).
+- **Backup/rollback**: `/home/hamka/pits/backup-pre-fix-20260921/` (src, docker-compose.yml, .env) + image lama di-tag `trustmark-trustmark-app:pre-fix-20260921`. Rollback: kembalikan `src/` dari backup lalu recreate `trustmark-app`, atau retag image `pre-fix-20260921` ke `latest`.
+- **Verifikasi live** (uat-tester): malformed token 401, filename panjang 400, register normal `issuer_id` = sub asli, `/records` hanya milik sendiri, verify publik 200, health 200. 1 record tes (`deploy-check.pdf`) tertinggal di DB production.
+- **Belum**: rerun API E2E live (`tests/api`) dan tes isolasi 2 publisher di production (baru ada 1 akun publisher produksi). Buat akun publisher kedua di Keycloak prod kalau mau membuktikan A tidak melihat B secara live.
+- Catatan SSH server: perintah non-interaktif butuh `-tt`; `scp`/stdin-redirect sering hang; cara upload yang andal = base64 di-embed di argumen perintah (`echo '<b64>' | base64 -d > file`) lalu cek `md5sum`.
+- Paket evidence V2 (`/qa-evidence-pass5-v2/`) sudah diupdate ke status ini; V1 (`/qa-evidence-pass5/`) tetap sebagai baseline sebelum-fix.
+
 ## Backlog tersisa
 
 | # | Item | Detail |

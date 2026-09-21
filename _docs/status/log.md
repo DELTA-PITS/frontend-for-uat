@@ -4,6 +4,18 @@ File ini diupdate Claude Code **setiap sesi kerja selesai**. Entry terbaru selal
 
 ---
 
+## [2026-09-21] — Claude Code
+
+- **Progress**: Fix backend F1/F2/F3 (IDOR, malformed-token 500, filename 500) di-deploy ke production; halaman evidence V2 dan handoff diupdate.
+- **Selesai sesi ini**:
+  - Backup (src/compose/.env + tag image `pre-fix-20260921`), salin 2 file yang berbeda dari commit production `c6a5638`, rebuild + recreate hanya `trustmark-app`. Tidak pakai `git pull` karena checkout production divergen dari git.
+  - Verifikasi live di production: 401 untuk malformed token, 400 untuk filename >255, register normal dengan `issuer_id` = sub, `/records` terfilter, verify publik & health 200.
+  - Halaman V2 (index, 03, 04, 05) diubah dari "belum di-deploy" ke "deployed 21 Sep, spot-verified live" tanpa mengklaim verifikasi penuh; `pits-post-fix-qa-master.md` ditambah addendum §11.
+- **Blocker/keputusan dibutuhkan**: tidak ada. Sisa: rerun API E2E live + tes isolasi 2 publisher di production (butuh akun publisher kedua); 1 record tes tertinggal di DB production.
+- **Next steps**: buat akun publisher kedua di Keycloak prod, jalankan ulang `tests/api` terhadap production, lalu update V2 ke "fully verified" bila lulus. Masih terbuka: validasi PDF magic-byte, mekanisme `TEST_MODE`.
+
+---
+
 ## [2026-09-14 01:15] — Claude Code
 
 - **Progress**: Lanjutan independent QA (PASS 5 — Integration & Reproducibility) untuk paper akademik, diikuti deploy paket evidence QA (5 halaman HTML dari ChatGPT) ke production. Semua detail teknis di `backend-for-uat/_docs/qa/pass-5-integration-reproducibility.md` dan handoff (lihat entry di bawah).
