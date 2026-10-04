@@ -4,12 +4,12 @@ import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import SummaryRow from '@components/common/SummaryRow';
 import CopyButton from '@components/dashboard/CopyButton';
+import BlockchainProof from '@components/common/BlockchainProof';
+import { buildAnchorView } from '@lib/anchor';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import ApartmentOutlinedIcon from '@mui/icons-material/ApartmentOutlined';
-import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { formatDisplayDateTime } from '@lib/dateFormat';
 import { getFileIconConfig } from '@lib/fileIcon';
 import type { RecordItem } from '@/types/files.types';
@@ -49,6 +49,13 @@ export default function RecordDetailDrawer({ record, onClose }: RecordDetailDraw
   if (!record) return null;
 
   const { Icon: FileIcon, color: fileColor } = getFileIconConfig(record.filename ?? '');
+  const anchorState = buildAnchorView({
+    anchor: record.anchor,
+    flatTransactionHash: record.transaction_hash,
+    anchorStatus: record.anchor_status,
+  }).state;
+  // Records from a backend without anchor metadata (state "none") keep the original verified badge.
+  const showVerifiedBadge = anchorState === 'confirmed' || anchorState === 'none';
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-stretch sm:justify-end">
@@ -66,10 +73,12 @@ export default function RecordDetailDrawer({ record, onClose }: RecordDetailDraw
             <h3 className="break-words text-lg font-bold text-secondary">
               {record.filename ?? t.table.unknownFile}
             </h3>
-            <span className="badge badge-success badge-soft mt-1 gap-1 font-medium">
-              <VerifiedOutlinedIcon style={{ fontSize: '0.9rem' }} />
-              {t.drawer.verified}
-            </span>
+            {showVerifiedBadge ? (
+              <span className="badge badge-success badge-soft mt-1 gap-1 font-medium">
+                <VerifiedOutlinedIcon style={{ fontSize: '0.9rem' }} />
+                {t.drawer.verified}
+              </span>
+            ) : null}
           </div>
           <button
             type="button"
@@ -101,18 +110,17 @@ export default function RecordDetailDrawer({ record, onClose }: RecordDetailDraw
         </div>
 
         <div className="mt-6 flex flex-col gap-3">
-          <SectionLabel>{t.drawer.blockchainProof}</SectionLabel>
-          <SummaryRow icon={<LinkOutlinedIcon />} label={t.drawer.network} value={t.drawer.networkValue} />
+          <SectionLabel>{t.proof.title}</SectionLabel>
+          <BlockchainProof
+            anchor={record.anchor}
+            transactionHash={record.transaction_hash}
+            anchorStatus={record.anchor_status}
+          />
           <div className="flex items-center gap-2 text-xs text-base-content/70">
             <BadgeOutlinedIcon style={{ fontSize: '1.1rem' }} />
-            {t.drawer.recordId}: <span className="font-mono text-xs">{record.record_id}</span>
+            {t.drawer.recordId}: <span className="min-w-0 break-all font-mono text-xs">{record.record_id}</span>
           </div>
           <HashRow label={t.drawer.contentHash} value={record.content_hash} />
-          <HashRow label={t.drawer.txHash} value={record.transaction_hash} />
-          <div className="flex items-start gap-2 rounded-lg bg-base-200 p-3 text-xs text-base-content/70">
-            <InfoOutlinedIcon style={{ fontSize: '1rem' }} className="mt-0.5 shrink-0" />
-            <span>{t.drawer.networkDisclaimer}</span>
-          </div>
         </div>
 
         <button type="button" onClick={onClose} className="btn btn-block mt-8">

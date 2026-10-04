@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Card from '@components/common/OperationCard';
 import OperationButton from '@components/common/OperationButton';
 import CopyButton from '@components/dashboard/CopyButton';
+import BlockchainProof from '@components/common/BlockchainProof';
+import { buildAnchorView, parseAnchor } from '@lib/anchor';
 import { readResultPayload } from '@/lib/resultPayload';
 import type { ResultPayload } from '@/types';
 import { getUploadFailureMessage } from '@/lib/uploadErrorMessage';
@@ -15,6 +17,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
 import SearchOffOutlinedIcon from '@mui/icons-material/SearchOffOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import HourglassTopOutlinedIcon from '@mui/icons-material/HourglassTopOutlined';
+import LinkOffOutlinedIcon from '@mui/icons-material/LinkOffOutlined';
 import { useLocale } from '@lib/i18n/LocaleContext';
 import type { Dictionary } from '@lib/i18n/translations';
 
@@ -48,6 +52,8 @@ function getRegisterData(value: unknown): RegisterData {
     transaction_hash: getString(data, 'transaction_hash'),
     issuer_id: getString(data, 'issuer_id'),
     filename: getString(data, 'filename'),
+    anchor: parseAnchor(data.anchor),
+    anchor_status: getString(data, 'anchor_status'),
   };
 }
 
@@ -62,6 +68,9 @@ function getVerifyData(value: unknown): VerifyResultData {
     filename: getString(data, 'filename') ?? getString(data, 'file_name') ?? getString(data, 'document_name'),
     transaction_hash: getString(data, 'transaction_hash'),
     issuer_id: getString(data, 'issuer_id'),
+    anchor: parseAnchor(data.anchor),
+    anchor_status: getString(data, 'anchor_status'),
+    verification_status: getString(data, 'verification_status'),
   };
 }
 
@@ -88,8 +97,9 @@ function DetailRow({
   );
 }
 
-function StatusIcon({ tone, icon }: { tone: 'success' | 'error'; icon: React.ReactNode }) {
-  const toneClass = tone === 'success' ? 'bg-success/10 text-success' : 'bg-error/10 text-error';
+function StatusIcon({ tone, icon }: { tone: 'success' | 'error' | 'warning'; icon: React.ReactNode }) {
+  const toneClass =
+    tone === 'success' ? 'bg-success/10 text-success' : tone === 'warning' ? 'bg-warning/15 text-warning-content' : 'bg-error/10 text-error';
   return (
     <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full ${toneClass}`}>
       {icon}
@@ -99,6 +109,28 @@ function StatusIcon({ tone, icon }: { tone: 'success' | 'error'; icon: React.Rea
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">{children}</p>;
+}
+
+type UnverifiedOutcome = { tone: 'warning' | 'error'; icon: React.ReactNode; title: string; body: string };
+
+/** Wording for verification results where the record exists but the blockchain anchor does not confirm it. */
+function getUnverifiedOutcome(state: string, t: Dictionary): UnverifiedOutcome | null {
+  const o = t.proof.outcome;
+  const icon = (Icon: typeof HourglassTopOutlinedIcon) => <Icon style={{ fontSize: '2.5rem' }} />;
+  switch (state) {
+    case 'pending':
+      return { tone: 'warning', icon: icon(HourglassTopOutlinedIcon), title: o.pendingTitle, body: o.pendingBody };
+    case 'failed':
+      return { tone: 'error', icon: icon(ErrorOutlineOutlinedIcon), title: o.failedTitle, body: o.failedBody };
+    case 'not_found':
+      return { tone: 'warning', icon: icon(LinkOffOutlinedIcon), title: o.notFoundTitle, body: o.notFoundBody };
+    case 'unavailable':
+      return { tone: 'warning', icon: icon(LinkOffOutlinedIcon), title: o.unavailableTitle, body: o.unavailableBody };
+    case 'mismatch':
+      return { tone: 'error', icon: icon(ErrorOutlineOutlinedIcon), title: o.mismatchTitle, body: o.mismatchBody };
+    default:
+      return null;
+  }
 }
 
 /**
@@ -121,6 +153,20 @@ export default function ResultView({ status }: ResultViewProps) {
   const data = payload?.response?.data;
   const registerData = getRegisterData(data);
   const verifyData = getVerifyData(data);
+
+  const registerAnchor = buildAnchorView({
+    anchor: registerData.anchor,
+    flatTransactionHash: registerData.transaction_hash,
+    anchorStatus: registerData.anchor_status,
+  });
+  const verifyAnchor = buildAnchorView({
+    anchor: verifyData.anchor,
+    flatTransactionHash: verifyData.transaction_hash,
+    anchorStatus: verifyData.anchor_status,
+    verificationStatus: verifyData.verification_status,
+  });
+  // A record exists but its blockchain anchor cannot be confirmed (pending, failed, transaction gone, ...).
+  const unverifiedOutcome = getUnverifiedOutcome(verifyAnchor.state, t);
 
   const isRegistration = payload?.source === 'register';
   const isFileVerification = payload?.source === 'verify';
@@ -150,7 +196,9 @@ export default function ResultView({ status }: ResultViewProps) {
             <div className="flex flex-col items-center gap-3 text-center">
               <StatusIcon tone="success" icon={<CheckIcon style={{ fontSize: '2.5rem' }} />} />
               <h1 className="text-[2rem] font-bold text-secondary">{t.result.registerSuccessTitle}</h1>
-              <p className="text-xs text-ink-secondary">{t.result.registerSuccessBody}</p>
+              <p className="text-xs text-ink-secondary">
+                {registerAnchor.state === 'pending' ? t.proof.outcome.registerPendingBody : t.result.registerSuccessBody}
+              </p>
             </div>
 
             <div className="rounded-2xl border border-base-300 p-5">
@@ -167,7 +215,11 @@ export default function ResultView({ status }: ResultViewProps) {
                 <SectionLabel>{t.result.blockchainSection}</SectionLabel>
               </div>
               <DetailRow label={t.result.contentHash} value={registerData.content_hash} copyable notAvailable={t.result.notAvailable} />
-              <DetailRow label={t.result.txHash} value={registerData.transaction_hash} copyable notAvailable={t.result.notAvailable} />
+              <BlockchainProof
+                anchor={registerData.anchor}
+                transactionHash={registerData.transaction_hash}
+                anchorStatus={registerData.anchor_status}
+              />
             </div>
           </div>
         ) : isFileVerification ? (
@@ -203,10 +255,40 @@ export default function ResultView({ status }: ResultViewProps) {
                 notAvailable={t.result.notAvailable}
               />
               <DetailRow label={t.result.contentHash} value={verifyData.content_hash} copyable notAvailable={t.result.notAvailable} />
-              <DetailRow label={t.result.txHash} value={verifyData.transaction_hash} copyable notAvailable={t.result.notAvailable} />
+            </div>
+
+            <div className="rounded-2xl border border-base-300 p-5">
+              <SectionLabel>{t.proof.title}</SectionLabel>
+              <BlockchainProof
+                anchor={verifyData.anchor}
+                transactionHash={verifyData.transaction_hash}
+                anchorStatus={verifyData.anchor_status}
+                verificationStatus={verifyData.verification_status}
+              />
             </div>
           </div>
         ) : null
+      ) : isFileVerification && unverifiedOutcome ? (
+        <div className="flex flex-col gap-6 text-left" data-testid="verify-unverified">
+          <div className="flex flex-col items-center gap-3 text-center">
+            <StatusIcon tone={unverifiedOutcome.tone} icon={unverifiedOutcome.icon} />
+            <h1 className="text-[2rem] font-bold text-secondary">{unverifiedOutcome.title}</h1>
+            <p className="max-w-sm text-xs text-ink-secondary">{unverifiedOutcome.body}</p>
+          </div>
+
+          <div className="rounded-2xl border border-base-300 p-5">
+            <SectionLabel>{t.proof.title}</SectionLabel>
+            <DetailRow label={t.result.recordId} value={verifyData.record_id} copyable notAvailable={t.result.notAvailable} />
+            <DetailRow label={t.result.contentHash} value={verifyData.content_hash} copyable notAvailable={t.result.notAvailable} />
+            <BlockchainProof
+              anchor={verifyData.anchor}
+              transactionHash={verifyData.transaction_hash}
+              anchorStatus={verifyData.anchor_status}
+              verificationStatus={verifyData.verification_status}
+              showExplorerNote={false}
+            />
+          </div>
+        </div>
       ) : isFileVerification ? (
         <div className="flex flex-col gap-6 text-left">
           <div className="flex flex-col items-center gap-3 text-center">
