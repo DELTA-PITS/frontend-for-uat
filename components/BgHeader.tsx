@@ -2,6 +2,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import CloudOffIcon from '@mui/icons-material/CloudOff';
 import { FilledIcon } from '@components/common/FilledIcon';
+import { withBasePath } from '@lib/basePath';
 
 /**
  * Renders a success or failure background header illustration for the result view.
@@ -15,7 +16,7 @@ export function BgHeader(status: 'success' | 'failure', source?: 'register' | 'v
   return status === 'success' ? (
     <div className="relative mx-auto h-60 w-fit">
       <img
-        src="/bg-confetti.png"
+        src={withBasePath('/bg-confetti.png')}
         alt=""
         aria-hidden="true"
         className="h-60 w-auto select-none object-contain"

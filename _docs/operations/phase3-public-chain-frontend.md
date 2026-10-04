@@ -42,3 +42,25 @@ pointing at the production API until its env is changed deliberately.
 - The dashboard drawer was covered by component tests only (login needs Keycloak redirect URIs for a rehearsal host).
 - The register-result page was covered by component tests, not a live browser run.
 - Playwright e2e suites were not run (they need the full local stack).
+
+## Parallel deployment under `/sepolia` (2026-10-04)
+
+One codebase, two builds, selected only by build-time environment (production build has none of these variables):
+
+| Variable | Rehearsal value | Effect |
+|---|---|---|
+| `NEXT_PUBLIC_BASE_PATH` | `/sepolia` | Next.js `basePath`; `lib/basePath.ts#withBasePath` for raw fetch/img/location |
+| `NEXT_PUBLIC_ENV_LABEL` | `Public Blockchain Rehearsal · Ethereum Sepolia` | thin banner (`EnvBanner`); absent in production |
+| `AUTH_URL`, `NEXT_PUBLIC_AUTH_URL` | origin only (`https://pits-ui.pangkalandata.id`) | base path is added in code, not in the env value |
+| `PITS_BACKEND_*_URL` | `https://pits-ui.pangkalandata.id/sepolia-api/api/v1/...` | server-side forwarding to the Sepolia backend |
+| `AUTH_SECRET` | its own secret | rehearsal sessions are unreadable by production and vice versa |
+
+Things a sub-path needs that Next.js does not do by itself (all no-ops at the root): `fetch('/api/...')` and `window.location` use
+`withBasePath`; `next/image` needs the prefixed `src`; the Auth.js route re-adds the prefix Next strips so Auth.js's configured
+`basePath` (`/sepolia/api/auth`, used to build the Keycloak `redirect_uri`) matches; `pages.signIn` and the logout redirect include the
+prefix; Auth.js cookies get their own names and `Path=/sepolia` (`lib/authCookies.ts`) because both apps share one host and the default
+cookie names/paths would let a login on one overwrite the other's session.
+
+Canonical URL is `https://pits-ui.pangkalandata.id/sepolia` (Next.js redirects `/sepolia/` -> `/sepolia`).
+Keycloak client `nextjs-web` needs, in addition to the production entries, redirect URI
+`https://pits-ui.pangkalandata.id/sepolia/api/auth/callback/keycloak` and post-logout URI `https://pits-ui.pangkalandata.id/sepolia/api/auth/logout`.

@@ -1,6 +1,8 @@
 import nextAuth from 'next-auth';
 import Keycloak from 'next-auth/providers/keycloak';
 import type { JWT } from 'next-auth/jwt';
+import { BASE_PATH } from '@lib/basePath';
+import { buildScopedCookies } from '@lib/authCookies';
 
 const TOKEN_REFRESH_BUFFER_SECONDS = 30;
 
@@ -58,12 +60,15 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
 export const { handlers, auth, signIn, signOut } = nextAuth({
   debug: process.env.NODE_ENV === 'development',
   providers: [Keycloak],
+  // Auth.js routes live under Next's basePath (e.g. /sepolia/api/auth). Root deployment: '/api/auth' (default).
+  basePath: `${BASE_PATH}/api/auth`,
+  cookies: buildScopedCookies(BASE_PATH, (process.env.AUTH_URL ?? '').startsWith('https://')),
   // Redirect target when `authorized()` rejects a request (middleware) — the
   // public Verify page rather than NextAuth's plain default sign-in page, so
   // an unauthenticated visitor lands somewhere with real context and a
   // "Masuk" button, not a bare provider list.
   pages: {
-    signIn: '/',
+    signIn: `${BASE_PATH}/`,
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {

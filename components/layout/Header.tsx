@@ -18,6 +18,7 @@ import SignOut from '@components/auth/SignOut';
 import LanguageSwitcher from '@components/layout/LanguageSwitcher';
 import { AccountModal } from '@components/layout/AccountModal';
 import { useLocale } from '@lib/i18n/LocaleContext';
+import { withBasePath } from '@lib/basePath';
 
 export interface HeaderProps {
   session?: Session | null;
@@ -89,7 +90,7 @@ export function Header({ session }: HeaderProps) {
           className="flex min-w-0 cursor-pointer items-center gap-3 text-left hover:opacity-80 transition-opacity"
         >
           <Image
-            src="/logo.png"
+            src={withBasePath('/logo.png')}
             alt="Logo BRIN"
             width={36}
             height={36}

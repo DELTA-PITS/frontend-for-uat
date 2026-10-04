@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import { Header } from '@components/layout/Header';
 import { Footer } from '@components/layout/Footer';
+import { EnvBanner } from '@components/layout/EnvBanner';
 import BfcacheRefresh from '@components/layout/BfcacheRefresh';
 import { LocaleProvider } from '@lib/i18n/LocaleContext';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
@@ -30,6 +31,7 @@ export default async function RootLayout({ children }: { readonly children: Reac
       <body className="min-h-full flex flex-col">
         <LocaleProvider>
           <BfcacheRefresh />
+          <EnvBanner />
           <Header session={session} />
           {/* Plain flex-col, not `items-center justify-center` — that would
               force every page to be vertically centered like a landing-page

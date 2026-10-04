@@ -1,4 +1,5 @@
 import { signOut } from '@/auth';
+import { BASE_PATH } from '@lib/basePath';
 
 /**
  * API route handler for processing logout requests. It utilizes the signOut function from the authentication module to log the user out of their session, redirecting them to the specified authentication URL after successful logout. The handler ensures that the user is properly signed out and redirected, providing a seamless logout experience.
@@ -10,6 +11,6 @@ export const GET = async () => {
     // `?loggedOut=1` triggers the confirmation banner on the Verify page
     // (`components/verify/LogoutBanner.tsx`) — logout previously gave no
     // feedback at all when every redirect happened to succeed silently.
-    redirectTo: `${process.env.AUTH_URL}/?loggedOut=1`,
+    redirectTo: `${process.env.AUTH_URL}${BASE_PATH}/?loggedOut=1`,
   });
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { BASE_PATH } from '@lib/basePath';
 
 export const generateKeycloakLogoutUrl = (
   redirectUrl: string,
@@ -13,7 +14,7 @@ export const generateKeycloakLogoutUrl = (
   urlParams.append('client_id', CLIENT_ID);
   urlParams.append(
     'post_logout_redirect_uri',
-    `${redirectUrl}/api/auth/logout`,
+    `${redirectUrl}${BASE_PATH}/api/auth/logout`,
   );
 
   if (idToken) {

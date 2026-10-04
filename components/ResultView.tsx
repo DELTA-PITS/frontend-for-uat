@@ -6,6 +6,7 @@ import OperationButton from '@components/common/OperationButton';
 import CopyButton from '@components/dashboard/CopyButton';
 import BlockchainProof from '@components/common/BlockchainProof';
 import { buildAnchorView, parseAnchor } from '@lib/anchor';
+import { withBasePath } from '@lib/basePath';
 import { readResultPayload } from '@/lib/resultPayload';
 import type { ResultPayload } from '@/types';
 import { getUploadFailureMessage } from '@/lib/uploadErrorMessage';
@@ -324,7 +325,7 @@ export default function ResultView({ status }: ResultViewProps) {
       <div className="mt-10 flex justify-center">
         <OperationButton
           onClick={() => {
-            window.location.href = backHref;
+            window.location.href = withBasePath(backHref);
           }}
           label={backLabel}
           icon={<ChevronLeftIcon fontSize="small" aria-hidden="true" />}

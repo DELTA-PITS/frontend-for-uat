@@ -1,4 +1,5 @@
 import type { ApiResponse } from '@/types';
+import { withBasePath } from '@lib/basePath';
 
 /**
  * Custom error class for handling upload-related errors.
@@ -67,7 +68,7 @@ async function submit(url: string, formData: FormData): Promise<ApiResponse> {
  * @returns A promise that resolves to the API response if the registration is successful, or throws an UploadError if it fails.
  */
 export async function registerFile(formData: FormData) {
-  return submit('/api/register', formData);
+  return submit(withBasePath('/api/register'), formData);
 }
 
 /**
@@ -77,5 +78,5 @@ export async function registerFile(formData: FormData) {
  * @returns A promise that resolves to the API response if the verification is successful, or throws an UploadError if it fails.
  */
 export async function verifyFile(formData: FormData) {
-  return submit('/api/verify', formData);
+  return submit(withBasePath('/api/verify'), formData);
 }
