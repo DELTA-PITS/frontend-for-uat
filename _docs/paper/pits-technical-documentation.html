@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PITS Technical Documentation for the Paper</title>
+<meta name="description" content="Architecture, technology stack, anchoring protocol, verification algorithm, environments, evidence and limitations of the Public Information Trust System (PITS).">
+<style>
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --ink:#15202b; --muted:#5b6876; --line:#dfe3e8; --brand:#c8372d; --brand-soft:#fbeceb;
+  --ok:#17803d; --ok-soft:#e6f4ea; --warn:#9a6700; --warn-soft:#fff4d6; --bad:#b42318; --bad-soft:#fde8e6;
+  --code-bg:#0f1720; --code-ink:#e6edf3; --blue:#1f5fbf; --blue-soft:#e8f0fc;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e141b; --card:#151d27; --ink:#e7edf3; --muted:#9aa8b6; --line:#27323f; --brand:#ff6b5f; --brand-soft:#2b1815;
+    --ok:#4cc27a; --ok-soft:#12261a; --warn:#e3b341; --warn-soft:#2a2310; --bad:#ff8077; --bad-soft:#2c1614;
+    --code-bg:#0a0f15; --code-ink:#dbe5ee; --blue:#6aa6ff; --blue-soft:#14223a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e141b; --card:#151d27; --ink:#e7edf3; --muted:#9aa8b6; --line:#27323f; --brand:#ff6b5f; --brand-soft:#2b1815;
+  --ok:#4cc27a; --ok-soft:#12261a; --warn:#e3b341; --warn-soft:#2a2310; --bad:#ff8077; --bad-soft:#2c1614;
+  --code-bg:#0a0f15; --code-ink:#dbe5ee; --blue:#6aa6ff; --blue-soft:#14223a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--blue)}
+header.top{background:var(--card);border-bottom:1px solid var(--line);padding:28px 16px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.top h1{margin:0 0 6px;font-size:clamp(1.5rem,3.2vw,2.3rem);line-height:1.2}
+header.top p{margin:4px 0;color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font-size:.78rem;padding:3px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:28px;padding:24px 0 80px}
+main{min-width:0}
+nav.toc{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 12px;font-size:.9rem}
+nav.toc strong{display:block;margin:0 0 8px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+nav.toc a{display:block;text-decoration:none;color:var(--ink);padding:5px 8px;border-radius:6px}
+nav.toc a:hover{background:var(--bg)}
+nav.toc a.sub{padding-left:20px;color:var(--muted);font-size:.85rem}
+main section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:0 0 20px}
+main h2{margin:0 0 4px;font-size:1.45rem;border-bottom:2px solid var(--brand);padding-bottom:8px}
+main h3{margin:26px 0 8px;font-size:1.12rem}
+main h4{margin:18px 0 6px;font-size:1rem;color:var(--muted)}
+p{margin:10px 0}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+code{background:var(--bg);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-size:.88em;word-break:break-word}
+pre{background:var(--code-bg);color:var(--code-ink);padding:14px 16px;border-radius:10px;overflow:auto;font-size:.84rem;line-height:1.5}
+pre code{background:none;border:0;padding:0;color:inherit}
+.tablewrap{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg);font-weight:600}
+.callout{border-left:4px solid var(--blue);background:var(--blue-soft);padding:10px 14px;border-radius:8px;margin:14px 0}
+.callout.ok{border-color:var(--ok);background:var(--ok-soft)}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.callout.bad{border-color:var(--bad);background:var(--bad-soft)}
+.callout strong:first-child{display:block;margin-bottom:2px}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 8px;border-radius:999px;vertical-align:middle;margin-left:4px}
+.tag.ok{background:var(--ok-soft);color:var(--ok)} .tag.warn{background:var(--warn-soft);color:var(--warn)} .tag.bad{background:var(--bad-soft);color:var(--bad)} .tag.info{background:var(--blue-soft);color:var(--blue)}
+figure{margin:16px 0}
+figure svg{width:100%;height:auto;background:var(--bg);border:1px solid var(--line);border-radius:10px}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.kv{display:grid;grid-template-columns:200px 1fr;gap:6px 14px;font-size:.93rem}
+.kv dt{color:var(--muted)} .kv dd{margin:0;word-break:break-word}
+button.theme{float:right;background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:6px 12px;border-radius:8px;cursor:pointer}
+footer{padding:30px 16px;text-align:center;color:var(--muted);font-size:.85rem}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  nav.toc{position:static;max-height:none}
+  .grid2{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr}
+  main section{padding:16px}
+}
+@media print{
+  body{background:#fff;color:#000;font-size:11pt}
+  nav.toc,button.theme{display:none}
+  .layout{display:block;padding:0}
+  main section{break-inside:avoid-page;border:0;padding:0 0 10px}
+  pre{white-space:pre-wrap}
+  a{color:#000}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <button class="theme" type="button" onclick="(function(){var r=document.documentElement;var d=r.getAttribute('data-theme')==='dark'||(!r.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);r.setAttribute('data-theme',d?'light':'dark')})()">Light / dark</button>
+    <h1>PITS &mdash; Technical Documentation for the Paper</h1>
+    <p>Public Information Trust System: architecture, technology stack, anchoring protocol, verification algorithm, environments, evidence and limitations.</p>
+    <p>Written for the authors of <em>&ldquo;From Hoax to Hash&rdquo;</em> so every technical statement in the paper can be checked against the system as it is actually built and deployed.</p>
+    <div class="meta">
+      <span class="chip">Snapshot: 4 October 2026</span>
+      <span class="chip">Backend: <code>backend-for-uat</code> &middot; branch <code>feat/sepolia-public-chain</code></span>
+      <span class="chip">Frontend: <code>frontend-for-uat</code> &middot; branch <code>feat/sepolia-public-verification</code></span>
+      <span class="chip">App version shown in UI: v1.0.0</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout">
+<nav class="toc" aria-label="Table of contents">
+  <strong>Contents</strong>
+  <a href="#summary">1. Summary</a>
+  <a href="#claims">2. What PITS proves (and does not)</a>
+  <a href="#architecture">3. Architecture</a>
+  <a href="#stack">4. Technology stack</a>
+  <a href="#protocol">5. Anchoring protocol</a>
+  <a class="sub" href="#hashing">5.1 Hashing</a>
+  <a class="sub" href="#tx">5.2 Transaction format</a>
+  <a class="sub" href="#fees">5.3 Gas &amp; fees</a>
+  <a class="sub" href="#nonce">5.4 Nonce safety</a>
+  <a class="sub" href="#lifecycle">5.5 Receipts &amp; lifecycle</a>
+  <a href="#verification">6. Verification algorithm</a>
+  <a href="#api">7. HTTP API</a>
+  <a href="#data">8. Data model</a>
+  <a href="#auth">9. Authentication &amp; authorisation</a>
+  <a href="#frontend">10. Frontend</a>
+  <a href="#environments">11. Environments &amp; deployment</a>
+  <a href="#chains">12. Chains: Anvil vs Sepolia</a>
+  <a href="#evidence">13. Evidence</a>
+  <a href="#testing">14. Testing</a>
+  <a href="#history">15. Engineering history</a>
+  <a href="#limits">16. Limitations &amp; threat model</a>
+  <a href="#reproduce">17. Independent verification recipe</a>
+  <a href="#glossary">18. Glossary</a>
+  <a href="#files">19. Source map</a>
+</nav>
+
+<main>
+
+<section id="summary">
+  <h2>1. Summary</h2>
+  <p>PITS lets an authorised <strong>publisher</strong> register a PDF document and lets <strong>anyone, without logging in</strong>, check whether a document they hold is byte-for-byte identical to a registered one. The system computes the document&rsquo;s <strong>SHA-256</strong>, stores it with registry metadata in PostgreSQL, and <strong>anchors</strong> the hash on an Ethereum-compatible blockchain by sending a transaction whose calldata is <code>VALUE:&lt;sha256&gt;</code>. Verification re-hashes the uploaded file, finds the registry record, reads the transaction back from the chain and compares.</p>
+  <p>Until October 2026 the chain was a local development ledger (<strong>Anvil</strong>, chain&nbsp;ID&nbsp;31337). The system now supports any EVM chain through configuration and has been proven on <strong>Ethereum Sepolia</strong> (chain&nbsp;ID&nbsp;11155111), where each anchor can be inspected independently on Etherscan.</p>
+  <div class="grid2">
+    <div class="callout ok"><strong>Verified on a public chain</strong>Canonical document SHA-256 <code>613171c8&hellip;adde9</code> is anchored in Sepolia transaction <code>0xeb912fd2&hellip;ed19</code>, block 11,839,743. See <a href="#evidence">section 13</a>.</div>
+    <div class="callout warn"><strong>Production still on Anvil</strong>The live site at the domain root still anchors to Anvil. The Sepolia deployment runs in parallel under <code>/sepolia</code> (UI) and <code>/sepolia-api</code> (API). No cutover has happened.</div>
+  </div>
+</section>
+
+<section id="claims">
+  <h2>2. What PITS proves &mdash; and what it does not</h2>
+  <div class="tablewrap"><table>
+    <tr><th style="width:50%">The system can support</th><th>The system does <em>not</em> support</th></tr>
+    <tr><td>The uploaded bytes are identical to bytes that were registered (SHA-256 match).</td><td>That the content of the document is true, accurate or official.</td></tr>
+    <tr><td>A registered hash was written into a specific blockchain transaction, sent by the PITS wallet, in a specific block with a block timestamp.</td><td>That the publisher who registered it was authorised to speak for the issuing organisation (that is an identity/organisational question handled in Keycloak, not on-chain).</td></tr>
+    <tr><td>The anchor can be checked independently of PITS with a public block explorer (public chains only).</td><td>That a local Anvil anchor is independently checkable &mdash; Anvil is a private, resettable, in-memory chain.</td></tr>
+    <tr><td>Any single-byte change to the file breaks the match.</td><td>That two documents that look alike (re-scanned, re-saved, compressed) match; they hash differently.</td></tr>
+  </table></div>
+  <div class="callout"><strong>Wording used by the UI</strong>&ldquo;This result only proves document integrity, not the truth of its content.&rdquo; Papers and slides should keep that boundary.</div>
+</section>
+
+<section id="architecture">
+  <h2>3. Architecture</h2>
+  <figure>
+  <svg viewBox="0 0 1100 520" role="img" aria-label="PITS architecture diagram" font-family="system-ui,Segoe UI,Arial" font-size="14">
+    <defs><marker id="ar" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="currentColor"/></marker></defs>
+    <g fill="none" stroke="currentColor" stroke-width="1.6" color="#5b6876">
+      <rect x="20" y="210" width="130" height="70" rx="10" fill="#e8f0fc" stroke="#1f5fbf"/>
+      <rect x="210" y="190" width="150" height="110" rx="10" fill="#fff4d6" stroke="#9a6700"/>
+      <rect x="430" y="40" width="190" height="90" rx="10" fill="#e8f0fc" stroke="#1f5fbf"/>
+      <rect x="430" y="150" width="190" height="90" rx="10" fill="#e8f0fc" stroke="#1f5fbf"/>
+      <rect x="430" y="290" width="190" height="90" rx="10" fill="#e6f4ea" stroke="#17803d"/>
+      <rect x="430" y="400" width="190" height="90" rx="10" fill="#e6f4ea" stroke="#17803d"/>
+      <rect x="700" y="40" width="170" height="70" rx="10" fill="#fbeceb" stroke="#c8372d"/>
+      <rect x="700" y="200" width="170" height="70" rx="10" fill="#fbeceb" stroke="#c8372d"/>
+      <rect x="700" y="330" width="170" height="70" rx="10" fill="#f0f0f0" stroke="#888"/>
+      <rect x="930" y="330" width="150" height="70" rx="10" fill="#e6f4ea" stroke="#17803d"/>
+      <rect x="930" y="420" width="150" height="70" rx="10" fill="#e6f4ea" stroke="#17803d"/>
+      <rect x="930" y="200" width="150" height="70" rx="10" fill="#fbeceb" stroke="#c8372d"/>
+      <line x1="150" y1="245" x2="208" y2="245" marker-end="url(#ar)"/>
+      <line x1="360" y1="220" x2="428" y2="95" marker-end="url(#ar)"/>
+      <line x1="360" y1="245" x2="428" y2="195" marker-end="url(#ar)"/>
+      <line x1="360" y1="270" x2="428" y2="335" marker-end="url(#ar)"/>
+      <line x1="360" y1="285" x2="428" y2="440" marker-end="url(#ar)"/>
+      <line x1="620" y1="85" x2="698" y2="75" marker-end="url(#ar)"/>
+      <line x1="620" y1="195" x2="698" y2="235" marker-end="url(#ar)"/>
+      <line x1="620" y1="335" x2="698" y2="365" marker-end="url(#ar)"/>
+      <line x1="620" y1="445" x2="698" y2="385" marker-end="url(#ar)"/>
+      <line x1="870" y1="365" x2="928" y2="365" marker-end="url(#ar)"/>
+      <line x1="870" y1="380" x2="928" y2="450" marker-end="url(#ar)"/>
+      <line x1="870" y1="235" x2="928" y2="235" marker-end="url(#ar)"/>
+    </g>
+    <g fill="#15202b" text-anchor="middle">
+      <text x="85" y="240" font-weight="700">Browser</text><text x="85" y="260" font-size="12">verifier / publisher</text>
+      <text x="285" y="230" font-weight="700">nginx</text><text x="285" y="250" font-size="12">TLS, routing</text><text x="285" y="270" font-size="12">one domain</text>
+      <text x="525" y="72" font-weight="700">Frontend (prod)</text><text x="525" y="92" font-size="12">Next.js &middot; path /</text><text x="525" y="110" font-size="12">127.0.0.1:3000</text>
+      <text x="525" y="182" font-weight="700">Frontend (rehearsal)</text><text x="525" y="202" font-size="12">Next.js &middot; path /sepolia</text><text x="525" y="220" font-size="12">127.0.0.1:3001</text>
+      <text x="525" y="322" font-weight="700">API (prod)</text><text x="525" y="342" font-size="12">FastAPI &middot; /api/v1</text><text x="525" y="360" font-size="12">127.0.0.1:41012</text>
+      <text x="525" y="432" font-weight="700">API (rehearsal)</text><text x="525" y="452" font-size="12">FastAPI &middot; /sepolia-api</text><text x="525" y="470" font-size="12">127.0.0.1:41013</text>
+      <text x="785" y="68" font-weight="700">Keycloak 26</text><text x="785" y="88" font-size="12">realm nextjs-kc (OIDC)</text>
+      <text x="785" y="228" font-weight="700">Keycloak JWKS</text><text x="785" y="248" font-size="12">token verification</text>
+      <text x="785" y="358" font-weight="700">PostgreSQL 16</text><text x="785" y="378" font-size="12">tdb &middot; trustmark_sepolia</text>
+      <text x="1005" y="358" font-weight="700">Anvil 31337</text><text x="1005" y="378" font-size="12">local chain (prod)</text>
+      <text x="1005" y="448" font-weight="700">Ethereum Sepolia</text><text x="1005" y="468" font-size="12">11155111 via RPC</text>
+      <text x="1005" y="228" font-weight="700">Etherscan</text><text x="1005" y="248" font-size="12">public explorer</text>
+    </g>
+  </svg>
+  <figcaption>Components and trust boundaries. Both APIs are the same code base; they differ only in configuration (database, chain). The browser talks only to nginx; the frontends call their APIs server-side.</figcaption>
+  </figure>
+  <h3>Design principles</h3>
+  <ul>
+    <li><strong>Thin anchoring.</strong> No smart contract: the anchor is a plain self-transfer carrying the hash as calldata. This works on any EVM chain with no deployment step and no contract address to trust.</li>
+    <li><strong>Hash only.</strong> Uploaded files are processed in memory and never written to disk or stored. The registry keeps the hash and metadata.</li>
+    <li><strong>Configuration, not code, selects the chain.</strong> <code>BLOCKCHAIN_RPC_URL</code>, <code>BLOCKCHAIN_PRIVATE_KEY</code> and <code>BLOCKCHAIN_CHAIN_ID</code> decide where anchors go; the backend refuses to start if the RPC reports a different chain ID.</li>
+    <li><strong>Public verification needs no account.</strong> <code>POST /verify</code> and <code>GET /verify/{sha256}</code> are unauthenticated; registration requires a Keycloak token with the <code>publisher</code> role.</li>
+  </ul>
+</section>
+
+<section id="stack">
+  <h2>4. Technology stack</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Layer</th><th>Technology</th><th>Version / detail</th></tr>
+    <tr><td>Frontend framework</td><td>Next.js (App Router, webpack build), React</td><td>Next.js 16.2.12, React 19.2.4, TypeScript</td></tr>
+    <tr><td>UI</td><td>Tailwind CSS 4, daisyUI 5, Material UI icons, Plus Jakarta Sans + Inter</td><td>Brand colour BRIN red <code>#E62F2A</code>; i18n Indonesian/English</td></tr>
+    <tr><td>Frontend auth</td><td>Auth.js (next-auth v5) with the Keycloak provider</td><td>5.0.0-beta.32; session in encrypted JWT cookie</td></tr>
+    <tr><td>Frontend tests</td><td>Vitest (jsdom), Testing Library, Playwright (e2e), Storybook</td><td>102 unit/component tests; lint with oxlint</td></tr>
+    <tr><td>Backend</td><td>Python, FastAPI, Uvicorn, Pydantic</td><td>Python &ge; 3.12.8, FastAPI &ge; 0.135</td></tr>
+    <tr><td>Persistence</td><td>SQLAlchemy 2 (ORM + Core), psycopg2, PostgreSQL</td><td>PostgreSQL 16 (Alpine image)</td></tr>
+    <tr><td>Blockchain client</td><td>web3.py, eth-account</td><td>web3 &ge; 7.16 (lock file); eth-tester used in tests</td></tr>
+    <tr><td>Identity provider</td><td>Keycloak, python-jose (JWT/JWKS verification)</td><td>Keycloak 26.6.2; realm <code>nextjs-kc</code>; client <code>nextjs-web</code></td></tr>
+    <tr><td>Config</td><td>Dynaconf + environment variables</td><td><code>conf/settings.toml</code>, <code>docker/.env</code></td></tr>
+    <tr><td>Chains</td><td>Anvil (Foundry) &middot; Ethereum Sepolia</td><td>Chain IDs 31337 and 11155111</td></tr>
+    <tr><td>RPC for Sepolia</td><td>Public JSON-RPC endpoint (publicnode)</td><td>No API key; a keyed provider is a drop-in replacement</td></tr>
+    <tr><td>Containers</td><td>Docker Engine, Docker Compose</td><td>Separate Compose projects: <code>trustmark</code>, <code>trustmark-sepolia</code>, <code>frontend-for-uat</code>, <code>frontend-sepolia</code></td></tr>
+    <tr><td>Reverse proxy</td><td>nginx</td><td>1.14.1; TLS via Let&rsquo;s Encrypt; one hostname, several locations</td></tr>
+    <tr><td>Host</td><td>Leaseweb virtual server (Singapore)</td><td>4 vCPU, 4&nbsp;GB RAM, 80&nbsp;GB SSD, CentOS 8; shared with unrelated projects</td></tr>
+    <tr><td>Test tooling (backend)</td><td>pytest, eth-tester, real PostgreSQL integration tests, Locust</td><td>187 unit + 15 PostgreSQL integration tests</td></tr>
+  </table></div>
+</section>
+
+<section id="protocol">
+  <h2>5. Anchoring protocol</h2>
+
+  <h3 id="hashing">5.1 Hashing</h3>
+  <p>The live endpoints compute <code>SHA-256</code> over the <strong>raw uploaded bytes</strong> (<code>hashlib.sha256(content).hexdigest()</code>, 64 lowercase hex characters). The code base also contains a text canonicalisation helper (CRLF&rarr;LF, trailing-whitespace strip, UTF-8) used by unit tests, but <em>it is not used by <code>/register</code> or <code>/verify</code></em>. A document is therefore identified by its exact bytes.</p>
+  <div class="callout warn"><strong>Consequence for the paper</strong>Re-saving or re-scanning a PDF changes its hash even if it looks identical. Only the original file verifies.</div>
+
+  <h3 id="tx">5.2 Transaction format (<code>anchor_type = calldata-v1</code>)</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td><code>from</code> / <code>to</code></td><td>The PITS signer address (a self-transfer; no counterparty, no contract)</td></tr>
+    <tr><td><code>value</code></td><td>0</td></tr>
+    <tr><td><code>data</code></td><td><code>0x</code> + hex of <code>"VALUE:" + sha256_hex</code> &mdash; 6 + 64 = <strong>70 bytes</strong></td></tr>
+    <tr><td><code>chainId</code></td><td>Read from the RPC; must equal <code>BLOCKCHAIN_CHAIN_ID</code></td></tr>
+    <tr><td>Type</td><td>EIP-1559 (type&nbsp;2) when the chain has a base fee, legacy <code>gasPrice</code> otherwise</td></tr>
+  </table></div>
+<pre><code>input (utf-8 of calldata) = VALUE:613171c873064a79d01805ba70f1cb5f4460800e46e83b8728d6bbf32b6adde9</code></pre>
+  <p>Records re-anchored after the Anvil reset use <code>anchor_type = calldata-v1-reanchored</code> (see <a href="#history">section 15</a>). The wire format is identical.</p>
+
+  <h3 id="fees">5.3 Gas and fees (no hard-coded values)</h3>
+  <ul>
+    <li><strong>Gas limit</strong> = <code>eth_estimateGas</code> &times; 1.20 (20&nbsp;% buffer against estimator variance between providers). Observed gas used for the canonical transaction: <strong>23,800</strong>.</li>
+    <li><strong>EIP-1559 fees</strong>: <code>maxPriorityFeePerGas</code> = <code>eth_maxPriorityFeePerGas</code> (fallback: median of <code>eth_feeHistory</code> rewards over 5 blocks); <code>maxFeePerGas</code> = 2 &times; current base fee + priority fee. A 2&times; base-fee multiple survives about six consecutive full blocks.</li>
+    <li><strong>Balance pre-check</strong>: if the wallet cannot cover <code>gas &times; maxFee</code>, the API returns <code>503 Anchor wallet has insufficient funds</code> and stores nothing.</li>
+    <li><strong>Observed cost</strong> of the canonical anchor: 23,800 gas &times; 0.977322016&nbsp;gwei = <strong>0.0000232603 ETH</strong> (Sepolia test ETH, no monetary value).</li>
+  </ul>
+
+  <h3 id="nonce">5.4 Nonce safety</h3>
+  <p>Concurrent registrations from one signer must not reuse a nonce. Three mechanisms, each added after a concrete failure:</p>
+  <ol>
+    <li><strong>Pending nonce.</strong> <code>eth_getTransactionCount(addr, "pending")</code> instead of <code>latest</code>.</li>
+    <li><strong>Serialisation lock.</strong> Reading the nonce, signing and broadcasting run under a PostgreSQL transaction-scoped advisory lock (<code>pg_advisory_xact_lock</code>) keyed by <code>sha256(chain_id:address)</code> truncated to a signed 64-bit integer. The lock also protects several backend containers sharing one database. On SQLite (tests) a process-local lock is used.</li>
+    <li><strong>Nonce floor.</strong> Public RPC providers are load-balanced: right after a broadcast, <code>pending</code> may still be served by a node that has not seen the transaction. In the live rehearsal, 2 of 4 simultaneous registrations failed with <em>replacement transaction underpriced</em> although the lock worked. The last-used nonce per (chain, signer) is now stored in table <code>anchor_signer_nonces</code> and used as a floor for 120&nbsp;s (the floor expires so a dropped transaction cannot create a permanent nonce gap). After the fix, 6 simultaneous registrations all succeeded with nonces 6&ndash;11.</li>
+  </ol>
+
+  <h3 id="lifecycle">5.5 Receipts and anchor lifecycle</h3>
+  <figure>
+  <svg viewBox="0 0 1000 150" role="img" aria-label="Anchor status lifecycle" font-family="system-ui,Segoe UI,Arial" font-size="14">
+    <defs><marker id="a2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#5b6876"/></marker></defs>
+    <g stroke="#5b6876" stroke-width="1.6" fill="none">
+      <rect x="10" y="50" width="160" height="50" rx="10" fill="#e8f0fc"/>
+      <rect x="260" y="50" width="160" height="50" rx="10" fill="#fff4d6"/>
+      <rect x="520" y="10" width="170" height="50" rx="10" fill="#e6f4ea"/>
+      <rect x="520" y="90" width="170" height="50" rx="10" fill="#fde8e6"/>
+      <rect x="780" y="50" width="200" height="50" rx="10" fill="#f0f0f0"/>
+      <line x1="170" y1="75" x2="258" y2="75" marker-end="url(#a2)"/>
+      <line x1="420" y1="65" x2="518" y2="40" marker-end="url(#a2)"/>
+      <line x1="420" y1="85" x2="518" y2="115" marker-end="url(#a2)"/>
+    </g>
+    <g fill="#15202b" text-anchor="middle">
+      <text x="90" y="80">broadcast</text><text x="340" y="72">pending</text><text x="340" y="90" font-size="12">tx hash stored</text>
+      <text x="605" y="40">confirmed</text><text x="605" y="120">failed (status 0)</text><text x="880" y="72">legacy_local</text><text x="880" y="90" font-size="12">pre-multichain rows</text>
+    </g>
+  </svg>
+  <figcaption>The transaction hash is persisted as soon as the broadcast succeeds, <em>before</em> waiting for the receipt, so a slow RPC never loses it.</figcaption>
+  </figure>
+  <ul>
+    <li>The API waits at most <code>BLOCKCHAIN_RECEIPT_TIMEOUT_SECONDS</code> (default 45&nbsp;s). If no receipt arrives it responds normally with <code>anchor_status: "pending"</code>; the record is confirmed later, the next time it is registered again or verified (a non-blocking receipt lookup).</li>
+    <li><code>BLOCKCHAIN_CONFIRMATIONS</code> (default 1) sets how many blocks must include the transaction before <code>confirmed</code>.</li>
+    <li>Blocking chain calls run in a worker thread so they do not stall the event loop.</li>
+    <li>A <code>failed</code> anchor is re-broadcast if the same document is registered again.</li>
+    <li>Observed receipt latency on Sepolia: roughly 3&ndash;25&nbsp;s (block time about 12&nbsp;s); the canonical registration returned in 5&nbsp;s.</li>
+  </ul>
+</section>
+
+<section id="verification">
+  <h2>6. Verification algorithm</h2>
+<pre><code>verify(file or sha256):
+  hash  = SHA-256(file bytes)                      # or the supplied hex
+  rec   = registry_records WHERE content_hash = hash
+  if no rec                       -> valid=false (not registered)
+  if rec.chain_id != backend chain -> valid=false, status chain_not_available
+  if rec.anchor_status == pending  -> refresh receipt once; still pending -> valid=false, status pending
+  if rec.anchor_status == failed   -> valid=false, status anchor_failed
+  tx = eth_getTransactionByHash(rec.transaction_hash)
+       not found                   -> valid=false, status transaction_not_found
+       not mined                   -> valid=false, status pending
+       input not "VALUE:"+utf8     -> valid=false, status invalid_anchor_payload
+  if tx.input value != rec.content_hash         -> status hash_mismatch
+  if rec.anchor_wallet and tx.from != wallet    -> status wallet_mismatch
+  else                                          -> valid=true,  status confirmed (+ block timestamp)</code></pre>
+  <div class="tablewrap"><table>
+    <tr><th><code>verification_status</code></th><th>Meaning</th><th><code>valid</code></th></tr>
+    <tr><td><code>confirmed</code></td><td>Hash matches a mined anchor sent by the recorded wallet</td><td>true</td></tr>
+    <tr><td><code>pending</code></td><td>Registered, transaction not yet mined/confirmed. Never reported as valid.</td><td>false</td></tr>
+    <tr><td><code>anchor_failed</code></td><td>Receipt status 0</td><td>false</td></tr>
+    <tr><td><code>transaction_not_found</code></td><td>The record points to a transaction that no longer exists on its chain</td><td>false</td></tr>
+    <tr><td><code>chain_not_available</code></td><td>Record belongs to another chain than this backend is connected to (e.g. a legacy Anvil row seen from the Sepolia API)</td><td>false</td></tr>
+    <tr><td><code>hash_mismatch</code>, <code>wallet_mismatch</code>, <code>invalid_anchor_payload</code></td><td>On-chain data disagrees with the registry</td><td>false</td></tr>
+  </table></div>
+  <p>Anything other than a confirmed, matching anchor is returned as <code>valid:false</code> with an explicit status &mdash; never as an HTTP error &mdash; so a client cannot mistake &ldquo;cannot verify here&rdquo; for &ldquo;verified&rdquo;. A hash that was never registered returns <code>{"valid": false, "content_hash": "&hellip;"}</code> with no record ID.</p>
+</section>
+
+<section id="api">
+  <h2>7. HTTP API</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Method &amp; path</th><th>Auth</th><th>Purpose</th></tr>
+    <tr><td><code>GET /health</code></td><td>none</td><td>Liveness</td></tr>
+    <tr><td><code>POST /api/v1/register</code> (multipart <code>file</code>)</td><td>Bearer JWT, role <code>publisher</code></td><td>Hash, store, anchor. Duplicate hash returns the existing record (<code>already_existed: true</code>) without a new transaction</td></tr>
+    <tr><td><code>GET /api/v1/records</code></td><td>Bearer JWT, role <code>publisher</code></td><td>The caller&rsquo;s own records only (filtered by the token&rsquo;s <code>sub</code>)</td></tr>
+    <tr><td><code>POST /api/v1/verify</code> (multipart <code>file</code>)</td><td>none</td><td>Verify by uploading the document</td></tr>
+    <tr><td><code>GET /api/v1/verify/{sha256}</code></td><td>none</td><td>Verify by hash (64 hex characters, case-insensitive)</td></tr>
+  </table></div>
+  <p>Limits: upload size is capped by <code>MAX_UPLOAD_BYTES</code>; empty file &rarr; 400; file name &gt; 255 characters &rarr; 400; oversize &rarr; 413. The public frontend only accepts PDFs.</p>
+  <h3>Example &mdash; real response from the Sepolia API</h3>
+<pre><code>GET /sepolia-api/api/v1/verify/613171c873064a79d01805ba70f1cb5f4460800e46e83b8728d6bbf32b6adde9
+{
+  "valid": true,
+  "record_id": "1b752465-a85e-4ae1-ba2e-812d0a83b16f",
+  "content_hash": "613171c8&hellip;adde9",
+  "transaction_hash": "eb912fd2&hellip;ed19",
+  "filename": "pits-sepolia-canonical.pdf",
+  "anchor_status": "confirmed",
+  "anchor": {
+    "chain_id": 11155111,
+    "network_name": "Ethereum Sepolia",
+    "anchor_type": "calldata-v1",
+    "anchor_status": "confirmed",
+    "transaction_hash": "0xeb912fd2728dc79330b592684ca687374a882273a43c0a21ccb95719b052ed19",
+    "explorer_url": "https://sepolia.etherscan.io",
+    "explorer_tx_url": "https://sepolia.etherscan.io/tx/0xeb912fd2&hellip;ed19",
+    "block_number": 11839743,
+    "submitted_at": "2026-10-04 03:25:21+00",
+    "confirmed_at": "2026-10-04 03:25:24+00"
+  },
+  "verification_status": "confirmed",
+  "blockchain_timestamp": "2026-10-04 03:25:24+00:00"
+}</code></pre>
+  <div class="callout"><strong>Backward compatibility</strong>The <code>anchor</code>, <code>anchor_status</code> and <code>verification_status</code> fields were added without removing any existing flat field (<code>transaction_hash</code>, <code>issuer_id</code>, &hellip;). The frontend tolerates responses with none of them. Note that the flat <code>transaction_hash</code> is stored without the <code>0x</code> prefix for historical reasons; <code>anchor.transaction_hash</code> is always <code>0x</code>-prefixed.</div>
+</section>
+
+<section id="data">
+  <h2>8. Data model</h2>
+  <h3>Table <code>registry_records</code></h3>
+  <div class="tablewrap"><table>
+    <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+    <tr><td>id</td><td>varchar(36) PK</td><td>UUID</td></tr>
+    <tr><td>content_hash</td><td>varchar(64) UNIQUE</td><td>SHA-256 hex. Unique <em>across the database</em>: one document, one record</td></tr>
+    <tr><td>transaction_hash</td><td>varchar(66) UNIQUE</td><td>Anchor transaction</td></tr>
+    <tr><td>issuer_id</td><td>varchar(128)</td><td>Keycloak token <code>sub</code> of the publisher</td></tr>
+    <tr><td>original_filename, content_type</td><td>varchar, nullable</td><td>Metadata only; the file itself is not stored</td></tr>
+    <tr><td>created_at</td><td>timestamptz</td><td>Registration time (preserved when records are re-anchored)</td></tr>
+    <tr><td>chain_id</td><td>integer, default 31337</td><td>Which chain holds the anchor</td></tr>
+    <tr><td>anchor_type</td><td>varchar(32)</td><td><code>calldata-v1</code> / <code>calldata-v1-reanchored</code></td></tr>
+    <tr><td>anchor_status</td><td>varchar(16), default <code>legacy_local</code></td><td><code>pending | confirmed | failed | legacy_local</code></td></tr>
+    <tr><td>anchor_wallet</td><td>varchar(42)</td><td>Sender of the anchor transaction</td></tr>
+    <tr><td>block_number, block_hash, gas_used, effective_gas_price</td><td>bigint / varchar</td><td>From the receipt</td></tr>
+    <tr><td>submitted_at, confirmed_at</td><td>timestamptz</td><td>Broadcast and confirmation time</td></tr>
+  </table></div>
+  <p>The server defaults (<code>31337</code> / <code>legacy_local</code>) describe rows written before chain tracking existed; new rows always set these columns explicitly.</p>
+  <h3>Table <code>anchor_signer_nonces</code></h3>
+  <p><code>(chain_id, address)</code> primary key, <code>next_nonce</code> bigint, <code>updated_at</code> timestamptz &mdash; the nonce floor described in <a href="#nonce">5.4</a>.</p>
+  <h3>Schema changes are explicit</h3>
+  <p>Application start-up only <em>checks</em> the schema and refuses to run if it is out of date. Changing it is a deliberate deployment step: <code>python -m trustmark.infra.schema check|migrate</code>. On PostgreSQL <code>migrate</code> runs <code>src/trustmark/migrations/*.sql</code> in one transaction under an advisory lock (all-or-nothing, safe if two runners overlap, additive only). A test fails if the SQL files drift from the ORM models. <code>SCHEMA_AUTO_APPLY=true</code> exists for local/CI only.</p>
+  <h3>Database separation</h3>
+  <p>The Sepolia rehearsal uses its <strong>own database</strong> (<code>trustmark_sepolia</code>, pinned by <code>REQUIRE_DATABASE_NAME</code> so the process refuses to start against any other) because <code>content_hash</code> is globally unique and test chains must never mix with production records.</p>
+</section>
+
+<section id="auth">
+  <h2>9. Authentication &amp; authorisation</h2>
+  <ul>
+    <li><strong>Identity provider:</strong> Keycloak 26, realm <code>nextjs-kc</code>. Self-registration and password reset are disabled; accounts are created by an administrator or through the optional Google identity provider. <code>publisher</code> is the realm&rsquo;s default role.</li>
+    <li><strong>Frontend login:</strong> OpenID Connect authorisation-code flow through Auth.js (confidential client <code>nextjs-web</code>). The access token is kept in an encrypted session cookie and refreshed with the refresh token; the browser never sees the token in JavaScript.</li>
+    <li><strong>Backend validation</strong> (<code>KeycloakVerifier</code>): the bearer JWT is verified with RS256/PS256 against the realm&rsquo;s JWKS (cached one hour, refreshed on unknown <code>kid</code>), checking <code>iss</code> and <code>aud</code>. Roles come from <code>realm_access.roles</code> and the client&rsquo;s <code>resource_access</code>. <code>require_roles("publisher")</code> guards registration and listing.</li>
+    <li><strong>Per-user isolation:</strong> <code>GET /records</code> filters on the token&rsquo;s <code>sub</code>. Before 14&nbsp;Sep&nbsp;2026 this endpoint listed every user&rsquo;s records (an IDOR finding); it was fixed and verified with two real accounts.</li>
+    <li><strong>Issuer identity:</strong> the realm export originally defined no <code>sub</code> mapper, so tokens lacked <code>sub</code> and <code>issuer_id</code> was empty. A protocol mapper fixes this.</li>
+  </ul>
+  <div class="callout warn"><strong>Known authentication risk</strong>The backend entrypoint contains a <code>TEST_MODE</code> switch that, when set to <code>true</code>, replaces authentication with a hard-coded publisher. It is <code>False</code> in every deployed container (checked), but the mechanism still exists in code.</div>
+</section>
+
+<section id="frontend">
+  <h2>10. Frontend</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Route</th><th>Access</th><th>Purpose</th></tr>
+    <tr><td><code>/</code></td><td>public</td><td>Verification (upload a PDF)</td></tr>
+    <tr><td><code>/result/success</code>, <code>/result/failure</code></td><td>public</td><td>Outcome: verified, pending, not found, anchor problems</td></tr>
+    <tr><td><code>/publisher</code></td><td>login</td><td>Register a document</td></tr>
+    <tr><td><code>/dashboard</code></td><td>login</td><td>The publisher&rsquo;s records and a detail drawer with blockchain proof</td></tr>
+    <tr><td><code>/api/register|verify|records</code></td><td>server</td><td>Forward to the backend (<code>PITS_BACKEND_*_URL</code>); the browser never calls the backend directly</td></tr>
+    <tr><td><code>/api/auth/*</code></td><td>Auth.js</td><td>Sign-in, callback, session, logout</td></tr>
+  </table></div>
+  <h3>Public-chain verification UI (October 2026)</h3>
+  <ul>
+    <li>A shared <em>Blockchain Proof</em> component shows <strong>network</strong>, <strong>status</strong>, shortened <strong>transaction</strong> (full value in the tooltip and the copy button), <strong>block</strong> number and a <strong>&ldquo;View on Etherscan&rdquo;</strong> link.</li>
+    <li>Network name and explorer URL come <em>only</em> from the API (<code>anchor.network_name</code>, <code>anchor.explorer_tx_url</code>). The UI never builds an explorer URL; it accepts <code>https:</code> links only, opens them in a new tab with <code>rel="noopener noreferrer"</code>, and shows none for the legacy Anvil chain.</li>
+    <li>States handled: confirmed, pending, failed, transaction not found, legacy/chain unavailable, mismatch, unknown status, and responses from older backends with no <code>anchor</code> at all.</li>
+    <li>Language: Indonesian and English dictionaries with a key-parity test.</li>
+  </ul>
+  <h3>Serving under a sub-path</h3>
+  <p>Because the domain cannot get a new sub-domain, the rehearsal UI is built with <code>basePath=/sepolia</code> (<code>NEXT_PUBLIC_BASE_PATH</code>); the production build has none. Things Next.js does not prefix by itself were handled explicitly: raw <code>fetch</code> URLs, <code>window.location</code>, the <code>next/image</code> source, the Auth.js base path and redirect URIs, and Auth.js cookie names. Rehearsal cookies are named <code>__Secure-sepolia.authjs.*</code> with <code>Path=/sepolia</code> and the rehearsal has its own <code>AUTH_SECRET</code>, so a login on one app cannot overwrite or read the other&rsquo;s session. A small banner (<code>NEXT_PUBLIC_ENV_LABEL</code>) marks the rehearsal as &ldquo;Public Blockchain Rehearsal &middot; Ethereum Sepolia&rdquo;.</p>
+</section>
+
+<section id="environments">
+  <h2>11. Environments &amp; deployment</h2>
+  <div class="tablewrap"><table>
+    <tr><th>URL path</th><th>Serves</th><th>Backend / database / chain</th></tr>
+    <tr><td><code>/</code> (domain root)</td><td>Production frontend</td><td>Production API &middot; DB <code>tdb</code> &middot; <strong>Anvil 31337</strong></td></tr>
+    <tr><td><code>/sepolia</code></td><td>Rehearsal frontend (basePath)</td><td>Rehearsal API &middot; DB <code>trustmark_sepolia</code> &middot; <strong>Ethereum Sepolia</strong></td></tr>
+    <tr><td><code>/sepolia-api/</code></td><td>Rehearsal API (public JSON)</td><td>same as above; nginx strips the prefix</td></tr>
+    <tr><td>separate host name</td><td>Production API and Keycloak</td><td>&mdash;</td></tr>
+  </table></div>
+  <div class="tablewrap"><table>
+    <tr><th>Container</th><th>Compose project</th><th>Port (loopback)</th><th>Notes</th></tr>
+    <tr><td>production frontend</td><td><code>frontend-for-uat</code></td><td>3000</td><td>unchanged</td></tr>
+    <tr><td>rehearsal frontend</td><td><code>frontend-sepolia</code></td><td>3001</td><td>runtime-only image, 400&nbsp;MB memory limit (uses &asymp;66&nbsp;MB)</td></tr>
+    <tr><td>production API</td><td><code>trustmark</code></td><td>41012</td><td>chain 31337</td></tr>
+    <tr><td>rehearsal API</td><td><code>trustmark-sepolia</code></td><td>41013</td><td>chain 11155111, <code>TEST_MODE=False</code></td></tr>
+    <tr><td>PostgreSQL / Keycloak / Anvil</td><td><code>trustmark</code></td><td>5432 / 8080 / 8545</td><td>all bound to 127.0.0.1</td></tr>
+  </table></div>
+  <h3>Deployment method (non-obvious, by necessity)</h3>
+  <ul>
+    <li>The production checkout on the server has diverged from Git, so nothing is deployed with <code>git pull</code>. Only the changed files are copied, checksummed, and the single affected service is rebuilt and recreated with <code>--no-deps</code>.</li>
+    <li>The rehearsal runs as separate Compose projects attached to the existing Docker network, so building or restarting them cannot recreate production containers.</li>
+    <li><strong>The frontend is built off-server.</strong> A full <code>next build</code> run on the 4&nbsp;GB host coincided with a hang of the whole machine (section 15). The rehearsal image therefore contains only the pre-built <code>.next</code> output (built on a developer laptop) plus <code>npm ci --omit=dev</code>. A runtime <code>next.config.js</code> supplies the base path, because <code>next start</code> reads it from the config file, not from the build output.</li>
+    <li>Secrets live only in server-side <code>.env</code> files (mode 600) and are never committed. The Sepolia signing key is a freshly generated wallet used for nothing else.</li>
+  </ul>
+</section>
+
+<section id="chains">
+  <h2>12. Chains: Anvil vs Ethereum Sepolia</h2>
+  <div class="tablewrap"><table>
+    <tr><th></th><th>Anvil (production today)</th><th>Ethereum Sepolia (rehearsal)</th></tr>
+    <tr><td>Chain ID</td><td>31337</td><td>11155111</td></tr>
+    <tr><td>Nature</td><td>Local development ledger, single node</td><td>Public Ethereum test network</td></tr>
+    <tr><td>Independent verification</td><td>Not possible</td><td>Any block explorer / node</td></tr>
+    <tr><td>Persistence</td><td>In memory by default; now saved to a file (<code>--state</code>, 10&nbsp;s interval) &mdash; survives restarts and kills, but is still one machine</td><td>Replicated by the network, independent of our servers</td></tr>
+    <tr><td>Block time</td><td>Instant</td><td>&asymp;12&nbsp;s</td></tr>
+    <tr><td>Cost</td><td>None</td><td>Test ETH from a faucet (free, no value)</td></tr>
+    <tr><td>Trust model</td><td>Whoever controls the server controls the ledger</td><td>Decentralised consensus (testnet security assumptions)</td></tr>
+  </table></div>
+  <div class="callout warn"><strong>Testnet caveat</strong>Sepolia demonstrates public verifiability, not production-grade economic security. A production deployment would target Ethereum mainnet or a rollup (Base, Arbitrum, Optimism): the code needs only a new RPC URL, key and chain ID. Polygon PoS needs a higher minimum priority fee than the old hard-coded values, which is one reason fees are now dynamic.</div>
+</section>
+
+<section id="evidence">
+  <h2>13. Evidence</h2>
+  <h3>13.1 Canonical transaction</h3>
+  <dl class="kv">
+    <dt>Document</dt><dd><code>pits-sepolia-canonical.pdf</code> (446 bytes)</dd>
+    <dt>SHA-256</dt><dd><code>613171c873064a79d01805ba70f1cb5f4460800e46e83b8728d6bbf32b6adde9</code></dd>
+    <dt>Transaction</dt><dd><code>0xeb912fd2728dc79330b592684ca687374a882273a43c0a21ccb95719b052ed19</code></dd>
+    <dt>Network / block</dt><dd>Ethereum Sepolia &middot; block 11,839,743 &middot; 2026-10-04 03:25:24 UTC</dd>
+    <dt>From = To</dt><dd><code>0x3EB7D8332a8405a81Dbae7Bc2dA2FAfAe3603EB5</code> (PITS rehearsal wallet), value 0</dd>
+    <dt>Input data (decoded)</dt><dd><code>VALUE:613171c8&hellip;adde9</code> &mdash; equals the SHA-256 of the PDF</dd>
+    <dt>Gas used / price / fee</dt><dd>23,800 &middot; 977,322,016 wei (0.977 gwei) &middot; 0.0000232603 ETH</dd>
+    <dt>Explorer</dt><dd><a href="https://sepolia.etherscan.io/tx/0xeb912fd2728dc79330b592684ca687374a882273a43c0a21ccb95719b052ed19">sepolia.etherscan.io/tx/0xeb912fd2&hellip;ed19</a></dd>
+  </dl>
+  <p>The match was confirmed independently of PITS by opening the transaction on Etherscan and decoding its input data. PITS verification of the same file (by upload and by hash) returns <code>valid:true</code>; a one-byte-modified file and an unknown hash return <code>valid:false</code>. Verification through the deployed rehearsal UI renders &ldquo;Document Verified &middot; Ethereum Sepolia &middot; Confirmed &middot; block 11.839.743&rdquo; with the Etherscan link.</p>
+
+  <h3>13.2 Behaviour proven on the live rehearsal</h3>
+  <ul>
+    <li>Duplicate registration returns the existing record without a second transaction.</li>
+    <li>Pending path: with the receipt timeout set to 1&nbsp;s, registration returned <code>pending</code> with the transaction hash stored; verification reported <code>valid:false / pending</code>; a later verification reported <code>valid:true / confirmed</code> and the row became <code>confirmed</code> with its block number.</li>
+    <li>Unfunded wallet: <code>503</code>, nothing stored.</li>
+    <li>Six simultaneous registrations: six HTTP&nbsp;200, nonces 6&ndash;11, no broadcast failures (after the nonce-floor fix).</li>
+  </ul>
+
+  <h3>13.3 Legacy records</h3>
+  <p>Production holds 57 registry records originally anchored on Anvil. After a reboot reset the in-memory chain to block 0, none of them could be verified (three had already been orphaned earlier the same way). They were restored in two independent ways, both labelled <code>calldata-v1-reanchored</code> and both keeping the original <code>created_at</code>:</p>
+  <ul>
+    <li><strong>On Sepolia</strong> (copied into the rehearsal database): 57 of 57 now verify as <code>confirmed</code> through the Sepolia API.</li>
+    <li><strong>On Anvil</strong> (production): the 57 hashes were re-anchored on the live Anvil (blocks 9&ndash;65) and only the <code>transaction_hash</code> column in production was updated, with a full database dump taken first and an old&rarr;new mapping file kept. 57 of 57 now verify through the production API.</li>
+  </ul>
+  <div class="callout warn"><strong>Timestamp caveat for the paper</strong>The on-chain timestamp of a re-anchored record is the <em>re-anchoring</em> time (4 Oct 2026), not the original registration date (6&ndash;9 Sep 2026); the original date is only in the database. Re-anchoring proves the document existed unchanged at re-anchoring time, not at the original date.</div>
+</section>
+
+<section id="testing">
+  <h2>14. Testing</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Suite</th><th>Count / result</th><th>What it covers</th></tr>
+    <tr><td>Backend unit (<code>tests/trustmark</code>)</td><td>187 pass (94 at the start of the migration)</td><td>Config and chain-ID validation, fee/gas builder, nonce lock and floor, receipts, register/verify flows with a real SQLite session, schema check/migrate, start-up guards, an in-process EVM round trip (eth-tester)</td></tr>
+    <tr><td>Backend PostgreSQL integration (<code>tests/postgres_integration</code>)</td><td>15 pass</td><td>Real PostgreSQL: migration (incl. three concurrent migrators and rollback of a failing migration), legacy rows &rarr; <code>legacy_local</code>/31337, advisory lock visible in <code>pg_locks</code>, a second holder waits, nonce race with a control run <em>without</em> the lock that does collide</td></tr>
+    <tr><td>Frontend unit/component</td><td>102 pass (14 files)</td><td>Anchor state mapping, 8 backend states in EN/ID, unsafe-URL rejection, old-backend responses, base path, cookie scoping, banner, i18n parity</td></tr>
+    <tr><td>Live smoke (Sepolia)</td><td>performed</td><td>Real Keycloak login (API), register, verify, dedup, pending, concurrency, tamper, unknown hash</td></tr>
+    <tr><td>QA &ldquo;Pass 5&rdquo; integration suite</td><td>53 tests, run on 14 Sep 2026 against a local Anvil stack: 44 pass, 8 fail (documented findings), 1 skip (baseline before the fixes)</td><td>Not re-run against Sepolia: it is hard-wired to the production ports and some tests stop the Anvil container. Anvil-specific: blockchain, resilience, part of provenance; chain-agnostic: DB, file validation, isolation, Keycloak</td></tr>
+  </table></div>
+  <p>Two defects were found <em>only</em> by running on real infrastructure: the schema CLI did not register the ORM model (so <code>check</code> passed on an empty schema), and the stale pending-nonce problem of section 5.4. A third, log hygiene, was caught by review: web3/urllib3 DEBUG logs contain the full RPC URL (and therefore any provider API key); those loggers are now at WARNING.</p>
+</section>
+
+<section id="history">
+  <h2>15. Engineering history (chronology)</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Date</th><th>Event</th></tr>
+    <tr><td>Jul&ndash;Sep 2026</td><td>Frontend and backend delivered for UAT on Anvil; QA findings (IDOR on <code>/records</code>, missing <code>sub</code> claim, malformed-token 500, long file name 500) fixed and deployed 14&ndash;21 Sep.</td></tr>
+    <tr><td>6 Sep 2026</td><td>Anvil container recreated: three records registered before that moment lose their transactions (first orphans).</td></tr>
+    <tr><td>4 Oct, phase 1</td><td>Backend made chain-agnostic: configurable chain, dynamic fees, nonce lock, pending/confirmed lifecycle, chain-aware verification, explicit schema migration (commits <code>185a03d</code>, <code>384d69d</code>, <code>cedc85d</code>).</td></tr>
+    <tr><td>4 Oct, phase 2</td><td>Separate Sepolia backend and database on the same server; first transaction mined; independent Etherscan check; pending and concurrency proofs.</td></tr>
+    <tr><td>4 Oct, phase 3</td><td>Frontend public-chain verification UI (<code>2695fa9</code>) and sub-path build (<code>41adcbe</code>).</td></tr>
+    <tr><td>4 Oct, incident</td><td>A <code>next build</code> executed on the 4&nbsp;GB host coincided with a total hang (SSH, HTTPS and console unresponsive for about 3.5&nbsp;h); recovered with a hypervisor reboot. Cause believed to be memory exhaustion, not confirmed. Consequences: Anvil&rsquo;s in-memory chain was lost; <code>docker</code> and <code>nginx</code> are not enabled at boot on that host and had to be started by hand.</td></tr>
+    <tr><td>4 Oct, recovery</td><td>Anvil changed to persist its state; 57 records re-anchored on Anvil and on Sepolia; frontend rebuilt off-server and deployed under <code>/sepolia</code>.</td></tr>
+  </table></div>
+  <div class="callout"><strong>Lessons worth stating in the paper</strong>(1) An in-memory development chain is not a ledger: one reboot erased every proof, which is the strongest practical argument for a public chain. (2) The proof of integrity must live outside the operator&rsquo;s infrastructure. (3) Public RPC behaves differently from a local node (stale pending nonces, receipt latency), so concurrency has to be tested on the real network.</div>
+</section>
+
+<section id="limits">
+  <h2>16. Limitations &amp; threat model</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Topic</th><th>Status</th></tr>
+    <tr><td>Hash only, byte-exact</td><td>By design. Content truth, authorship of the content and semantic equivalence are out of scope.</td></tr>
+    <tr><td>Operator trust</td><td>A single PITS wallet signs every anchor, and the registry lives in a database the operator controls. The on-chain record cannot be altered, but the registry could be edited to point elsewhere. Independent verification (section 17) removes that dependency because it recomputes the hash and checks the transaction sender directly.</td></tr>
+    <tr><td>Anyone can anchor any hash</td><td>The chain does not restrict who writes <code>VALUE:&hellip;</code>. Trust comes from the sender being the known PITS wallet, which a verifier must check. A contract-based registry (<code>Registered(hash, publisher)</code> events) would make this enforceable on-chain; it is a possible future work item.</td></tr>
+    <tr><td>Finality</td><td>&ldquo;Confirmed&rdquo; currently means one confirmation (configurable). Reorg risk on a public chain is not modelled further.</td></tr>
+    <tr><td>Testnet</td><td>Sepolia is not economically secured; faucet ETH has no value. Production would need mainnet/rollup and a funded, protected key.</td></tr>
+    <tr><td>Key management</td><td>The signing key sits in a server-side <code>.env</code> file. A KMS/HSM and balance alerts are not in place.</td></tr>
+    <tr><td>Availability</td><td>One 4&nbsp;GB VPS hosts everything (single point of failure); no automatic start of Docker/nginx after reboot; no background job to confirm pending anchors; verification depends on an RPC provider.</td></tr>
+    <tr><td>Authentication</td><td><code>TEST_MODE</code> bypass still present in code (off in deployments); no rate limiting on public endpoints; sign-up intentionally disabled.</td></tr>
+    <tr><td>Privacy</td><td>Files are not stored, but file name, content type, publisher ID and hash are in the registry. The hash of a public document is public information on-chain.</td></tr>
+    <tr><td>Legacy re-anchoring</td><td>Timestamps reflect re-anchoring time (section 13.3).</td></tr>
+    <tr><td>Performance claims</td><td>Historical load-test figures from before the fixes were produced with a test harness that had defects (missing Authorization header; an always-true type check). They should not be compared with new measurements and are not part of this documentation.</td></tr>
+  </table></div>
+</section>
+
+<section id="reproduce">
+  <h2>17. Independent verification recipe</h2>
+  <p>Anyone can verify a Sepolia-anchored PITS document without trusting PITS:</p>
+  <ol>
+    <li>Compute the SHA-256 of the file: <code>shasum -a 256 document.pdf</code>.</li>
+    <li>Obtain the transaction hash (shown by the PITS UI, or from <code>GET /sepolia-api/api/v1/verify/&lt;sha256&gt;</code>).</li>
+    <li>Open <code>https://sepolia.etherscan.io/tx/&lt;hash&gt;</code>. Check: status <em>Success</em>; <em>From</em> equals <em>To</em> equals the published PITS wallet <code>0x3EB7D8332a8405a81Dbae7Bc2dA2FAfAe3603EB5</code>; value 0.</li>
+    <li>Expand <em>More details &rarr; Input data</em>, switch to UTF-8: it must read <code>VALUE:</code> followed by your SHA-256.</li>
+    <li>The block timestamp is the earliest time the hash was provably public (for re-anchored legacy records: the re-anchoring time).</li>
+  </ol>
+<pre><code># same check with any JSON-RPC node
+curl -s -X POST https://ethereum-sepolia-rpc.publicnode.com \
+  -H 'content-type: application/json' \
+  --data '{"jsonrpc":"2.0","id":1,"method":"eth_getTransactionByHash","params":["0xeb912fd2728dc79330b592684ca687374a882273a43c0a21ccb95719b052ed19"]}'
+# decode result.input (hex) as UTF-8 -> VALUE:613171c8...adde9</code></pre>
+</section>
+
+<section id="glossary">
+  <h2>18. Glossary</h2>
+  <dl class="kv">
+    <dt>Anchor</dt><dd>A blockchain transaction that carries a document hash, making the hash&rsquo;s existence at that time publicly checkable.</dd>
+    <dt>Calldata</dt><dd>The <code>data</code>/<code>input</code> field of an Ethereum transaction. Here: <code>VALUE:&lt;sha256&gt;</code>.</dd>
+    <dt>Anvil</dt><dd>Foundry&rsquo;s local Ethereum node for development; chain ID 31337.</dd>
+    <dt>Sepolia</dt><dd>A public Ethereum test network; chain ID 11155111.</dd>
+    <dt>EIP-1559</dt><dd>Ethereum fee market with a base fee and a priority tip.</dd>
+    <dt>Nonce</dt><dd>Per-account transaction counter; each transaction needs the next unused value.</dd>
+    <dt>Advisory lock</dt><dd>PostgreSQL application-level lock, here used to serialise nonce selection per signer.</dd>
+    <dt>JWKS</dt><dd>JSON Web Key Set: the public keys used to verify Keycloak-issued JWTs.</dd>
+    <dt>RPC provider</dt><dd>Service exposing an Ethereum node over JSON-RPC.</dd>
+    <dt>Re-anchoring</dt><dd>Writing an existing record&rsquo;s hash to a (new) chain again after its original proof was lost.</dd>
+  </dl>
+</section>
+
+<section id="files">
+  <h2>19. Source map</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Repository / path</th><th>Contents</th></tr>
+    <tr><td>backend <code>src/trustmark/infra/blockchain_connector.py</code></td><td>Chain config, transaction builder, fees, nonce handling, receipts, tolerant reads</td></tr>
+    <tr><td>backend <code>src/trustmark/api/v1/documents.py</code></td><td>register / records / verify endpoints and the verification algorithm</td></tr>
+    <tr><td>backend <code>src/trustmark/services/anchoring.py</code></td><td>Anchor metadata (network name, explorer URL), receipt application, pending refresh</td></tr>
+    <tr><td>backend <code>src/trustmark/infra/nonce_lock.py</code>, <code>schema.py</code>, <code>migrations/</code></td><td>Advisory lock and nonce floor, explicit schema check/migrate, SQL migrations</td></tr>
+    <tr><td>backend <code>src/trustmark/infra/auth/keycloak.py</code></td><td>JWT/JWKS verification and role checks</td></tr>
+    <tr><td>backend <code>docker/</code></td><td>Compose files (default stack, Sepolia overlay and standalone), env example</td></tr>
+    <tr><td>backend <code>tools/</code></td><td><code>reanchor_legacy.py</code> (copy + anchor on the configured chain), <code>reanchor_to_anvil.py</code> (restore production verification)</td></tr>
+    <tr><td>backend <code>tests/trustmark</code>, <code>tests/postgres_integration</code></td><td>Unit and real-PostgreSQL tests</td></tr>
+    <tr><td>backend <code>_docs/blockchain-environments.md</code>, <code>_docs/qa/sepolia-rehearsal/</code></td><td>Environment notes, canonical PDF, phase-2 report</td></tr>
+    <tr><td>frontend <code>components/common/BlockchainProof.tsx</code>, <code>lib/anchor.ts</code></td><td>Blockchain proof UI and status mapping</td></tr>
+    <tr><td>frontend <code>lib/basePath.ts</code>, <code>lib/authCookies.ts</code>, <code>auth.ts</code></td><td>Sub-path support and Auth.js configuration</td></tr>
+    <tr><td>frontend <code>_docs/operations/</code></td><td>Handoff, deployment, rollback and phase-3 notes</td></tr>
+  </table></div>
+  <h3>Relevant commits</h3>
+  <ul>
+    <li>Backend: <code>185a03d</code> configurable public-chain anchoring &middot; <code>384d69d</code> schema CLI fix, PostgreSQL tests, standalone compose &middot; <code>cedc85d</code> nonce floor &middot; <code>af678e6</code> / <code>baa56c8</code> re-anchoring tools and notes.</li>
+    <li>Frontend: <code>2695fa9</code> public blockchain verification &middot; <code>41adcbe</code> serving under a sub-path.</li>
+  </ul>
+  <div class="callout"><strong>Status of this document</strong>Every number above was observed on the running system or in the repositories on 4 October 2026. Items described as &ldquo;believed&rdquo; or &ldquo;not confirmed&rdquo; are marked as such. If the paper states something that is not in this document, check it against the code or run it before citing it.</div>
+</section>
+
+</main>
+</div>
+<footer>PITS technical documentation &middot; snapshot 2026-10-04</footer>
+</body>
+</html>
